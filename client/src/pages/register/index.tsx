@@ -1,4 +1,4 @@
-import { Card, Form, Input, Checkbox, Button } from 'antd';
+import { Card, Form, Input, Checkbox, Button, AutoComplete } from 'antd';
 import Link from 'next/link';
 import React from 'react';
 import { FormWrapper } from '../../components/forms/FormWrapper';
@@ -14,7 +14,7 @@ type RegisterComponent = React.FC & {Layout: string}
  const Register: RegisterComponent = ({}) => {
         return (
             <div className="container card-center">
-        <Card style={{ width: 500 }}>
+        {/* <Card style={{ width: 500 }}>
           <FormWrapper wrapperVariant="large" heading="CREATE AN ACCOUNT">
             <Form name="basic" wrapperCol={{ span: 24 }} layout="vertical">
                 <div style={{textAlign: 'center', padding:'2%'}}>Choose an account type</div>
@@ -37,7 +37,59 @@ type RegisterComponent = React.FC & {Layout: string}
               
             </Form>
           </FormWrapper>
+        </Card> */}
+        <div className="container card-center">
+        <Card style={{ width: 500 }}>
+          <FormWrapper wrapperVariant="large" heading="SIGN UP">
+            <Form name="basic" wrapperCol={{ span: 24 }} layout="vertical">
+              <Form.Item label="Username" name="username">
+                <Input size="large" placeholder="Username" />
+              </Form.Item>
+              <Form.Item label="Email" name="email">
+                <Input size="large" placeholder="Email" />
+              </Form.Item>
+              <Form.Item label="Password" name="password">
+                <Input.Password size="large" placeholder="Password" />
+                
+              </Form.Item>
+              {/* <Form.Item
+                name="remember"
+                valuePropName="checked"
+                wrapperCol={{ offset: 0, span: 16 }}
+              >
+                <Checkbox>Remember me</Checkbox>
+              </Form.Item> */}
+              <Form.Item label="User type" name="user_type">
+              <Input.Group size="large">
+              <AutoComplete
+                style={{ width: "100%", textAlign:'start' }}
+                placeholder="Job Seeker or Company?"
+                options={[{ value: "Job seeker" }, { value: "Company" }]}
+                size="large"
+              />
+            </Input.Group>
+            </Form.Item>
+              <Form.Item>
+                <div className="btn-center">
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    size="large"
+                    style={{ width: "40%" }}
+                  >
+                    Continue
+                  </Button>
+                </div>
+              </Form.Item>
+              <div style={{display:'flex',  alignItems:'center'}} className="a-link">
+                    <div>Already have account?</div>
+                  <Link href="/login">Log In</Link>
+              </div>
+                  
+            </Form>
+          </FormWrapper>
         </Card>
+      </div>
       </div>
         );
 };

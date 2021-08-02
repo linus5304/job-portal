@@ -45,9 +45,9 @@ export const login: loginComponent = ({}) => {
                 </div>
               </Form.Item>
               
-                  <div style={{display:'flex'}} className="a-link">
-                      <Link href="/register/employer">Employer Registration</Link>
-                  <Link href="/register/job-seeker">Job Seeker Registration</Link>
+                  <div style={{display:'flex',  alignItems:'center'}} className="a-link">
+                    <div>Don't have an account?</div>
+                  <Link href="/register">Sign Up</Link>
               </div>
             </Form>
           </FormWrapper>
