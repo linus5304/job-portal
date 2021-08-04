@@ -4,9 +4,9 @@ import { Hero } from '../components/Hero'
 import { HeroContact } from '../components/HeroContact';
 import { HeroPost } from '../components/HeroPost';
 import { Navbar } from '../components/Navbar'
-import { CompanySection } from './../components/CompanySection';
-import { FeaturedJobs } from './../components/FeaturedJobs';
-import { LatestJobs } from './../components/LatestJobs';
+import { CompanySection } from '../components/CompanySection';
+import { FeaturedJobs } from '../components/FeaturedJobs';
+import { LatestJobs } from '../components/LatestJobs';
 
 export type layout = {
   value: string, variant?:string

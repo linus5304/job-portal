@@ -2,7 +2,7 @@ import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import {createBreakpoints} from '@chakra-ui/theme-tools'
 import React from 'react';
 import { MainLayout } from '../components/layouts/MainLayout';
-import { DashboardLayout } from './../components/layouts/DashboardLayout';
+import { DashboardLayout } from '../components/layouts/DashboardLayout';
 
 const breakpoints = createBreakpoints({
     sm: "320px",
