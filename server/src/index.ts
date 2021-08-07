@@ -33,12 +33,12 @@ const main = async () => {
   });
 
   const app = express();
-  // app.use(
-  //     cors({
-  //         origin: 'https://studio.apollographql.com',
-  //         credentials: true
-  //     })
-  // )
+  app.use(
+      cors({
+          origin: 'http://localhost:3000',
+          credentials: true
+      })
+  )
 
   app.use(
     session({
@@ -75,7 +75,7 @@ const main = async () => {
     res.send("helo");
   });
 
-  apolloServer.applyMiddleware({ app });
+  apolloServer.applyMiddleware({ app , cors: false});
 
   app.listen(4000, () => {
     console.log("localhost:4000/graphql");

@@ -14,6 +14,9 @@ import { InputField } from "../components/form/InputField";
 import { Form, Formik } from "formik";
 import { PasswordField } from "../components/form/PasswordField";
 import NextLink from 'next/link'
+import { useLoginMutation } from "../generated/graphql";
+import { toErrorMap } from "../utils/errorMap";
+
 
 interface loginProps {}
 
@@ -23,11 +26,19 @@ export type layout = {
 };
 
 export const login: React.FC<loginProps> & layout = ({}) => {
+  const [login] = useLoginMutation()
   return (
     <Formik
       initialValues={{ usernameOrEmail: "", password: "" }}
-      onSubmit={(values) => {
-        console.log(values);
+      onSubmit={async (values, {setErrors}) => {
+        const response = await login({
+          variables: {data: values}
+        })
+        if(response.data.login.errors){
+          setErrors(toErrorMap(response.data.login.errors))
+        }else if(response.data.login.user){
+          console.log(values)
+        }
       }}
     >
       {({ isSubmitting }) => (
@@ -48,6 +59,16 @@ export const login: React.FC<loginProps> & layout = ({}) => {
             </Flex>
 
             <Form>
+             <Flex fontWeight="bold" >
+             <InputField
+                  name="login"
+                  placeholder=""
+                  label=""
+                  hidden
+                  
+                />
+               </Flex> 
+            
               <VStack spacing={6}>
                 <InputField
                   name="usernameOrEmail"

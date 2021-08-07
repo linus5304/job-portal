@@ -19,9 +19,7 @@ import { MdWork,MdLocationOn } from "react-icons/md";
 interface JobListItemProps {}
 
 export const JobListItem: React.FC<JobListItemProps> = ({}) => {
-  const imageSize = useBreakpointValue(
-    { base: "80px", md: "96px", 'xl': "192px" }, 'xl'
-  );
+  
   return (
     <LinkBox
       as="article"
@@ -41,8 +39,8 @@ export const JobListItem: React.FC<JobListItemProps> = ({}) => {
         <Flex flexDirection="column" flex={2} gridGap="20px">
           <Flex alignItems="center" justifyContent="space-between" >
             <Box>
-              <LinkOverlay href="/">
-                <Link fontSize="xl" fontWeight="bold">Credit Analyst [Sample Job] </Link>
+              <LinkOverlay href="/jobs/1">
+                <Text fontSize="xl" fontWeight="bold">Credit Analyst [Sample Job] </Text>
               </LinkOverlay>
             </Box>
             <Box>

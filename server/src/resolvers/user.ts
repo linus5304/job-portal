@@ -17,7 +17,7 @@ import { MyContext } from "./../types/MyContext";
 import { v4 } from "uuid";
 import { FORGET_PASSWORD_PREFIX } from "../utils/constants";
 import { sendEmail } from "../utils/sendEmail";
-import { COOKIE_NAME } from './../utils/constants';
+import { COOKIE_NAME } from "./../utils/constants";
 @ObjectType()
 class UserResponse {
   @Field(() => [FieldError], { nullable: true })
@@ -61,7 +61,7 @@ export class UserResolver {
     @Arg("token") token: string,
     @Ctx() { req, redis }: MyContext
   ) {
-    const valid = await passwordValidation.validate(newPassword)
+    const valid = await passwordValidation.validate(newPassword);
     if (!valid) {
       return {
         errors: [
@@ -87,25 +87,27 @@ export class UserResolver {
       };
     }
 
-    const userIdNum = parseInt(userId)
-    const user = await User.findOne(userIdNum)
-    if(!user){
+    const userIdNum = parseInt(userId);
+    const user = await User.findOne(userIdNum);
+    if (!user) {
       return {
-        errors: [{
-          field: 'token',
-          message: 'user no longer exist'
-        }]
-      }
+        errors: [
+          {
+            field: "token",
+            message: "user no longer exist",
+          },
+        ],
+      };
     }
     User.update(
-      {id: userIdNum},
-      {password: await argon2.hash(newPassword)}
-    )
+      { id: userIdNum },
+      { password: await argon2.hash(newPassword) }
+    );
 
-    await redis.del(key)
-    req.session!.userId = user.id
+    await redis.del(key);
+    req.session!.userId = user.id;
 
-    return {user}
+    return { user };
   }
 
   @Mutation(() => Boolean)
@@ -171,11 +173,18 @@ export class UserResolver {
         .execute();
 
       user = result.raw[0];
-      console.log("session id");
       req.session!.userId = user.id;
+      console.log("session id", req.session!.userId);
       return { user };
     } catch (err) {
+      if (err.code === "23505") {
+        return {
+          errors: [{ field: "username", message: "User name already taken" }],
+        };
+      }
       const errors = formatYupError(err);
+
+      console.log(errors);
       return {
         errors,
       };
@@ -221,16 +230,16 @@ export class UserResolver {
   }
 
   @Mutation(() => Boolean)
-  async logout(@Ctx() {req, res}: MyContext){
+  async logout(@Ctx() { req, res }: MyContext) {
     return new Promise((resolve) => {
-      req.session.destroy(err => {
-        res.clearCookie(COOKIE_NAME)
-        if(err){
-          console.log(err)
-          resolve(false)
+      req.session.destroy((err) => {
+        res.clearCookie(COOKIE_NAME);
+        if (err) {
+          console.log(err);
+          resolve(false);
         }
-        resolve(true)
-      })
-    })
+        resolve(true);
+      });
+    });
   }
 }

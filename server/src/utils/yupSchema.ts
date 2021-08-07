@@ -10,7 +10,6 @@ export const passwordValidation = yup
   .max(255)
   .required();
 
-  
 // let schema = yup.object().shape({
 //     username: yup.string().required(),
 //     password: yup.string().required().length(4),
@@ -18,14 +17,15 @@ export const passwordValidation = yup
 //   });
 
 export const validUserSchema = yup.object().shape({
-    username: yup.string().required(),
+  username: yup.string().required("username required"),
   email: yup
     .string()
     .min(3, emailNotLongEnough)
     .max(255)
     .email(invalidEmail)
-    .required(),
-  password: passwordValidation
+    .required("email required"),
+  password: passwordValidation,
+  user_type: yup.string().required('user type required')
 });
 
 const invalidLogin = "invalid login";
@@ -36,14 +36,14 @@ export const loginSchema = yup.object().shape({
     .min(3, invalidLogin)
     .max(255, invalidLogin)
     .email(invalidLogin)
-    .required(),
+    .required("email required"),
   password: yup
     .string()
     .min(3, invalidLogin)
     .max(255, invalidLogin)
-    .required()
+    .required("password required"),
 });
 
 export const changePasswordSchema = yup.object().shape({
-  newPassword: passwordValidation
+  newPassword: passwordValidation,
 });

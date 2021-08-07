@@ -15,15 +15,28 @@ import { InputField } from "../components/form/InputField";
 import { PasswordField } from "../components/form/PasswordField";
 import { layout } from "./login";
 import NextLink from "next/link";
+import { useRegisterMutation } from "./../generated/graphql";
+import { toErrorMap } from "../utils/errorMap";
+import { useRouter } from "next/router";
 
-interface forgotPasswordProps {}
+interface RegisterProps {}
 
-export const forgotPassword: React.FC<forgotPasswordProps> & layout = ({}) => {
+export const Register: React.FC<RegisterProps> & layout = ({}) => {
+  const [register] = useRegisterMutation();
+  const router = useRouter();
   return (
     <Formik
-      initialValues={{ email: "" }}
-      onSubmit={(values) => {
-        console.log(values);
+      initialValues={{ username: "", email: "", password: "", user_type: "" }}
+      onSubmit={async (values, { setErrors }) => {
+        const response = await register({
+          variables: { data: values },
+        });
+
+        if (response.data.register.errors) {
+          setErrors(toErrorMap(response.data.register.errors));
+        } else if (response.data.register.user) {
+          console.log(values);
+        }
       }}
     >
       {({ isSubmitting }) => (
@@ -38,7 +51,7 @@ export const forgotPassword: React.FC<forgotPasswordProps> & layout = ({}) => {
           >
             <Flex mb="5%" flexDirection="column">
               <Heading size="xl" textAlign="center" fontWeight="bold" mb={2}>
-                Forgot Password
+                Register
               </Heading>
               <Divider />
             </Flex>
@@ -46,25 +59,37 @@ export const forgotPassword: React.FC<forgotPasswordProps> & layout = ({}) => {
             <Form>
               <VStack spacing={6}>
                 <InputField
-                  name="email"
-                  placeholder="Enter your email"
-                  label="Email"
+                  name="username"
+                  placeholder="Username "
+                  label="Username"
                 />
-
+                <InputField name="email" placeholder="Email" label="Email" />
+                <PasswordField
+                  label="Password"
+                  placeholder="Password"
+                  name="password"
+                  loginOrRegister={false}
+                />
+                <InputField
+                  name="user_type"
+                  placeholder="Select a user"
+                  label="User Type"
+                  select
+                />
                 <Button
                   type="submit"
                   size="lg"
                   fontSize="md"
                   isLoading={isSubmitting}
                 >
-                  Send
+                  Register
                 </Button>
               </VStack>
               <Flex gridGap="2%" fontSize="sm" mt="3%">
                 <Text fontSize="sm">Already have account?</Text>
                 <NextLink href="/login">
                   <Link fontSize="sm" color="#470137" fontWeight="semibold">
-                    Log in
+                    Login
                   </Link>
                 </NextLink>
               </Flex>
@@ -76,6 +101,6 @@ export const forgotPassword: React.FC<forgotPasswordProps> & layout = ({}) => {
   );
 };
 
-forgotPassword.value = "L2";
-forgotPassword.variant = "sm";
-export default forgotPassword;
+Register.value = "L2";
+Register.variant = "sm";
+export default Register;

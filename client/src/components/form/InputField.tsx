@@ -1,5 +1,5 @@
 import React, { InputHTMLAttributes } from "react";
-import {useField} from 'formik'
+import {useField, Field} from 'formik'
 import {FormControl, FormErrorMessage, FormLabel, Input, Select, Textarea} from '@chakra-ui/react'
 import {options} from '../../utils/sample-data'
 
@@ -27,16 +27,23 @@ export const InputField: React.FC<InputFieldProps> = ({
 
     if (select) {
 		return (
-			<FormControl>
+			<FormControl isInvalid={!!error}>
 				<FormLabel htmlFor={field.name}>{label}</FormLabel>
-				<Select>
-					<option></option>
+				<Field
+					as={Select}
+					name={field.name}
+					{...field}
+				>
+          <option value=""></option>
 					{options
 						? options.map((a) => (
-								<option key={a.id}>{a.name}</option>
+								<option key={a.id} value={a.name.toLocaleLowerCase()}>
+									{a.name}
+								</option>
 						  ))
 						: null}
-				</Select>
+				</Field>
+        {error ? <FormErrorMessage>{error}</FormErrorMessage> : null}
 			</FormControl>
 		);
 	}

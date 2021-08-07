@@ -10,20 +10,39 @@ import {
   Link,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
-import React from "react";
-import { InputField } from "../components/form/InputField";
-import { PasswordField } from "../components/form/PasswordField";
-import { layout } from "./login";
-import NextLink from "next/link";
+import React, {useState} from "react";
+import { InputField } from "../../components/form/InputField";
+import { PasswordField } from "../../components/form/PasswordField";
+import { useChangePasswordMutation } from "../../generated/graphql";
+import { layout } from "./../login";
+import {useRouter} from 'next/router'
+import { toErrorMap } from './../../utils/errorMap';
+import NextLink from 'next/link'
 
 interface changePasswordProps {}
 
 export const changePassword: React.FC<changePasswordProps> & layout = ({}) => {
+  const [changePassword] = useChangePasswordMutation();
+  const router = useRouter()
+  const [tokenError, setTokenError] = useState('')
   return (
     <Formik
       initialValues={{ password: "" }}
-      onSubmit={(values) => {
-        console.log(values);
+      onSubmit={async (values, {setErrors}) => {
+        const response = await changePassword({
+          variables: { newPassword: values.password, token: typeof router.query.token === "string" ? router.query.token : "" },
+        });
+        if (response.data.changePassword.errors) {
+          const errorMap = toErrorMap(response.data.changePassword.errors)
+          if('token' in errorMap){
+            setTokenError(errorMap.token)
+          }
+          setErrors(errorMap)
+        }
+
+        if(response.data.changePassword.user){
+            router.push('/')
+        }
       }}
     >
       {({ isSubmitting }) => (
@@ -51,6 +70,16 @@ export const changePassword: React.FC<changePasswordProps> & layout = ({}) => {
                   name="password"
                   loginOrRegister={false}
                 />
+                {tokenError ? (
+                    <Flex>
+                    <Box mr={2} color="red">
+                        {tokenError}
+                    </Box>
+                    <NextLink href="/forgot-password">
+                        <Link>click here to get a new one </Link>
+                    </NextLink>
+                </Flex>
+                ) : null}
                 <Button
                   type="submit"
                   size="lg"
