@@ -18,11 +18,11 @@ export const postJob: React.FC<postJobProps> & layout = ({}) => {
         return (
             <Formik
       initialValues={{
-        name: "",
-        website: "",
-        phone: "",
+        title: "",
+        category: "",
+        salary: "",
         location: "",
-        logo: "",
+        expDate: "",
         description: "",
       }}
       onSubmit={async (values) => {
@@ -76,23 +76,21 @@ export const postJob: React.FC<postJobProps> & layout = ({}) => {
                 <InputField name="title" label="Title" />
                 <InputField name="description" label="Description" textarea />
                 <HStack w="100%">
-                <InputField name="website" label="Website"  />
-                <InputField name="phone" label="Phone" />
+                <InputField name="category" label="Category"  select/>
+                <InputField name="salary" label="Salary" type="number"/>
                 </HStack>
                 <HStack w="100%">
                 <InputField name="location" label="Location" />
-                <InputField name="logo" label="Logo" type="file" />
+                <InputField name="expDate" label="Expiration Date" type="date" />
                 </HStack>
                
                 
-                <Stack direction="row" spacing={4}>
-                    <Button type="submit" size="lg" isLoading={isSubmitting}>
-                      Create Profile
+                <Flex direction="row" >
+                    <Button type="submit"  isLoading={isSubmitting}>
+                      Post Job
                     </Button>
-                  <NextLink href="/">
-                    <Button size="lg">Skip</Button>
-                  </NextLink>
-                </Stack>
+                  
+                </Flex>
               </VStack>
             </Form>
           </Flex>

@@ -53,7 +53,7 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
               <NextLink href="/jobs">
                 <Button variant="ghost">Jobs</Button>
               </NextLink>
-              <NextLink href="">
+              <NextLink href="/post-job">
                 <Button variant="ghost">Post Job</Button>
               </NextLink>
               <NextLink href="">
@@ -76,7 +76,7 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
               <NextLink href="/jobs">
                 <Button variant="ghost">Jobs</Button>
               </NextLink>
-              <NextLink href="">
+              <NextLink href="/post-job">
                 <Button variant="ghost">Post Job</Button>
               </NextLink>
               <NextLink href="/login">
@@ -127,7 +127,7 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
                 <NextLink href="/jobs">
                   <Button variant="ghost">Jobs</Button>
                 </NextLink>
-                <NextLink href="">
+                <NextLink href="/post-job">
                   <Button variant="ghost">Post Job</Button>
                 </NextLink>
                 <NextLink href="">
@@ -147,7 +147,7 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
                 <NextLink href="/jobs">
                   <Button variant="ghost" onClick={() => changeDisplay("none")}>Jobs</Button>
                 </NextLink>
-                <NextLink href="">
+                <NextLink href="/post-job">
                   <Button variant="ghost" onClick={() => changeDisplay("none")}>Post Job</Button>
                 </NextLink>
                 <NextLink href="/login">
