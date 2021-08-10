@@ -8,6 +8,8 @@ import {
   VStack,
   Button,
   Link,
+useToast
+
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import React from "react";
@@ -19,11 +21,13 @@ import { useRegisterMutation } from "./../generated/graphql";
 import { toErrorMap } from "../utils/errorMap";
 import { useRouter } from "next/router";
 
+
 interface RegisterProps {}
 
 export const Register: React.FC<RegisterProps> & layout = ({}) => {
   const [register] = useRegisterMutation();
   const router = useRouter();
+  const toast = useToast()
   return (
     <Formik
       initialValues={{ username: "", email: "", password: "", user_type: "" }}
@@ -36,6 +40,15 @@ export const Register: React.FC<RegisterProps> & layout = ({}) => {
           setErrors(toErrorMap(response.data.register.errors));
         } else if (response.data.register.user) {
           console.log(values);
+          toast({
+            title: "Account created.",
+            position:'top-right',
+            description: "We've created your account for you.",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+          })
+          router.push('/create-profile')
         }
       }}
     >
@@ -79,10 +92,9 @@ export const Register: React.FC<RegisterProps> & layout = ({}) => {
                 <Button
                   type="submit"
                   size="lg"
-                  fontSize="md"
                   isLoading={isSubmitting}
                 >
-                  Register
+                  Next
                 </Button>
               </VStack>
               <Flex gridGap="2%" fontSize="sm" mt="3%">

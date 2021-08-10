@@ -1,0 +1,14 @@
+mutation CreateCompanyProfile($data: companyProfileInput!) {
+  createCompanyProfile(data: $data) {
+    id
+    name
+    userId
+    website
+    location
+    phone
+    logo
+    description
+    createdAt
+    updatedAt
+  }
+}

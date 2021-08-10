@@ -5,8 +5,8 @@ import {options} from '../../utils/sample-data'
 
 type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   name: string;
-  placeholder: string;
-  label: string;
+  placeholder?: string;
+  label?: string;
   textarea?: boolean;
   select?: boolean;
 };

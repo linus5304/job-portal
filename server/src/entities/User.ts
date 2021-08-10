@@ -1,5 +1,6 @@
-import {Entity, PrimaryGeneratedColumn, Column, BaseEntity} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToOne} from "typeorm";
 import { Field, ObjectType } from 'type-graphql';
+import { CompanyProfile } from './Company';
 
 @ObjectType()
 @Entity()
@@ -23,4 +24,6 @@ export class User extends BaseEntity{
     @Column()
     user_type: string;
 
+    @OneToOne(()=> CompanyProfile, companyProfile => companyProfile.user )
+    companyProfile: CompanyProfile
 }

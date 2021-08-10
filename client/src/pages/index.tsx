@@ -16,7 +16,7 @@ const IndexPage : React.FC<{}> & layout = () => {
   return(
     <>
     <Hero/>
-    <CompanySection/>
+    <CompanySection heading="Featured Companies"/>
     <HeroPost/>
     <FeaturedJobs/>
     <LatestJobs/>

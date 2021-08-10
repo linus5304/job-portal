@@ -12,6 +12,8 @@ import session from "express-session";
 import { redis } from "./utils/redis";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 import { MyContext } from "./types/MyContext";
+import { CompanyResolver } from './resolvers/company';
+import { CompanyProfile } from "./entities/Company";
 
 declare module "express-session" {
   interface Session {
@@ -29,8 +31,9 @@ const main = async () => {
     password: "toor",
     logging: true,
     synchronize: true,
-    entities: [User],
+    entities: [User, CompanyProfile],
   });
+
 
   const app = express();
   app.use(
@@ -58,7 +61,7 @@ const main = async () => {
   );
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver, UserResolver],
+      resolvers: [HelloResolver, UserResolver, CompanyResolver],
       validate: false,
     }),
     context: ({ req, res }: MyContext) => ({ req, res, redis }),

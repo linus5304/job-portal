@@ -5,6 +5,7 @@ import {
   Link,
   chakra,
   Image,
+  LinkBox, LinkOverlay
 } from "@chakra-ui/react";
 import React from "react";
 
@@ -12,6 +13,7 @@ interface CompanyCardProps {}
 
 export const CompanyCard: React.FC<CompanyCardProps> = ({}) => {
   return (
+    <LinkBox as="article" >
     <Box
       w={['200px','200px','200px','270px', '270px' ]}
       bg={useColorModeValue("white", "gray.800")}
@@ -31,14 +33,15 @@ export const CompanyCard: React.FC<CompanyCardProps> = ({}) => {
       />
 
       <Box py={5} textAlign="center">
-        <Link
+        <LinkOverlay
           display="block"
           fontSize="2xl"
           color={useColorModeValue("gray.800", "white")}
           fontWeight="bold"
+          href="/company/1"
         >
           John Doe
-        </Link>
+        </LinkOverlay>
         <chakra.span
           fontSize="sm"
           color={useColorModeValue("gray.700", "gray.200")}
@@ -47,5 +50,6 @@ export const CompanyCard: React.FC<CompanyCardProps> = ({}) => {
         </chakra.span>
       </Box>
     </Box>
+    </LinkBox>
   );
 };

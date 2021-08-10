@@ -123,4 +123,5 @@ export const newJob: React.FC<newJobProps> & layout = ({}) => {
 };
 
 newJob.value = "L2";
+
 export default newJob;

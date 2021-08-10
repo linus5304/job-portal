@@ -131,7 +131,10 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
                   <Button variant="ghost">Post Job</Button>
                 </NextLink>
                 <NextLink href="">
-                  <Button variant="ghost" onClick={logoutFn}>
+                  <Button variant="ghost" onClick={() => {
+                    logoutFn
+                    changeDisplay("flex")
+                  } }>
                     Logout
                   </Button>
                 </NextLink>
@@ -142,16 +145,16 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
             ) : (
               <VStack spacing="24px" mx="auto">
                 <NextLink href="/jobs">
-                  <Button variant="ghost">Jobs</Button>
+                  <Button variant="ghost" onClick={() => changeDisplay("none")}>Jobs</Button>
                 </NextLink>
                 <NextLink href="">
-                  <Button variant="ghost">Post Job</Button>
+                  <Button variant="ghost" onClick={() => changeDisplay("none")}>Post Job</Button>
                 </NextLink>
                 <NextLink href="/login">
-                  <Button variant="ghost">Login</Button>
+                  <Button variant="ghost" onClick={() => changeDisplay("none")}>Login</Button>
                 </NextLink>
                 <NextLink href="/register">
-                  <Button>Register</Button>
+                  <Button onClick={() => changeDisplay("none")}>Register</Button>
                 </NextLink>
               </VStack>
             )}

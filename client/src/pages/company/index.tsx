@@ -1,14 +1,20 @@
-import React from "react";
-import { Flex, Text, Stack, Wrap, WrapItem } from "@chakra-ui/react";
-import { CompanyCard } from "./CompanyCard";
+import React from 'react';
+import { layout } from '../../utils/types';
+import { HeroJob } from './../../components/HeroJob';
+import { Flex, Heading, Wrap, WrapItem, Text } from '@chakra-ui/react';
+import {CompanyCard} from '../../components/CompanyCard'
 
-interface CompanySectionProps {
-  heading?:string
+
+interface CompaniesProps{
+
 }
 
-export const CompanySection: React.FC<CompanySectionProps> = ({heading}) => {
-  return (
-    <Flex
+
+const Companies: React.FC<CompaniesProps> & layout = ({}) => {
+        return (
+            <>
+            <HeroJob/>
+            <Flex
       flexDir="column"
       mt={["10%", "10%", "10%", "6%", "6%"]}
       w="70%"
@@ -18,7 +24,7 @@ export const CompanySection: React.FC<CompanySectionProps> = ({heading}) => {
     >
       <Flex mx="auto">
         <Text fontSize="4xl" fontWeight="bold" textAlign="center">
-          {heading}
+          Companies
         </Text>
       </Flex>
       <Wrap justify="center" mx="auto" alignItems="center">
@@ -34,5 +40,10 @@ export const CompanySection: React.FC<CompanySectionProps> = ({heading}) => {
         
       </Wrap>
     </Flex>
-  );
+            </>
+        );
 };
+
+Companies.value ="L2"
+Companies.variant="rg"
+export default Companies

@@ -13,7 +13,7 @@ export const Wrapper: React.FC<WrapperProps> = ({children, variant="regular"}) =
         if(variant === 'regular'){
                 maxWidth = '1500px'
         }else if( variant === 'medium'){
-                maxWidth = '600px'
+                maxWidth = '700px'
         }else{
                 maxWidth = '450px'
         }

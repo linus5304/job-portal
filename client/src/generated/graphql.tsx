@@ -14,6 +14,20 @@ export type Scalars = {
   Float: number;
 };
 
+export type CompanyProfile = {
+  __typename?: 'CompanyProfile';
+  id: Scalars['Float'];
+  name: Scalars['String'];
+  location: Scalars['String'];
+  website: Scalars['String'];
+  phone: Scalars['String'];
+  logo: Scalars['String'];
+  userId: Scalars['Float'];
+  description: Scalars['String'];
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
+};
+
 export type FieldError = {
   __typename?: 'FieldError';
   field: Scalars['String'];
@@ -32,6 +46,7 @@ export type Mutation = {
   register: UserResponse;
   login: UserResponse;
   logout: Scalars['Boolean'];
+  createCompanyProfile: CompanyProfile;
 };
 
 
@@ -55,10 +70,16 @@ export type MutationLoginArgs = {
   data: LoginInput;
 };
 
+
+export type MutationCreateCompanyProfileArgs = {
+  data: CompanyProfileInput;
+};
+
 export type Query = {
   __typename?: 'Query';
   hello: Scalars['String'];
   me?: Maybe<User>;
+  company: Scalars['String'];
 };
 
 export type RegisterInput = {
@@ -80,6 +101,15 @@ export type UserResponse = {
   __typename?: 'UserResponse';
   errors?: Maybe<Array<FieldError>>;
   user?: Maybe<User>;
+};
+
+export type CompanyProfileInput = {
+  name: Scalars['String'];
+  location: Scalars['String'];
+  website: Scalars['String'];
+  phone: Scalars['String'];
+  logo: Scalars['String'];
+  description: Scalars['String'];
 };
 
 export type ChangePasswordMutationVariables = Exact<{
@@ -108,6 +138,13 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
+
+export type CreateCompanyProfileMutationVariables = Exact<{
+  data: CompanyProfileInput;
+}>;
+
+
+export type CreateCompanyProfileMutation = { __typename?: 'Mutation', createCompanyProfile: { __typename?: 'CompanyProfile', id: number, name: string, userId: number, website: string, location: string, phone: string, logo: string, description: string, createdAt: string, updatedAt: string } };
 
 export type RegisterMutationVariables = Exact<{
   data: RegisterInput;
@@ -267,6 +304,48 @@ export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<Logou
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
+export const CreateCompanyProfileDocument = gql`
+    mutation CreateCompanyProfile($data: companyProfileInput!) {
+  createCompanyProfile(data: $data) {
+    id
+    name
+    userId
+    website
+    location
+    phone
+    logo
+    description
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export type CreateCompanyProfileMutationFn = Apollo.MutationFunction<CreateCompanyProfileMutation, CreateCompanyProfileMutationVariables>;
+
+/**
+ * __useCreateCompanyProfileMutation__
+ *
+ * To run a mutation, you first call `useCreateCompanyProfileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCompanyProfileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCompanyProfileMutation, { data, loading, error }] = useCreateCompanyProfileMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateCompanyProfileMutation(baseOptions?: Apollo.MutationHookOptions<CreateCompanyProfileMutation, CreateCompanyProfileMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateCompanyProfileMutation, CreateCompanyProfileMutationVariables>(CreateCompanyProfileDocument, options);
+      }
+export type CreateCompanyProfileMutationHookResult = ReturnType<typeof useCreateCompanyProfileMutation>;
+export type CreateCompanyProfileMutationResult = Apollo.MutationResult<CreateCompanyProfileMutation>;
+export type CreateCompanyProfileMutationOptions = Apollo.BaseMutationOptions<CreateCompanyProfileMutation, CreateCompanyProfileMutationVariables>;
 export const RegisterDocument = gql`
     mutation Register($data: RegisterInput!) {
   register(data: $data) {
