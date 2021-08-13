@@ -18,6 +18,7 @@ import { v4 } from "uuid";
 import { FORGET_PASSWORD_PREFIX } from "../utils/constants";
 import { sendEmail } from "../utils/sendEmail";
 import { COOKIE_NAME } from "./../utils/constants";
+import { CompanyProfile } from "./../entities/Company";
 @ObjectType()
 class UserResponse {
   @Field(() => [FieldError], { nullable: true })
@@ -55,6 +56,16 @@ class LoginInput {
 
 @Resolver(User)
 export class UserResolver {
+  @Query(() => CompanyProfile)
+  async getCompanyUserDetails(@Ctx() { req }: MyContext) {
+    const details = await getConnection()
+      .createQueryBuilder(CompanyProfile, "company")
+      .where("company.userId = :userId", {userId: req.session.userId})
+      .getOne()
+
+      return details
+  }
+
   @Mutation(() => UserResponse)
   async changePassword(
     @Arg("newPassword") newPassword: string,

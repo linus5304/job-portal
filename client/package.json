@@ -14,12 +14,15 @@
     "@choc-ui/chakra-autocomplete": "^4.4.3",
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
+    "apollo-upload-client": "^16.0.0",
     "formik": "^2.2.9",
     "framer-motion": "^4.1.17",
     "graphql": "^15.5.1",
     "next": "latest",
+    "next-apollo": "^5.0.6",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-dropzone": "^11.3.4",
     "react-icons": "^4.2.0"
   },
   "devDependencies": {

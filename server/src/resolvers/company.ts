@@ -7,9 +7,12 @@ import {
   Mutation,
   Query,
   Resolver,
+  ObjectType,
+  Int,
 } from "type-graphql";
 import { CompanyProfile } from "./../entities/Company";
-import { getConnection } from 'typeorm';
+import {  getConnection } from "typeorm";
+import { Job } from "./../entities/Job";
 
 @InputType()
 class companyProfileInput {
@@ -31,6 +34,13 @@ class companyProfileInput {
   description: string;
 }
 
+@ObjectType()
+export class companyDetails {
+  @Field(() => CompanyProfile , {nullable: true})
+  details: CompanyProfile;
+  @Field(() => [Job], {nullable: true})
+  jobs: Job[];
+}
 
 @Resolver()
 export class CompanyResolver {
@@ -50,16 +60,29 @@ export class CompanyResolver {
     }).save();
   }
 
-  @Query(() => CompanyProfile, {nullable: true})
-  async getCompanyById(@Arg('id')id: number):Promise<CompanyProfile | undefined>{
-    return await CompanyProfile.findOne(id)
+  @Query(() => companyDetails, { nullable: true })
+  async getCompanyById(
+    @Arg("id", ()=> Int) id: number,
+  ): Promise<companyDetails | undefined> {
+    const company = await getConnection().createQueryBuilder(CompanyProfile,"company" )
+      .leftJoinAndSelect("company.jobs", "jobs")
+      .where("company.id = :id", { id: id })
+      .orderBy("jobs.createdAt", "DESC")
+      .getOne();
+
+      console.log(company?.jobs)
+      return {
+        details: company as CompanyProfile,
+        jobs: company?.jobs as Job[]
+      }
   }
 
-  @Query(() => [CompanyProfile], {nullable: true})
-  async getAllCompanys():Promise<CompanyProfile[] | undefined>{
-    const result = await getConnection().createQueryBuilder(CompanyProfile,'companies').getMany()
-    return result
+  @Query(() => [CompanyProfile], { nullable: true })
+  async getCompanies(): Promise<CompanyProfile[] | undefined> {
+    const result = await getConnection()
+      .createQueryBuilder(CompanyProfile, "companies")
+      .getMany();
+    return result;
+    
   }
-
-
 }

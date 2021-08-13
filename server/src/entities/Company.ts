@@ -8,7 +8,9 @@ import {
   BaseEntity,
   JoinColumn,
   OneToOne,
+  OneToMany,
 } from "typeorm";
+import { Job } from "./Job";
 import { User } from "./User";
 
 @Entity()
@@ -50,10 +52,13 @@ export class CompanyProfile extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column({unique: true})
-  userId: number
+  @Column({ unique: true })
+  userId: number;
 
-  @OneToOne(() => User, user => user.companyProfile, {onDelete: 'CASCADE'})
+  @OneToOne(() => User, (user) => user.companyProfile, { onDelete: "CASCADE" })
   @JoinColumn()
   user: User;
+
+  @OneToMany(() => Job, (job) => job.companyProfile)
+  jobs: Job[];
 }

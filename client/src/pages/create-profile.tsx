@@ -11,19 +11,26 @@ import {
   Stack,
   useToast,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import { layout } from "../utils/types";
 import { Formik, Form } from "formik";
 import { InputField } from "../components/form/InputField";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import { useCreateCompanyProfileMutation } from "../generated/graphql";
+import {
+  useCreateCompanyProfileMutation,
+  useFileUploadMutation,
+} from "../generated/graphql";
+import Dropzone from "react-dropzone";
 
 interface createProfileProps {}
 
 const createProfile: React.FC<createProfileProps> & layout = ({}) => {
   const router = useRouter();
   const [createCompanyProfile] = useCreateCompanyProfileMutation();
+  const [uploadFile] = useFileUploadMutation();
+  const [img, setImg] = useState(() =>'')
+
 
   const toast = useToast();
 
@@ -64,7 +71,7 @@ const createProfile: React.FC<createProfileProps> & layout = ({}) => {
         console.log(values);
       }}
     >
-      {({ isSubmitting }) => (
+      {({ isSubmitting, setFieldValue }) => (
         <Box py={20} px={["3%", "3%", "3%", "auto", "auto"]}>
           <Flex
             bg={useColorModeValue("white", "gray.700")}
@@ -76,7 +83,7 @@ const createProfile: React.FC<createProfileProps> & layout = ({}) => {
           >
             <Flex mb="5%" flexDirection="column">
               <Heading size="xl" textAlign="center" fontWeight="bold" mb={2}>
-                Create Company Profile
+                Create Company Profilex
               </Heading>
               <Divider />
             </Flex>
@@ -91,12 +98,31 @@ const createProfile: React.FC<createProfileProps> & layout = ({}) => {
                 <InputField name="website" label="Website" />
                 <InputField name="phone" label="Phone" />
                 <InputField name="location" label="Location" />
-                <InputField name="logo" label="Logo" type="file" />
                 <InputField name="description" label="Description" textarea />
+                <Dropzone
+                  onDrop={async ([file]) => {
+                    const { data } = await uploadFile({
+                      variables: { imgUrl: file },
+                    });
+                    setFieldValue("logo", data.fileUpload.url);
+                    setImg((img) => (img = data.fileUpload.url));
+                    console.log(file);
+                  }}
+                >
+                  {({ getRootProps, getInputProps }) => (
+                    <Box border="1px dashed" h="60px" {...getRootProps()}>
+                      <input {...getInputProps()} name="logo" />
+                      <Text textAlign={"center"}>
+                        Drag 'n' drop a company logo here, or click to select a file
+                      </Text>
+                    </Box>
+                  )}
+                </Dropzone>
+
                 <Stack direction="row" spacing={4}>
-                    <Button type="submit" size="lg" isLoading={isSubmitting}>
-                      Create Profile
-                    </Button>
+                  <Button type="submit" size="lg" isLoading={isSubmitting}>
+                    Create Profile
+                  </Button>
                   <NextLink href="/">
                     <Button size="lg">Skip</Button>
                   </NextLink>

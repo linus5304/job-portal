@@ -1,0 +1,10 @@
+query GetCompanyUserDetails{
+  getCompanyUserDetails{
+    id
+    name
+    website
+    location
+    logo
+    description
+  }
+}

@@ -9,9 +9,14 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 
-interface CompanyCardProps {}
+interface CompanyCardProps {
+  name?:string
+  description?:string
+  imgUrl?: string
+  id?:number
+}
 
-export const CompanyCard: React.FC<CompanyCardProps> = ({}) => {
+export const CompanyCard: React.FC<CompanyCardProps> = ({name, description, imgUrl, id}) => {
   return (
     <LinkBox as="article" >
     <Box
@@ -28,7 +33,7 @@ export const CompanyCard: React.FC<CompanyCardProps> = ({}) => {
         w="full"
         h={56}
         fit="cover"
-        src="https://images.unsplash.com/photo-1542156822-6924d1a71ace?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
+        src={imgUrl}
         alt="avatar"
       />
 
@@ -38,15 +43,15 @@ export const CompanyCard: React.FC<CompanyCardProps> = ({}) => {
           fontSize="2xl"
           color={useColorModeValue("gray.800", "white")}
           fontWeight="bold"
-          href="/company/1"
+          href={`/company/${id}`}
         >
-          John Doe
+          {name}
         </LinkOverlay>
         <chakra.span
           fontSize="sm"
           color={useColorModeValue("gray.700", "gray.200")}
         >
-          Software Engineer
+          {description}
         </chakra.span>
       </Box>
     </Box>

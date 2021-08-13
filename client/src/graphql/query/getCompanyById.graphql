@@ -1,0 +1,25 @@
+query GetCompanyById($id: Int!){
+  getCompanyById(id: $id) {
+    details {
+      id
+      name
+      location
+      phone
+      logo
+      description
+      website
+    }
+    jobs {
+      title
+      id
+      salary
+      location
+      category
+      salary
+      description
+      imgUrl
+      companyProfileId
+        createdAt
+    }
+  }
+}

@@ -1,0 +1,15 @@
+mutation PostJob($data: jobInput!) {
+  postJob(data: $data) {
+    id
+    title
+    category
+    location
+    expDate
+    description
+    createdAt
+    updatedAt
+    salary
+    expDate
+    companyProfileId
+  }
+}

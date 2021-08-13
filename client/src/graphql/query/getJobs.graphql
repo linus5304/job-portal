@@ -1,0 +1,16 @@
+query getJobs($limit: Int!, $cursor: String){
+  getJobs(limit: $limit, cursor:$cursor){
+    jobs{
+      id
+      title
+      location
+      category
+      expDate
+      description
+      imgUrl
+      salary
+      createdAt
+    }
+    hasMore
+  }
+}

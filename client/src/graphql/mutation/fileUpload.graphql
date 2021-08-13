@@ -1,0 +1,5 @@
+mutation FileUpload($imgUrl:Upload!) {
+  fileUpload(imgUrl: $imgUrl){
+    url
+  }
+}

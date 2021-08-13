@@ -10,15 +10,22 @@ import {
   Text,
   useBreakpointValue,
   VStack,
-  Link
+  Link,
+  Image
 } from "@chakra-ui/react";
-import { Image } from "./Image";
 import { FaBookmark, FaMapPin, FaSuitcase } from "react-icons/fa";
 import { MdWork,MdLocationOn } from "react-icons/md";
 
-interface JobListItemProps {}
+interface JobListItemProps {
+  title: string
+  companyName?: string
+  location?:string
+  imgUrl?:string
+  postDate?:string
+  type?: string
+}
 
-export const JobListItem: React.FC<JobListItemProps> = ({}) => {
+export const JobListItem: React.FC<JobListItemProps> = ({title, companyName, location, imgUrl, postDate, type}) => {
   
   return (
     <LinkBox
@@ -34,13 +41,13 @@ export const JobListItem: React.FC<JobListItemProps> = ({}) => {
     >
       <Stack direction={['column', 'column', 'column','row','row']} >
         <Flex width="96px" display={['none', 'none', 'none','flex', 'flex']} height="96px">
-          <Image src="/bg2.jpg"width="96px" height="96px"/>
+          <Image src={imgUrl} width="96px" height="96px" alt="hello"/>
         </Flex>
         <Flex flexDirection="column" flex={2} gridGap="20px">
           <Flex alignItems="center" justifyContent="space-between" >
             <Box>
               <LinkOverlay href="/jobs/1">
-                <Text fontSize="xl" fontWeight="bold">Credit Analyst [Sample Job] </Text>
+                <Text fontSize="xl" fontWeight="bold">{title} </Text>
               </LinkOverlay>
             </Box>
             <Box>
@@ -50,16 +57,16 @@ export const JobListItem: React.FC<JobListItemProps> = ({}) => {
           <Flex gridGap={2} flexDir={['column', 'column', 'column','row','row']}>
             <Flex alignItems="center">
               <Icon as={MdWork} fontSize="lg"/>
-              <Text>Sample Employer</Text>
+              <Text>{companyName}</Text>
             </Flex>
             <Flex alignItems="center">
               <Icon as={MdLocationOn} fontSize="lg"/>
-              <Text fontSize="lg">Yaounde, Ekoounou Cameroon</Text>
+              <Text fontSize="lg">{location}</Text>
             </Flex>
           </Flex>
         </Flex>
         <Stack direction={['row', 'row', 'row','column','column']} alignItems="center">
-          <Text>May 15, 2017</Text>
+          <Text>{postDate}</Text>
           <Button variant="ghost">Full Time</Button>
         </Stack>
       </Stack>

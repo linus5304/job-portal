@@ -28,10 +28,22 @@ import { InputField } from "../../components/form/InputField";
 import { PasswordField } from "../../components/form/PasswordField";
 import { toErrorMap } from "../../utils/errorMap";
 import login from "../login";
+import { useGetCompanyByIdQuery } from './../../generated/graphql';
+import { useRouter } from 'next/router';
 
 interface CompanyProps {}
 
 const Company: React.FC<CompanyProps> & layout = ({}) => {
+  const router = useRouter()
+  const {id} = router.query
+  const jobId = parseInt(id as string);
+
+  const {data, error}= useGetCompanyByIdQuery({
+    variables: {
+      id: jobId
+    }
+  }
+  )
   return (
     <>
       <Flex w="100%" flexDirection="column" bg="#470137" m={0} h="100%" py="4%">
@@ -48,17 +60,17 @@ const Company: React.FC<CompanyProps> & layout = ({}) => {
             </Box>
             <Flex flexDir="column" gridGap={3}>
               <Flex>
-                <Heading>Chilisoft Sample Employer</Heading>
+                <Heading>{data?.getCompanyById.details.name}</Heading>
               </Flex>
               <HStack spacing="50px">
                 <Flex alignItems="center">
                   <Icon as={MdLocationOn} fontSize="lg" />
-                  <Text>Sample Employer</Text>
+                  <Text>{data?.getCompanyById.details.location}</Text>
                 </Flex>
                 <Flex alignItems="center">
                   <Icon as={FiGlobe} fontSize="lg" />
                   <Link>
-                  testurl.com
+                  {data?.getCompanyById.details.website}
                   </Link>
                 </Flex>
               </HStack>
@@ -77,7 +89,7 @@ const Company: React.FC<CompanyProps> & layout = ({}) => {
             </Tab>
             <Tab>
               <Text fontSize="lg" fontWeight="bold">
-                Jobs (1)
+                Jobs ({data?.getCompanyById.jobs.length})
               </Text>
             </Tab>
           </TabList>
@@ -85,17 +97,16 @@ const Company: React.FC<CompanyProps> & layout = ({}) => {
           <TabPanels>
             <TabPanel>
               <Text>
-                As a distributor we focus on security solutions and carefully
-                select leading or emerging products from reliable and reputable
-                vendors that can benefit our resellers and and-user clients in
-                our target markets. We work to ensure that our staff are well t
+                {data?.getCompanyById.details.description}
               </Text>
             </TabPanel>
             <TabPanel>
               <VStack w="100%">
-                <JobListItem />
-                <JobListItem />
-                <JobListItem />
+                {data?.getCompanyById?.jobs.map(job => (
+                  <JobListItem title={job.title} location={job.location} imgUrl={job.imgUrl} postDate={job.createdAt} key={job.id} companyName={data?.getCompanyById.details.name}/>
+                ))}
+                
+                
               </VStack>
             </TabPanel>
           </TabPanels>

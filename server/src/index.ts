@@ -12,8 +12,12 @@ import session from "express-session";
 import { redis } from "./utils/redis";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 import { MyContext } from "./types/MyContext";
-import { CompanyResolver } from './resolvers/company';
+import { CompanyResolver } from "./resolvers/company";
 import { CompanyProfile } from "./entities/Company";
+import { Job } from "./entities/Job";
+import { JobResolver } from "./resolvers/job";
+import { graphqlUploadExpress } from 'graphql-upload';
+import path  from 'path';
 
 declare module "express-session" {
   interface Session {
@@ -24,24 +28,26 @@ declare module "express-session" {
 const main = async () => {
   const RedisStore = connectRedis(session);
 
-  const conn = createConnection({
+  const conn = await createConnection({
     type: "postgres",
     database: "jobportal",
     username: "postgres",
     password: "toor",
     logging: true,
     synchronize: true,
-    entities: [User, CompanyProfile],
+    migrations: [path.join(__dirname, './migrations/*')],
+    entities: [User, CompanyProfile, Job],
   });
 
+  await conn.runMigrations()
 
   const app = express();
   app.use(
-      cors({
-          origin: 'http://localhost:3000',
-          credentials: true
-      })
-  )
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true,
+    })
+  );
 
   app.use(
     session({
@@ -59,9 +65,11 @@ const main = async () => {
       },
     } as any)
   );
+  app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
+
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver, UserResolver, CompanyResolver],
+      resolvers: [HelloResolver, UserResolver, CompanyResolver, JobResolver],
       validate: false,
     }),
     context: ({ req, res }: MyContext) => ({ req, res, redis }),
@@ -70,15 +78,15 @@ const main = async () => {
         // options
       }),
     ],
+    
   });
 
   await apolloServer.start();
+  app.use(express.static('public'));
 
-  app.get("/", (_, res) => {
-    res.send("helo");
-  });
 
-  apolloServer.applyMiddleware({ app , cors: false});
+  apolloServer.applyMiddleware({ app, cors: false });
+
 
   app.listen(4000, () => {
     console.log("localhost:4000/graphql");
