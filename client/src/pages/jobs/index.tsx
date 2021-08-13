@@ -75,6 +75,8 @@ export const index: React.FC<indexProps> & layout = ({}) => {
               imgUrl={job.imgUrl}
               postDate={job.createdAt}
               key={job.id}
+              companyName={job.company.name}
+              id={job.id}
             />
           ))}
           {data?.getJobs.hasMore ? (

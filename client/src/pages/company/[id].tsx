@@ -17,17 +17,19 @@ import {
   useColorModeValue,
   Divider,
   Link,
+  Image
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import { layout } from "../../utils/types";
 import { MdLocationOn } from "react-icons/md";
 import { FiGlobe } from "react-icons/fi";
-import { Image } from "./../../components/Image";
 import { JobListItem } from "../../components/JobListItem";
 import { InputField } from "../../components/form/InputField";
 import { PasswordField } from "../../components/form/PasswordField";
 import { toErrorMap } from "../../utils/errorMap";
 import login from "../login";
+import { FaChevronLeft } from "react-icons/fa";
+
 import { useGetCompanyByIdQuery } from './../../generated/graphql';
 import { useRouter } from 'next/router';
 
@@ -49,14 +51,14 @@ const Company: React.FC<CompanyProps> & layout = ({}) => {
       <Flex w="100%" flexDirection="column" bg="#470137" m={0} h="100%" py="4%">
         <VStack my="auto" ml="10%" align="flex-start">
           <Flex align="flex-start">
-            <Button size="sm">Back</Button>
+            <Button size="sm" leftIcon={<FaChevronLeft/>} onClick={() => router.back()}>Back</Button>
           </Flex>
           <Stack
             direction={["column", "column", "column", "row", "row"]}
             color="#fff"
           >
             <Box>
-              <Image src="/bg2.jpg" width="100px" height="100px" />
+              <Image src={data?.getCompanyById.details.logo} width="100px" height="100px" />
             </Box>
             <Flex flexDir="column" gridGap={3}>
               <Flex>
@@ -103,7 +105,7 @@ const Company: React.FC<CompanyProps> & layout = ({}) => {
             <TabPanel>
               <VStack w="100%">
                 {data?.getCompanyById?.jobs.map(job => (
-                  <JobListItem title={job.title} location={job.location} imgUrl={job.imgUrl} postDate={job.createdAt} key={job.id} companyName={data?.getCompanyById.details.name}/>
+                  <JobListItem title={job.title} id={job.id} location={job.location} imgUrl={job.imgUrl} postDate={job.createdAt} key={job.id} companyName={data?.getCompanyById.details.name}/>
                 ))}
                 
                 

@@ -1,0 +1,21 @@
+query GetJobById($id: Int!){
+  getJobById(id: $id){
+    id
+    title
+    location
+    category
+    description
+    imgUrl
+    createdAt
+    salary
+    expDate
+    company{
+      id
+      name
+      website
+      logo
+      phone
+      description
+    }
+  }
+}

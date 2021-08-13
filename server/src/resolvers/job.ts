@@ -3,21 +3,22 @@ import {
   Arg,
   Ctx,
   Field,
+  FieldResolver,
   InputType,
   Int,
   Mutation,
   ObjectType,
   Query,
   Resolver,
+  Root,
 } from "type-graphql";
 import { getConnection } from "typeorm";
 import { Job } from "./../entities/Job";
-import {
-  GraphQLUpload,
-} from "graphql-upload";
+import { GraphQLUpload } from "graphql-upload";
 import path from "path";
 import { generate } from "randomstring";
 import fs from "fs";
+import { CompanyProfile } from "./../entities/Company";
 
 @InputType()
 class jobInput {
@@ -48,19 +49,23 @@ export class ImageUrl {
 }
 
 @ObjectType()
-export class PaginatedJobs{
+export class PaginatedJobs {
   @Field(() => [Job])
-  jobs: Job[]
+  jobs: Job[];
   @Field()
-  hasMore: boolean
+  hasMore: boolean;
 }
 
-
-@Resolver()
+@Resolver(Job)
 export class JobResolver {
   @Query(() => String)
   job() {
     return "new job post";
+  }
+
+  @FieldResolver(() => CompanyProfile)
+  async company(@Root() job: Job) {
+    return await CompanyProfile.findOne(job.companyProfileId);
   }
 
   @Mutation(() => ImageUrl)
@@ -96,37 +101,42 @@ export class JobResolver {
   }
 
   @Query(() => Job, { nullable: true })
-  async getJobById(@Arg("id") id: number): Promise<Job | undefined> {
+  async getJobById(@Arg("id", () => Int!) id: number): Promise<Job | undefined> {
     return await Job.findOne(id);
   }
 
   @Query(() => PaginatedJobs, { nullable: true })
   async getJobs(
-    @Arg('limit', () =>Int) limit: number,
-    @Arg('cursor', () =>String, {nullable: true}) cursor: string | null,
+    @Arg("limit", () => Int) limit: number,
+    @Arg("cursor", () => String, { nullable: true }) cursor: string | null
   ): Promise<PaginatedJobs> {
-    const realLimit = Math.min(100, limit)
-    const realLimitPlusOne = realLimit + 1
-    const replacements: any[] = [realLimitPlusOne]
+    const realLimit = Math.min(100, limit);
+    const realLimitPlusOne = realLimit + 1;
+    const replacements: any[] = [realLimitPlusOne];
 
-    if(cursor){
-      replacements.push(new Date(parseInt(cursor)))
+    if (cursor) {
+      replacements.push(new Date(parseInt(cursor)));
     }
 
-    const jobs: Job[] = await getConnection().query(`
-      select j.*
-      from job j
-      ${cursor ? `where j."createdAt" < $2` : ''}
+    const jobs: Job[] = await getConnection().query(
+      `
+      select j.*, cp.name
+      from job j 
+      join company_profile cp
+      on j."companyProfileId" = cp.id
+      ${cursor ? `where j."createdAt" < $2` : ""}
       order by j."createdAt" DESC
       limit $1
-    `,replacements) 
+    `,
+      replacements
+    );
     // return await getConnection()
     //   .createQueryBuilder(Job, "jobs")
     //   .orderBy("jobs.createdAt", "DESC")
     //   .getMany();
     return {
       jobs: jobs.slice(0, realLimit),
-      hasMore: jobs.length === realLimitPlusOne
-    }
+      hasMore: jobs.length === realLimitPlusOne,
+    };
   }
 }

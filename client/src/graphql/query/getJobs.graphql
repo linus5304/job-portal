@@ -1,5 +1,5 @@
 query getJobs($limit: Int!, $cursor: String){
-  getJobs(limit: $limit, cursor:$cursor){
+  getJobs(limit: $limit, cursor: $cursor){
     jobs{
       id
       title
@@ -10,6 +10,11 @@ query getJobs($limit: Int!, $cursor: String){
       imgUrl
       salary
       createdAt
+      company{
+        name
+        website
+        phone
+      }
     }
     hasMore
   }

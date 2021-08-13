@@ -23,9 +23,10 @@ interface JobListItemProps {
   imgUrl?:string
   postDate?:string
   type?: string
+  id?:number
 }
 
-export const JobListItem: React.FC<JobListItemProps> = ({title, companyName, location, imgUrl, postDate, type}) => {
+export const JobListItem: React.FC<JobListItemProps> = ({title, companyName, location, imgUrl, postDate, type, id}) => {
   
   return (
     <LinkBox
@@ -46,7 +47,7 @@ export const JobListItem: React.FC<JobListItemProps> = ({title, companyName, loc
         <Flex flexDirection="column" flex={2} gridGap="20px">
           <Flex alignItems="center" justifyContent="space-between" >
             <Box>
-              <LinkOverlay href="/jobs/1">
+              <LinkOverlay href={`/jobs/${id}`}>
                 <Text fontSize="xl" fontWeight="bold">{title} </Text>
               </LinkOverlay>
             </Box>

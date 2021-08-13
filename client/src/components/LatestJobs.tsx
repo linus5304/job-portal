@@ -33,6 +33,8 @@ export const LatestJobs: React.FC<LatestJobsProps> = ({}) => {
             imgUrl={job.imgUrl}
             postDate={job.createdAt}
             key={job.id}
+            id={job.id}
+            companyName={job.company.name}
           />
         ))}
       </VStack>

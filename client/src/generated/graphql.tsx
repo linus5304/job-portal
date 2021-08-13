@@ -53,6 +53,7 @@ export type Job = {
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
   companyProfileId: Scalars['Float'];
+  company: CompanyProfile;
 };
 
 export type LoginInput = {
@@ -134,7 +135,7 @@ export type QueryGetCompanyByIdArgs = {
 
 
 export type QueryGetJobByIdArgs = {
-  id: Scalars['Float'];
+  id: Scalars['Int'];
 };
 
 
@@ -262,13 +263,20 @@ export type GetCompanyByIdQueryVariables = Exact<{
 
 export type GetCompanyByIdQuery = { __typename?: 'Query', getCompanyById?: Maybe<{ __typename?: 'companyDetails', details?: Maybe<{ __typename?: 'CompanyProfile', id: number, name: string, location: string, phone: string, logo: string, description: string, website: string }>, jobs?: Maybe<Array<{ __typename?: 'Job', title: string, id: number, salary: string, location: string, category: string, description: string, imgUrl: string, companyProfileId: number, createdAt: string }>> }> };
 
+export type GetJobByIdQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type GetJobByIdQuery = { __typename?: 'Query', getJobById?: Maybe<{ __typename?: 'Job', id: number, title: string, location: string, category: string, description: string, imgUrl: string, createdAt: string, salary: string, expDate: string, company: { __typename?: 'CompanyProfile', id: number, name: string, website: string, logo: string, phone: string, description: string } }> };
+
 export type GetJobsQueryVariables = Exact<{
   limit: Scalars['Int'];
   cursor?: Maybe<Scalars['String']>;
 }>;
 
 
-export type GetJobsQuery = { __typename?: 'Query', getJobs?: Maybe<{ __typename?: 'PaginatedJobs', hasMore: boolean, jobs: Array<{ __typename?: 'Job', id: number, title: string, location: string, category: string, expDate: string, description: string, imgUrl: string, salary: string, createdAt: string }> }> };
+export type GetJobsQuery = { __typename?: 'Query', getJobs?: Maybe<{ __typename?: 'PaginatedJobs', hasMore: boolean, jobs: Array<{ __typename?: 'Job', id: number, title: string, location: string, category: string, expDate: string, description: string, imgUrl: string, salary: string, createdAt: string, company: { __typename?: 'CompanyProfile', name: string, website: string, phone: string } }> }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -715,6 +723,57 @@ export function useGetCompanyByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetCompanyByIdQueryHookResult = ReturnType<typeof useGetCompanyByIdQuery>;
 export type GetCompanyByIdLazyQueryHookResult = ReturnType<typeof useGetCompanyByIdLazyQuery>;
 export type GetCompanyByIdQueryResult = Apollo.QueryResult<GetCompanyByIdQuery, GetCompanyByIdQueryVariables>;
+export const GetJobByIdDocument = gql`
+    query GetJobById($id: Int!) {
+  getJobById(id: $id) {
+    id
+    title
+    location
+    category
+    description
+    imgUrl
+    createdAt
+    salary
+    expDate
+    company {
+      id
+      name
+      website
+      logo
+      phone
+      description
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetJobByIdQuery__
+ *
+ * To run a query within a React component, call `useGetJobByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetJobByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetJobByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetJobByIdQuery(baseOptions: Apollo.QueryHookOptions<GetJobByIdQuery, GetJobByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetJobByIdQuery, GetJobByIdQueryVariables>(GetJobByIdDocument, options);
+      }
+export function useGetJobByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetJobByIdQuery, GetJobByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetJobByIdQuery, GetJobByIdQueryVariables>(GetJobByIdDocument, options);
+        }
+export type GetJobByIdQueryHookResult = ReturnType<typeof useGetJobByIdQuery>;
+export type GetJobByIdLazyQueryHookResult = ReturnType<typeof useGetJobByIdLazyQuery>;
+export type GetJobByIdQueryResult = Apollo.QueryResult<GetJobByIdQuery, GetJobByIdQueryVariables>;
 export const GetJobsDocument = gql`
     query getJobs($limit: Int!, $cursor: String) {
   getJobs(limit: $limit, cursor: $cursor) {
@@ -728,6 +787,11 @@ export const GetJobsDocument = gql`
       imgUrl
       salary
       createdAt
+      company {
+        name
+        website
+        phone
+      }
     }
     hasMore
   }
