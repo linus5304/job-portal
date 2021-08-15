@@ -67,7 +67,7 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
                   Logout
                 </Button>
                 </NextLink>
-              <NextLink href="/">
+              <NextLink href="/account/1">
                 <Button>My Account</Button>
               </NextLink>
             </HStack>
@@ -138,7 +138,7 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
                     Logout
                   </Button>
                 </NextLink>
-                <NextLink href="/register">
+                <NextLink href="/account/1">
                   <Button>My Account</Button>
                 </NextLink>
               </VStack>

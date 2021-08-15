@@ -1,0 +1,19 @@
+query SearchJobs($input:searchInput!){
+  searchJobs(input:$input){
+    id
+    title
+    location
+    category
+    salary
+    description
+    imgUrl
+    company{
+      id
+      name
+      website
+      phone
+      logo
+      location
+    }
+  }
+}

@@ -126,6 +126,7 @@ export type Query = {
   job: Scalars['String'];
   getJobById?: Maybe<Job>;
   getJobs?: Maybe<PaginatedJobs>;
+  searchJobs?: Maybe<Array<Job>>;
 };
 
 
@@ -142,6 +143,11 @@ export type QueryGetJobByIdArgs = {
 export type QueryGetJobsArgs = {
   cursor?: Maybe<Scalars['String']>;
   limit: Scalars['Int'];
+};
+
+
+export type QuerySearchJobsArgs = {
+  input: SearchInput;
 };
 
 export type RegisterInput = {
@@ -189,6 +195,11 @@ export type JobInput = {
   location: Scalars['String'];
   expDate: Scalars['String'];
   imgUrl: Scalars['String'];
+};
+
+export type SearchInput = {
+  title?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['String']>;
 };
 
 export type ChangePasswordMutationVariables = Exact<{
@@ -282,6 +293,13 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, username: string, email: string, user_type: string }> };
+
+export type SearchJobsQueryVariables = Exact<{
+  input: SearchInput;
+}>;
+
+
+export type SearchJobsQuery = { __typename?: 'Query', searchJobs?: Maybe<Array<{ __typename?: 'Job', id: number, title: string, location: string, category: string, salary: string, description: string, imgUrl: string, company: { __typename?: 'CompanyProfile', id: number, name: string, website: string, phone: string, logo: string, location: string } }>> };
 
 
 export const ChangePasswordDocument = gql`
@@ -863,3 +881,52 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const SearchJobsDocument = gql`
+    query SearchJobs($input: searchInput!) {
+  searchJobs(input: $input) {
+    id
+    title
+    location
+    category
+    salary
+    description
+    imgUrl
+    company {
+      id
+      name
+      website
+      phone
+      logo
+      location
+    }
+  }
+}
+    `;
+
+/**
+ * __useSearchJobsQuery__
+ *
+ * To run a query within a React component, call `useSearchJobsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchJobsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchJobsQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSearchJobsQuery(baseOptions: Apollo.QueryHookOptions<SearchJobsQuery, SearchJobsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchJobsQuery, SearchJobsQueryVariables>(SearchJobsDocument, options);
+      }
+export function useSearchJobsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchJobsQuery, SearchJobsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchJobsQuery, SearchJobsQueryVariables>(SearchJobsDocument, options);
+        }
+export type SearchJobsQueryHookResult = ReturnType<typeof useSearchJobsQuery>;
+export type SearchJobsLazyQueryHookResult = ReturnType<typeof useSearchJobsLazyQuery>;
+export type SearchJobsQueryResult = Apollo.QueryResult<SearchJobsQuery, SearchJobsQueryVariables>;

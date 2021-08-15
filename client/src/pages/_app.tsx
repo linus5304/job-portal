@@ -15,6 +15,8 @@ import { onError } from "@apollo/client/link/error";
 import { createUploadLink } from "apollo-upload-client";
 import { cache } from './../utils/withApollo';
 
+import { withApollo } from '../utils/withApollo';
+
 const breakpoints = createBreakpoints({
   sm: "320px",
   md: "768px",
@@ -34,39 +36,16 @@ const variants = {
   rg: "regular",
 };
 
-const link = createUploadLink({
-  uri: "http://localhost:4000/graphql",
-  headers: {
-    "keep-alive": "true",
-  },
-  credentials: "include",
-});
-// const link = createHttpLink({
-//   uri: "http://localhost:4000/graphql",
 
-// });
-// const link1 = createUploadLink({
-//   uri: "http://localhost:4000/graphql",
-//   credentials: "include",
-// });
-
-const client = new ApolloClient({
-  cache: cache,
-  link,
-  credentials: "include",
-});
 
 const App = ({ Component, pageProps }) => {
   const Layout = layouts[Component.value] || EmptyLayout;
   const variant = variants[Component.variant];
   return (
-    <ApolloProvider client={client}>
       <ChakraProvider theme={theme}>
-        <Layout variant={variant}>
+        
           <Component {...pageProps} />
-        </Layout>
       </ChakraProvider>
-    </ApolloProvider>
   );
 };
 

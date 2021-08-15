@@ -1,37 +1,57 @@
-import React from "react";
+import React, { InputHTMLAttributes, useState } from "react";
 import {
   AutoComplete,
   AutoCompleteInput,
   AutoCompleteItem,
   AutoCompleteList,
   AutoCompleteGroup,
-} from "@choc-ui/chakra-autocomplete";
+} from '@choc-ui/chakra-autocomplete';
+import { useField, Field, FieldHookConfig } from "formik";
+import { Flex, Icon, InputGroup, InputRightElement, Text, useColorModeValue, ListItem, List, VStack } from '@chakra-ui/react';
+import { ChevronRightIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import { InputField } from "./form/InputField";
 
-const fruits = ["Apple", "Grape", "Pawpaw"];
-const countries = ["Korea", "Nigeria", "India"];
-interface AutoFillProps {
-  placeholder?:string
-  title?:string
+import Select from 'react-select';
+
+export interface Item {
+  label: string;
+  value: string
 }
+const countries=[
+  "Acura",
+  "BMW",
+  "Audi",
+  "Bentley",
+  "Buick",
+  "Cadillac",
+  "Chevrolet",
+  ]
 
-export const AutoFill: React.FC<AutoFillProps> = ({placeholder, title}) => {
+type AutoFillProps = InputHTMLAttributes<HTMLInputElement>&FieldHookConfig<{}>& {
+  placeholder?: string;
+  title?: string;
+  name: string;
+};
+
+
+export const AutoFill: React.FC<AutoFillProps> = ({
+  placeholder,
+  title,
+  name,
+  ...props
+}) => {
+  const [field] = useField({name, placeholder})
+  const [selectedOption, setselectedOption] = useState("")
+  const [options, setOptions] = useState([])
+  const [search, setSearch] = useState("")
+  const handleChange = selectedOption => {
+    setselectedOption( selectedOption );
+    console.log(`Option selected:`, selectedOption);
+  };
+  
   return (
-    <AutoComplete rollNavigation >
-      <AutoCompleteInput variant="outline" placeholder={placeholder} autoFocus w={["100%","100%","100%",'200px', '300px']} />
-      <AutoCompleteList>
-        
-        <AutoCompleteGroup title={title}>
-          {countries.map((option, oid) => (
-            <AutoCompleteItem
-              key={`countries-${oid}`}
-              value={option}
-              textTransform="capitalize"
-            >
-              {option}
-            </AutoCompleteItem>
-          ))}
-        </AutoCompleteGroup>
-      </AutoCompleteList>
-    </AutoComplete>
-  );
+    <>
+    <InputField name="location" type="search" placeholder="Location"/>
+    </>
+  )
 };

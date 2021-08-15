@@ -22,6 +22,8 @@ import {
   useFileUploadMutation,
 } from "../generated/graphql";
 import Dropzone from "react-dropzone";
+import { MainLayout } from "../components/layouts/MainLayout";
+import { withApollo } from "../utils/withApollo";
 
 interface createProfileProps {}
 
@@ -35,6 +37,7 @@ const createProfile: React.FC<createProfileProps> & layout = ({}) => {
   const toast = useToast();
 
   return (
+    <MainLayout>
     <Formik
       initialValues={{
         name: "",
@@ -133,9 +136,10 @@ const createProfile: React.FC<createProfileProps> & layout = ({}) => {
         </Box>
       )}
     </Formik>
+    </MainLayout>
   );
 };
 
 createProfile.value = "L2";
 createProfile.variant = "md";
-export default createProfile;
+export default withApollo({ssr: false}) (createProfile);

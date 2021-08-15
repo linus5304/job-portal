@@ -5,17 +5,22 @@ import { HeroJob } from "./../../components/HeroJob";
 import { Flex, VStack, Button, Text, Box, Heading, Skeleton } from "@chakra-ui/react";
 import { Filter } from "./../../components/Filter";
 import { JobListItem } from "./../../components/JobListItem";
-import { useGetJobsQuery } from "./../../generated/graphql";
+import { useSearchJobsQuery } from "./../../generated/graphql";
+import {useRouter} from 'next/router'
 import { MainLayout } from './../../components/layouts/MainLayout';
-import { withApollo } from "../../utils/withApollo";
+import { withApollo } from '../../utils/withApollo';
 
-interface indexProps {}
 
-export const index: React.FC<indexProps> & layout = ({}) => {
+interface searchProps {}
+
+export const search: React.FC<searchProps> & layout = ({}) => {
   const [newLimit, setNewLimit] = useState(5)
-  const { data, loading, fetchMore, variables, error } = useGetJobsQuery({
-    variables: { limit: newLimit, cursor: null },
+const router = useRouter()
+  const { data, loading, error } = useSearchJobsQuery({
+    variables: { input: { title: router.query.title as string, location: router.query.location as string } },
   });
+
+  console.log(router.query.title, router.query.location)
 
  
 
@@ -26,7 +31,7 @@ export const index: React.FC<indexProps> & layout = ({}) => {
 
   return (
     <>
-        <MainLayout >
+    <MainLayout >
       <HeroJob />
       <Flex justify="space-between" mx="auto" w="60%" pt="10%" pb="4%">
         <VStack
@@ -74,18 +79,18 @@ export const index: React.FC<indexProps> & layout = ({}) => {
           
         ): (
         <VStack spacing="24px" w="100%">
-          {data?.getJobs.jobs.map((job) => (
+          {data?.searchJobs.map((job) => (
             <JobListItem
               title={job.title}
               location={job.location}
               imgUrl={job.imgUrl}
-              postDate={job.createdAt}
+            //   postDate={job.createdAt}
               key={job.id}
               companyName={job.company.name}
               id={job.id}
             />
           ))}
-          {data?.getJobs.hasMore ? (
+          {/* {data?.searchJobs.hasMore ? (
             <Flex mx="auto" align="center">
               <Button
                 isLoading={loading}
@@ -103,16 +108,15 @@ export const index: React.FC<indexProps> & layout = ({}) => {
                 Load More
               </Button>
             </Flex>
-          ) : null}
+          ) : null} */}
         </VStack>
         )}
       </Flex>
-      </MainLayout >
-
+      </MainLayout>
     </>
   );
 };
 
-index.value = "L2";
+search.value = "L2";
 
-export default withApollo({ssr: false}) (index);
+export default withApollo({ssr: true})(search);

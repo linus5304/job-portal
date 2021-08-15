@@ -56,6 +56,14 @@ export class PaginatedJobs {
   hasMore: boolean;
 }
 
+@InputType()
+export class searchInput {
+  @Field({nullable: true})
+  title?: string;
+  @Field({nullable: true})
+  location?: string;
+}
+
 @Resolver(Job)
 export class JobResolver {
   @Query(() => String)
@@ -101,7 +109,9 @@ export class JobResolver {
   }
 
   @Query(() => Job, { nullable: true })
-  async getJobById(@Arg("id", () => Int!) id: number): Promise<Job | undefined> {
+  async getJobById(
+    @Arg("id", () => Int!) id: number
+  ): Promise<Job | undefined> {
     return await Job.findOne(id);
   }
 
@@ -138,5 +148,19 @@ export class JobResolver {
       jobs: jobs.slice(0, realLimit),
       hasMore: jobs.length === realLimitPlusOne,
     };
+  }
+
+  @Query(() => [Job], { nullable: true })
+  async searchJobs(
+    @Arg("input") { title, location }: searchInput
+  ): Promise<Job[]> {
+    let jobsQB = getConnection().getRepository(Job).createQueryBuilder("j");
+    if(title){
+      jobsQB = jobsQB.andWhere("j.title ilike :title", {title: `%${title}%`})
+    }
+    if(location){
+      jobsQB = jobsQB.andWhere("j.location ilike :location", {location: `%${location}%`})
+    }
+    return jobsQB.getMany();
   }
 }

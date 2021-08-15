@@ -7,6 +7,10 @@ import { Navbar } from '../components/Navbar'
 import { CompanySection } from '../components/CompanySection';
 import { FeaturedJobs } from '../components/FeaturedJobs';
 import { LatestJobs } from '../components/LatestJobs';
+import { withApollo } from '../utils/withApollo';
+import React from 'react';
+import { MainLayout } from "../components/layouts/MainLayout";
+
 
 export type layout = {
   value: string, variant?:string
@@ -15,12 +19,14 @@ export type layout = {
 const IndexPage : React.FC<{}> & layout = () => {
   return(
     <>
+    <MainLayout >
     <Hero/>
     <CompanySection heading="Featured Companies"/>
     <HeroPost/>
     <FeaturedJobs/>
     <LatestJobs/>
     <HeroContact/>
+    </MainLayout>
     </>
   )
 }
@@ -28,4 +34,4 @@ const IndexPage : React.FC<{}> & layout = () => {
 
 IndexPage.value = 'L2'
 
-export default IndexPage
+export default withApollo({ssr: true}) (IndexPage)

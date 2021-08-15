@@ -16,6 +16,8 @@ import { PasswordField } from "../components/form/PasswordField";
 import NextLink from 'next/link'
 import { useLoginMutation } from "../generated/graphql";
 import { toErrorMap } from "../utils/errorMap";
+import { MainLayout } from "../components/layouts/MainLayout";
+import { withApollo } from "../utils/withApollo";
 
 
 interface loginProps {}
@@ -28,6 +30,7 @@ export type layout = {
 export const login: React.FC<loginProps> & layout = ({}) => {
   const [login] = useLoginMutation()
   return (
+    <MainLayout>
     <Formik
       initialValues={{ usernameOrEmail: "", password: "" }}
       onSubmit={async (values, {setErrors}) => {
@@ -99,10 +102,11 @@ export const login: React.FC<loginProps> & layout = ({}) => {
         </Box>
       )}
     </Formik>
+    </MainLayout>
   );
 };
 
 login.value = "L2";
 login.variant = "sm";
 
-export default login;
+export default withApollo({ssr: false}) (login);

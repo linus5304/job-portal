@@ -20,6 +20,8 @@ import NextLink from "next/link";
 import { useRegisterMutation } from "./../generated/graphql";
 import { toErrorMap } from "../utils/errorMap";
 import { useRouter } from "next/router";
+import { MainLayout } from "../components/layouts/MainLayout";
+import { withApollo } from "../utils/withApollo";
 
 
 interface RegisterProps {}
@@ -29,6 +31,7 @@ export const Register: React.FC<RegisterProps> & layout = ({}) => {
   const router = useRouter();
   const toast = useToast()
   return (
+    <MainLayout>
     <Formik
       initialValues={{ username: "", email: "", password: "", user_type: "" }}
       onSubmit={async (values, { setErrors }) => {
@@ -110,9 +113,10 @@ export const Register: React.FC<RegisterProps> & layout = ({}) => {
         </Box>
       )}
     </Formik>
+    </MainLayout>
   );
 };
 
 Register.value = "L2";
 Register.variant = "sm";
-export default Register;
+export default withApollo({ssr: false}) (Register);

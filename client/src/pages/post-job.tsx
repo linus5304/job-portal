@@ -20,6 +20,8 @@ import { layout } from "../utils/types";
 import NextLink from "next/link";
 import Dropzone, {useDropzone} from "react-dropzone"
 import { usePostJobMutation, useFileUploadMutation } from './../generated/graphql';
+import { MainLayout } from "../components/layouts/MainLayout";
+import { withApollo } from "../utils/withApollo";
 
 
 interface postJobProps {}
@@ -32,6 +34,7 @@ export const postJob: React.FC<postJobProps> & layout = ({}) => {
   const [uploadFile] = useFileUploadMutation()
 
   return (
+    <MainLayout>
     <Formik
       initialValues={{
         title: "",
@@ -147,9 +150,10 @@ export const postJob: React.FC<postJobProps> & layout = ({}) => {
         </Box>
       )}
     </Formik>
+    </MainLayout>
   );
 };
 
 postJob.value = "L2";
 postJob.variant = "md";
-export default postJob;
+export default withApollo({ssr: false}) (postJob);

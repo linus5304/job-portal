@@ -1,10 +1,24 @@
 import { Flex, Input, Button, Spacer, Stack } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import { AutoFill } from "../AutoFill";
+import { Formik, Form } from "formik";
+import { InputField } from "./../form/InputField";
+import { useSearchJobsQuery } from "./../../generated/graphql";
+import { useRouter } from "next/router";
 
 interface SearchBoxProps {}
 
 export const SearchBox: React.FC<SearchBoxProps> = ({}) => {
+  const { data } = useSearchJobsQuery({
+    variables: { input: { title: "", location: "" } },
+  });
+
+  const [title, setTitle] = useState(()=>"");
+  const [location, setLocation] = useState(()=>"");
+
+  const router = useRouter();
+ 
+
   return (
     <Flex
       justifyContent="space-between"
@@ -14,16 +28,37 @@ export const SearchBox: React.FC<SearchBoxProps> = ({}) => {
       bg="white"
       w="60%"
       alignSelf="center"
-      mb={['-8%', '-8%', '-8%', '-4%']}
+      mb={["-8%", "-8%", "-8%", "-4%"]}
       boxShadow="lg"
       borderRadius="lg"
     >
-      <Stack direction={['column','column', 'column', 'row', 'row' ]} spacing={["16px","16px","16px","24px"]} w="100%">
-        <Input placeholder="Job Title" />
+      <Formik
+        initialValues={{ title: "", location: "" }}
+        onSubmit={async (values) => {
+          setTitle((title) => (title = values.title));
+          setLocation((location) => (location = values.location));
+          router.push({
+            pathname:'/jobs/search',
+            query: {title: values.title, location:values.location }
+          })
+          console.log(values);
+        }}
+      >
+        <Form>
+          <Stack
+            direction={["column", "column", "column", "row", "row"]}
+            spacing={["16px", "16px", "16px", "24px"]}
+            w="100%"
+          >
+            <InputField placeholder="Job Title" name="title" />
 
-        <AutoFill placeholder="Location" />
-        <Button w={['100%', '100%', '100%', "200px"]}>Search</Button>
-      </Stack>
+            <AutoFill placeholder="Location" name="location" />
+            <Button w={["100%", "100%", "100%", "200px"]} type="submit">
+              Search
+            </Button>
+          </Stack>
+        </Form>
+      </Formik>
     </Flex>
   );
 };

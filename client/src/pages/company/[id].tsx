@@ -38,11 +38,11 @@ interface CompanyProps {}
 const Company: React.FC<CompanyProps> & layout = ({}) => {
   const router = useRouter()
   const {id} = router.query
-  const jobId = parseInt(id as string);
+  const companyId = parseInt(id as string);
 
   const {data, error}= useGetCompanyByIdQuery({
     variables: {
-      id: jobId
+      id: companyId
     }
   }
   )
