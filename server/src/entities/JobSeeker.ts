@@ -1,10 +1,8 @@
 import { Field } from "type-graphql";
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
-  CreateDateColumn,
-  UpdateDateColumn,
+  CreateDateColumn, Entity,
+  PrimaryGeneratedColumn, UpdateDateColumn
 } from "typeorm";
 
 @Entity()

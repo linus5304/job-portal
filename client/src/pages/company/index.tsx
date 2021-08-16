@@ -3,6 +3,8 @@ import { layout } from '../../utils/types';
 import { HeroJob } from './../../components/HeroJob';
 import { Flex, Heading, Wrap, WrapItem, Text } from '@chakra-ui/react';
 import {CompanyCard} from '../../components/CompanyCard'
+import { MainLayout } from '../../components/layouts/MainLayout';
+import { withApollo } from '../../utils/withApollo';
 
 
 interface CompaniesProps{
@@ -12,7 +14,9 @@ interface CompaniesProps{
 
 const Companies: React.FC<CompaniesProps> & layout = ({}) => {
         return (
-            <>
+            <MainLayout>
+
+            
             <HeroJob/>
             <Flex
       flexDir="column"
@@ -40,10 +44,10 @@ const Companies: React.FC<CompaniesProps> & layout = ({}) => {
         
       </Wrap>
     </Flex>
-            </>
+    </MainLayout>
         );
 };
 
 Companies.value ="L2"
 Companies.variant="rg"
-export default Companies
+export default withApollo({ssr: false}) (Companies)

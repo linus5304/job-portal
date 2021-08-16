@@ -1,25 +1,23 @@
-query GetCompanyById($id: Int!){
+query GetCompanyById($id: Int!) {
   getCompanyById(id: $id) {
-    details {
-      id
-      name
-      location
-      phone
-      logo
-      description
-      website
-    }
+    id
+    name
+    location
+    phone
+    logo
+    description
+    website
     jobs {
-      title
       id
-      salary
+      title
       location
       category
       salary
+      expDate
       description
+      createdAt
+      expDate
       imgUrl
-      companyProfileId
-        createdAt
     }
   }
 }

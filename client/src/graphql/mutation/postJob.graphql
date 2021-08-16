@@ -10,6 +10,6 @@ mutation PostJob($data: jobInput!) {
     updatedAt
     salary
     expDate
-    companyProfileId
+    userId
   }
 }

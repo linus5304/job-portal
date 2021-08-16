@@ -1,5 +1,5 @@
-query getCompanies{
-  getCompanies{
+query getCompanies {
+  getCompanies {
     id
     name
     location
@@ -8,6 +8,5 @@ query getCompanies{
     logo
     description
     createdAt
-    
   }
 }

@@ -31,7 +31,7 @@ export const Register: React.FC<RegisterProps> & layout = ({}) => {
   const router = useRouter();
   const toast = useToast()
   return (
-    <MainLayout>
+    <MainLayout variant="medium">
     <Formik
       initialValues={{ username: "", email: "", password: "", user_type: "" }}
       onSubmit={async (values, { setErrors }) => {
@@ -46,12 +46,12 @@ export const Register: React.FC<RegisterProps> & layout = ({}) => {
           toast({
             title: "Account created.",
             position:'top-right',
-            description: "We've created your account for you.",
+            description: "Create your profile in the MyAccout section",
             status: "success",
-            duration: 5000,
-            isClosable: true,
+            duration: 6000,
+            isClosable: false,
           })
-          router.push('/create-profile')
+          router.push(`/account/${response.data.register.user.id}`)
         }
       }}
     >

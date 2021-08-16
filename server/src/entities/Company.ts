@@ -1,16 +1,9 @@
 import { Field, ObjectType } from "type-graphql";
 import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  BaseEntity,
-  JoinColumn,
-  OneToOne,
-  OneToMany,
+  BaseEntity, Column,
+  CreateDateColumn, Entity, JoinColumn,
+  OneToOne, PrimaryGeneratedColumn, UpdateDateColumn
 } from "typeorm";
-import { Job } from "./Job";
 import { User } from "./User";
 
 @Entity()
@@ -58,7 +51,4 @@ export class CompanyProfile extends BaseEntity {
   @OneToOne(() => User, (user) => user.companyProfile, { onDelete: "CASCADE" })
   @JoinColumn()
   user: User;
-
-  @OneToMany(() => Job, (job) => job.companyProfile)
-  jobs: Job[];
 }

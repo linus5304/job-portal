@@ -18,6 +18,7 @@ import { Job } from "./entities/Job";
 import { JobResolver } from "./resolvers/job";
 import { graphqlUploadExpress } from 'graphql-upload';
 import path  from 'path';
+import { Application } from './entities/Application';
 
 declare module "express-session" {
   interface Session {
@@ -36,7 +37,7 @@ const main = async () => {
     logging: true,
     synchronize: true,
     migrations: [path.join(__dirname, './migrations/*')],
-    entities: [User, CompanyProfile, Job],
+    entities: [User, CompanyProfile, Job, Application],
   });
 
   await conn.runMigrations()

@@ -9,6 +9,7 @@ import {
   VStack,
   Button,
   Link,
+  useToast
 } from "@chakra-ui/react";
 import { InputField } from "../components/form/InputField";
 import { Form, Formik } from "formik";
@@ -18,6 +19,7 @@ import { useLoginMutation } from "../generated/graphql";
 import { toErrorMap } from "../utils/errorMap";
 import { MainLayout } from "../components/layouts/MainLayout";
 import { withApollo } from "../utils/withApollo";
+import {useRouter} from 'next/router'
 
 
 interface loginProps {}
@@ -29,6 +31,8 @@ export type layout = {
 
 export const login: React.FC<loginProps> & layout = ({}) => {
   const [login] = useLoginMutation()
+  const toast = useToast()
+  const router = useRouter()
   return (
     <MainLayout>
     <Formik
@@ -41,6 +45,15 @@ export const login: React.FC<loginProps> & layout = ({}) => {
           setErrors(toErrorMap(response.data.login.errors))
         }else if(response.data.login.user){
           console.log(values)
+          toast({
+            title: "Account created.",
+            position:'top-right',
+            description: "Create your profile in the MyAccout section",
+            status: "success",
+            duration: 6000,
+            isClosable: false,
+          })
+          router.push(`/account/${response.data.login.user.id}`)
         }
       }}
     >

@@ -49,13 +49,17 @@ export const SearchBox: React.FC<SearchBoxProps> = ({}) => {
             direction={["column", "column", "column", "row", "row"]}
             spacing={["16px", "16px", "16px", "24px"]}
             w="100%"
+            alignItems="center"
+            justify="space-between"
           >
             <InputField placeholder="Job Title" name="title" />
 
-            <AutoFill placeholder="Location" name="location" />
+            <InputField name="location" placeholder="Location" />
+            <Flex>
             <Button w={["100%", "100%", "100%", "200px"]} type="submit">
               Search
             </Button>
+            </Flex>
           </Stack>
         </Form>
       </Formik>

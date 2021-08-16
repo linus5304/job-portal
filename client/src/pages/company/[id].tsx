@@ -32,6 +32,8 @@ import { FaChevronLeft } from "react-icons/fa";
 
 import { useGetCompanyByIdQuery } from './../../generated/graphql';
 import { useRouter } from 'next/router';
+import { MainLayout } from "../../components/layouts/MainLayout";
+import { withApollo } from "../../utils/withApollo";
 
 interface CompanyProps {}
 
@@ -48,6 +50,7 @@ const Company: React.FC<CompanyProps> & layout = ({}) => {
   )
   return (
     <>
+    <MainLayout>
       <Flex w="100%" flexDirection="column" bg="#470137" m={0} h="100%" py="4%">
         <VStack my="auto" ml="10%" align="flex-start">
           <Flex align="flex-start">
@@ -58,21 +61,21 @@ const Company: React.FC<CompanyProps> & layout = ({}) => {
             color="#fff"
           >
             <Box>
-              <Image src={data?.getCompanyById.details.logo} width="100px" height="100px" />
+              <Image src={data?.getCompanyById.logo} width="100px" height="100px" />
             </Box>
             <Flex flexDir="column" gridGap={3}>
               <Flex>
-                <Heading>{data?.getCompanyById.details.name}</Heading>
+                <Heading>{data?.getCompanyById.name}</Heading>
               </Flex>
               <HStack spacing="50px">
                 <Flex alignItems="center">
                   <Icon as={MdLocationOn} fontSize="lg" />
-                  <Text>{data?.getCompanyById.details.location}</Text>
+                  <Text>{data?.getCompanyById.location}</Text>
                 </Flex>
                 <Flex alignItems="center">
                   <Icon as={FiGlobe} fontSize="lg" />
                   <Link>
-                  {data?.getCompanyById.details.website}
+                  {data?.getCompanyById.website}
                   </Link>
                 </Flex>
               </HStack>
@@ -99,7 +102,7 @@ const Company: React.FC<CompanyProps> & layout = ({}) => {
           <TabPanels>
             <TabPanel>
               <Text>
-                {data?.getCompanyById.details.description}
+                {data?.getCompanyById.description}
               </Text>
             </TabPanel>
             <TabPanel>
@@ -170,9 +173,10 @@ const Company: React.FC<CompanyProps> & layout = ({}) => {
         </Formik>
         </Flex>
       </Flex>
+      </MainLayout>
     </>
   );
 };
 
 Company.value = "L2";
-export default Company;
+export default withApollo({ssr: false}) (Company);

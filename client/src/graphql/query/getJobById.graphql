@@ -9,6 +9,7 @@ query GetJobById($id: Int!){
     createdAt
     salary
     expDate
+    userId
     company{
       id
       name

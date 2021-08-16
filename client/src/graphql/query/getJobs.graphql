@@ -1,6 +1,6 @@
-query getJobs($limit: Int!, $cursor: String){
-  getJobs(limit: $limit, cursor: $cursor){
-    jobs{
+query getJobs($limit: Int!, $cursor: String) {
+  getJobs(limit: $limit, cursor: $cursor) {
+    jobs {
       id
       title
       location
@@ -10,7 +10,7 @@ query getJobs($limit: Int!, $cursor: String){
       imgUrl
       salary
       createdAt
-      company{
+      company {
         name
         website
         phone

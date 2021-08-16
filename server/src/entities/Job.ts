@@ -1,14 +1,10 @@
 import { Field, ObjectType } from "type-graphql";
 import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  BaseEntity,
-  ManyToOne,
+  BaseEntity, Column,
+  CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn
 } from "typeorm";
-import { CompanyProfile } from "./Company";
+import { Application } from "./Application";
+import { User } from "./User";
 
 @Entity()
 @ObjectType()
@@ -34,7 +30,7 @@ export class Job extends BaseEntity {
   salary: string;
 
   @Field()
-  @Column({nullable: true})
+  @Column({ nullable: true })
   expDate: string;
 
   @Field()
@@ -45,18 +41,21 @@ export class Job extends BaseEntity {
   @Column()
   imgUrl: string;
 
-  @Field(() => String)
+  @Field(() => Date)
   @CreateDateColumn()
   createdAt: Date;
 
-  @Field(() => String)
+  @Field(() => Date)
   @UpdateDateColumn()
   updatedAt: Date;
 
   @Field()
   @Column()
-  companyProfileId: number;
+  userId: number;
 
-  @ManyToOne(() => CompanyProfile, companyProfile => companyProfile.jobs)
-  companyProfile: CompanyProfile
+  @ManyToOne(() => User, (user) => user.jobs)
+  user: User;
+
+  @OneToMany(() => Application, (application) => application.job)
+  application: Application[];
 }

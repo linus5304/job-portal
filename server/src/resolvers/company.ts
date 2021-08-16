@@ -9,9 +9,11 @@ import {
   Resolver,
   ObjectType,
   Int,
+  FieldResolver,
+  Root,
 } from "type-graphql";
 import { CompanyProfile } from "./../entities/Company";
-import {  getConnection } from "typeorm";
+import { getConnection } from "typeorm";
 import { Job } from "./../entities/Job";
 
 @InputType()
@@ -36,13 +38,13 @@ class companyProfileInput {
 
 @ObjectType()
 export class companyDetails {
-  @Field(() => CompanyProfile , {nullable: true})
+  @Field(() => CompanyProfile, { nullable: true })
   details: CompanyProfile;
-  @Field(() => [Job], {nullable: true})
+  @Field(() => [Job], { nullable: true })
   jobs: Job[];
 }
 
-@Resolver()
+@Resolver(CompanyProfile)
 export class CompanyResolver {
   @Query(() => String)
   company() {
@@ -60,29 +62,27 @@ export class CompanyResolver {
     }).save();
   }
 
-  @Query(() => companyDetails, { nullable: true })
-  async getCompanyById(
-    @Arg("id", ()=> Int) id: number,
-  ): Promise<companyDetails | undefined> {
-    const company = await getConnection().createQueryBuilder(CompanyProfile,"company" )
-      .leftJoinAndSelect("company.jobs", "jobs")
-      .where("company.id = :id", { id: id })
-      .orderBy("jobs.createdAt", "DESC")
-      .getOne();
+  @FieldResolver(() => [Job])
+  async jobs(@Root() profile: CompanyProfile) {
+    const jobs = await getConnection()
+      .createQueryBuilder(Job, "job")
+      .where("job.userId = :id", { id: profile.userId })
+      .getMany();
+    return jobs;
+  }
 
-      console.log(company?.jobs)
-      return {
-        details: company as CompanyProfile,
-        jobs: company?.jobs as Job[]
-      }
+  @Query(() => CompanyProfile, { nullable: true })
+  async getCompanyById(
+    @Arg("id", () => Int) id: number
+  ): Promise<CompanyProfile | undefined> {
+    return CompanyProfile.findOne(id);
   }
 
   @Query(() => [CompanyProfile], { nullable: true })
   async getCompanies(): Promise<CompanyProfile[] | undefined> {
     const result = await getConnection()
-      .createQueryBuilder(CompanyProfile, "companies")
+      .createQueryBuilder(CompanyProfile, "companies").orderBy('id', 'DESC').limit(3)
       .getMany();
     return result;
-    
   }
 }

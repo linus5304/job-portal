@@ -8,7 +8,7 @@ interface LatestJobsProps {}
 
 export const LatestJobs: React.FC<LatestJobsProps> = ({}) => {
   const { data } = useGetJobsQuery({
-    variables: { limit: 5 },
+    variables: { limit: 5 , cursor: null},
   });
   return (
     <Flex
@@ -25,7 +25,7 @@ export const LatestJobs: React.FC<LatestJobsProps> = ({}) => {
           Latest Jobs
         </Text>
       </Box>
-      <VStack spacing="24px" minW="100%">
+    <VStack spacing="24px" minW="100%">
         {data?.getJobs.jobs.map((job) => (
           <JobListItem
             title={job.title}

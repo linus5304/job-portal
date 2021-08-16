@@ -3,12 +3,15 @@ import { CompanyAccount } from '../../components/account/CompanyAccount';
 import { UserAccount } from '../../components/account/UserAccount';
 import { useMeQuery } from './../../generated/graphql';
 import { layout } from "../../utils/types";
+import { MainLayout } from "../../components/layouts/MainLayout";
+import { withApollo } from "../../utils/withApollo";
+
+
 
 
 interface AccountProps{
 
 }
-
 
 export const Account: React.FC<AccountProps> & layout = ({}) => {
     const {data} = useMeQuery()
@@ -23,8 +26,12 @@ export const Account: React.FC<AccountProps> & layout = ({}) => {
             displayData = <CompanyAccount/>
                 
     }
-    return (<>{displayData}</>)
+    return (
+        <MainLayout>
+    {displayData}
+    </MainLayout>
+    )
 }
 Account.value = "L2"
 
-export default Account
+export default withApollo({ssr: false}) (Account)

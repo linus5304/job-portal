@@ -19,6 +19,7 @@ import path from "path";
 import { generate } from "randomstring";
 import fs from "fs";
 import { CompanyProfile } from "./../entities/Company";
+import { Application } from './../entities/Application';
 
 @InputType()
 class jobInput {
@@ -58,9 +59,9 @@ export class PaginatedJobs {
 
 @InputType()
 export class searchInput {
-  @Field({nullable: true})
+  @Field({ nullable: true })
   title?: string;
-  @Field({nullable: true})
+  @Field({ nullable: true })
   location?: string;
 }
 
@@ -73,7 +74,7 @@ export class JobResolver {
 
   @FieldResolver(() => CompanyProfile)
   async company(@Root() job: Job) {
-    return await CompanyProfile.findOne(job.companyProfileId);
+    return await CompanyProfile.findOne(job.userId);
   }
 
   @Mutation(() => ImageUrl)
@@ -104,7 +105,7 @@ export class JobResolver {
   ): Promise<Job> {
     return Job.create({
       ...data,
-      companyProfileId: req.session.userId,
+      userId: req.session.userId,
     }).save();
   }
 
@@ -133,7 +134,7 @@ export class JobResolver {
       select j.*, cp.name
       from job j 
       join company_profile cp
-      on j."companyProfileId" = cp.id
+      on j."userId" = cp."userId"
       ${cursor ? `where j."createdAt" < $2` : ""}
       order by j."createdAt" DESC
       limit $1
@@ -155,12 +156,19 @@ export class JobResolver {
     @Arg("input") { title, location }: searchInput
   ): Promise<Job[]> {
     let jobsQB = getConnection().getRepository(Job).createQueryBuilder("j");
-    if(title){
-      jobsQB = jobsQB.andWhere("j.title ilike :title", {title: `%${title}%`})
+    if (title) {
+      jobsQB = jobsQB.andWhere("j.title ilike :title", { title: `%${title}%` });
     }
-    if(location){
-      jobsQB = jobsQB.andWhere("j.location ilike :location", {location: `%${location}%`})
+    if (location) {
+      jobsQB = jobsQB.andWhere("j.location ilike :location", {
+        location: `%${location}%`,
+      });
     }
     return jobsQB.getMany();
+  }
+
+  @Mutation(() => Application)
+  apply(@Arg("jobId", () => Int) jobId: number, @Ctx() { req }: MyContext) : Promise<Application>{
+    return Application.create({jobId,userId: req.session.userId}).save()
   }
 }

@@ -5,7 +5,7 @@ import { HeroJob } from "./../../components/HeroJob";
 import { Flex, VStack, Button, Text, Box, Heading, Skeleton } from "@chakra-ui/react";
 import { Filter } from "./../../components/Filter";
 import { JobListItem } from "./../../components/JobListItem";
-import { useGetJobsQuery } from "./../../generated/graphql";
+import { Job, useGetJobsQuery } from "./../../generated/graphql";
 import { MainLayout } from './../../components/layouts/MainLayout';
 import { withApollo } from "../../utils/withApollo";
 
@@ -17,8 +17,25 @@ export const index: React.FC<indexProps> & layout = ({}) => {
     variables: { limit: newLimit, cursor: null },
   });
 
- 
+  // const [saveJobs, setSaveJobs] = useState([] as Job[]);
 
+  // const handleSaveJob = (id: number) => {
+  //   setSaveJobs((saveJobs) => {
+  //     const jobs = data?.getJobs.jobs
+  //     const isJobSaved = jobs.find((jobItem) => jobItem.id === id);
+      
+  //     if (isJobSaved) {
+  //         jobs.filter((val) => {
+  //         return val.id !== isJobSaved.id;
+  //       });
+  //     } else {
+        
+  //       saveJobs.push(isJobSaved)
+  //     }
+  //     console.log(saveJobs)
+  //   });
+
+  
 
   if(!data && !loading){
     return <Text>{error.message}</Text>

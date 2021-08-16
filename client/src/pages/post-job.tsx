@@ -22,6 +22,7 @@ import Dropzone, {useDropzone} from "react-dropzone"
 import { usePostJobMutation, useFileUploadMutation } from './../generated/graphql';
 import { MainLayout } from "../components/layouts/MainLayout";
 import { withApollo } from "../utils/withApollo";
+import { FiUploadCloud } from 'react-icons/fi';
 
 
 interface postJobProps {}
@@ -32,9 +33,11 @@ export const postJob: React.FC<postJobProps> & layout = ({}) => {
   const [postJob] = usePostJobMutation()
   const [img, setImg] = useState(() =>'')
   const [uploadFile] = useFileUploadMutation()
+  const [name, setName] = useState("")
+
 
   return (
-    <MainLayout>
+    <MainLayout variant="medium">
     <Formik
       initialValues={{
         title: "",
@@ -116,25 +119,23 @@ export const postJob: React.FC<postJobProps> & layout = ({}) => {
                       })
                       setFieldValue('imgUrl', data.fileUpload.url)
                       setImg((img) =>  img = data.fileUpload.url)
+                      setName(name => name = file.name)
+
                       console.log(file)
+
 									}}
 								>
 									{({ getRootProps, getInputProps }) => (
 										<Box
-											border="1px"
-											height="100px"
+											
 											{...getRootProps()}
 										>
 											<input
 												{...getInputProps()}
 												name="imgUrl"
 											/>
-											<Text
-												textAlign={'center'}
-											>
-												Drag 'n' drop some files here,
-												or click to select files
-											</Text>
+											<Button leftIcon={<FiUploadCloud />}>add Image</Button>
+                        {name ? (<Text>{name}</Text> ): null}
 										</Box>
 									)}
 								</Dropzone>

@@ -1,0 +1,8 @@
+mutation Apply($jobId: Int!){
+  apply(jobId: $jobId){
+   appication_date
+    userId
+    jobId
+    updatedAt
+  }
+}
