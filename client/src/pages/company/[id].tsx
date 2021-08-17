@@ -108,7 +108,7 @@ const Company: React.FC<CompanyProps> & layout = ({}) => {
             <TabPanel>
               <VStack w="100%">
                 {data?.getCompanyById?.jobs.map(job => (
-                  <JobListItem title={job.title} id={job.id} location={job.location} imgUrl={job.imgUrl} postDate={job.createdAt} key={job.id} companyName={data?.getCompanyById.details.name}/>
+                  <JobListItem title={job.title} id={job.id} location={job.location} imgUrl={job.imgUrl} postDate={job.createdAt} key={job.id} companyName={data?.getCompanyById.name}/>
                 ))}
                 
                 

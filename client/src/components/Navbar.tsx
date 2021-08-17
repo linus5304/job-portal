@@ -1,5 +1,5 @@
 import { useApolloClient } from "@apollo/client";
-import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import {
   Flex,
   HStack,
@@ -9,6 +9,10 @@ import {
   Text,
   VStack,
   Button,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import React, { useState } from "react";
@@ -56,20 +60,30 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
               <NextLink href="/post-job">
                 <Button variant="ghost">Post Job</Button>
               </NextLink>
-              <NextLink href="">
-                <Button
-                  variant="ghost"
-                  onClick={async () => {
-                    await logout();
-                    apolloClient.resetStore();
-                  }}
-                >
-                  Logout
-                </Button>
-                </NextLink>
-              <NextLink href="/account/1">
-                <Button>My Account</Button>
-              </NextLink>
+
+              <Menu>
+                <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                  My Account
+                </MenuButton>
+                <MenuList>
+                  <NextLink href="/account/1">
+                    <MenuItem>Info</MenuItem>
+                  </NextLink>
+                  <NextLink href="/">
+                    <MenuItem
+                      onClick={async () => {
+                        await logout();
+                        apolloClient.resetStore();
+                      }}
+                    >
+                      Logout
+                    </MenuItem>
+                  </NextLink>
+                  <MenuItem>Mark as Draft</MenuItem>
+                  <MenuItem>Delete</MenuItem>
+                  <MenuItem>Attend a Workshop</MenuItem>
+                </MenuList>
+              </Menu>
             </HStack>
           ) : (
             <HStack spacing="24px">
@@ -131,10 +145,13 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
                   <Button variant="ghost">Post Job</Button>
                 </NextLink>
                 <NextLink href="">
-                  <Button variant="ghost" onClick={() => {
-                    logoutFn
-                    changeDisplay("flex")
-                  } }>
+                  <Button
+                    variant="ghost"
+                    onClick={() => {
+                      logoutFn;
+                      changeDisplay("flex");
+                    }}
+                  >
                     Logout
                   </Button>
                 </NextLink>
@@ -145,16 +162,24 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
             ) : (
               <VStack spacing="24px" mx="auto">
                 <NextLink href="/jobs">
-                  <Button variant="ghost" onClick={() => changeDisplay("none")}>Jobs</Button>
+                  <Button variant="ghost" onClick={() => changeDisplay("none")}>
+                    Jobs
+                  </Button>
                 </NextLink>
                 <NextLink href="/post-job">
-                  <Button variant="ghost" onClick={() => changeDisplay("none")}>Post Job</Button>
+                  <Button variant="ghost" onClick={() => changeDisplay("none")}>
+                    Post Job
+                  </Button>
                 </NextLink>
                 <NextLink href="/login">
-                  <Button variant="ghost" onClick={() => changeDisplay("none")}>Login</Button>
+                  <Button variant="ghost" onClick={() => changeDisplay("none")}>
+                    Login
+                  </Button>
                 </NextLink>
                 <NextLink href="/register">
-                  <Button onClick={() => changeDisplay("none")}>Register</Button>
+                  <Button onClick={() => changeDisplay("none")}>
+                    Register
+                  </Button>
                 </NextLink>
               </VStack>
             )}

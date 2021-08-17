@@ -34,7 +34,7 @@ export const login: React.FC<loginProps> & layout = ({}) => {
   const toast = useToast()
   const router = useRouter()
   return (
-    <MainLayout>
+    <MainLayout variant="small">
     <Formik
       initialValues={{ usernameOrEmail: "", password: "" }}
       onSubmit={async (values, {setErrors}) => {
@@ -46,11 +46,10 @@ export const login: React.FC<loginProps> & layout = ({}) => {
         }else if(response.data.login.user){
           console.log(values)
           toast({
-            title: "Account created.",
             position:'top-right',
-            description: "Create your profile in the MyAccout section",
+            description: "You are logged in",
             status: "success",
-            duration: 6000,
+            duration: 3000,
             isClosable: false,
           })
           router.push(`/account/${response.data.login.user.id}`)
