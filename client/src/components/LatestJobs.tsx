@@ -8,7 +8,7 @@ interface LatestJobsProps {}
 
 export const LatestJobs: React.FC<LatestJobsProps> = ({}) => {
   const { data } = useGetJobsQuery({
-    variables: { limit: 5 , cursor: null},
+    variables: { limit: 5 },
   });
   return (
     <Flex

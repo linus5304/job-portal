@@ -34,4 +34,4 @@ const IndexPage : React.FC<{}> & layout = () => {
 
 IndexPage.value = 'L2'
 
-export default withApollo({ssr: true}) (IndexPage)
+export default withApollo({ssr: false}) (IndexPage)

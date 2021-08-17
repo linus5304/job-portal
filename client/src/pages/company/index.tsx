@@ -5,7 +5,7 @@ import { Flex, Heading, Wrap, WrapItem, Text } from '@chakra-ui/react';
 import {CompanyCard} from '../../components/CompanyCard'
 import { MainLayout } from '../../components/layouts/MainLayout';
 import { withApollo } from '../../utils/withApollo';
-
+import { useGetCompaniesQuery } from './../../generated/graphql';
 
 interface CompaniesProps{
 
@@ -13,6 +13,7 @@ interface CompaniesProps{
 
 
 const Companies: React.FC<CompaniesProps> & layout = ({}) => {
+  const {data} = useGetCompaniesQuery()
         return (
             <MainLayout>
 
@@ -32,15 +33,12 @@ const Companies: React.FC<CompaniesProps> & layout = ({}) => {
         </Text>
       </Flex>
       <Wrap justify="center" mx="auto" alignItems="center">
-        <WrapItem>
-          <CompanyCard />
+      {data?.getCompanies.map(company => (
+            <WrapItem>
+          <CompanyCard name={company.name} imgUrl={company.logo} description={company.description.substr(0, 30)} key={company.id} id={company.id}/>
         </WrapItem>
-        <WrapItem>
-          <CompanyCard />
-        </WrapItem>
-        <WrapItem>
-          <CompanyCard />
-        </WrapItem>
+        
+        ))}
         
       </Wrap>
     </Flex>

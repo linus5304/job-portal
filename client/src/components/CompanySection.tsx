@@ -26,7 +26,7 @@ export const CompanySection: React.FC<CompanySectionProps> = ({heading}) => {
       <Wrap justify="center" mx="auto" alignItems="center">
         {data?.getCompanies.map(company => (
             <WrapItem>
-          <CompanyCard name={company.name} imgUrl={company.logo} description={company.description} key={company.id} id={company.id}/>
+          <CompanyCard name={company.name} imgUrl={company.logo} description={company.description.substr(0, 30)} key={company.id} id={company.id}/>
         </WrapItem>
         
         ))}

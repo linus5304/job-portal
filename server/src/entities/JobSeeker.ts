@@ -1,32 +1,31 @@
-import { Field } from "type-graphql";
+import { Field, ObjectType } from "type-graphql";
 import {
+  BaseEntity,
   Column,
   CreateDateColumn, Entity,
   PrimaryGeneratedColumn, UpdateDateColumn
 } from "typeorm";
 
 @Entity()
-export class JobSeeker {
+@ObjectType()
+export class JobSeeker extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  name: string;
+  first_name: string;
 
   @Column()
-  location: string;
+  last_name: string;
 
   @Column()
-  website: string;
+  about_me: string;
 
   @Column()
   phone: string;
 
   @Column()
-  logo: string;
-
-  @Column()
-  description: string;
+  profile_pic: string;
   
   @Field(() => String)
   @CreateDateColumn()

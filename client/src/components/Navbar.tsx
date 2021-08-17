@@ -57,6 +57,9 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
               <NextLink href="/jobs">
                 <Button variant="ghost">Jobs</Button>
               </NextLink>
+              <NextLink href="/company">
+                <Button variant="ghost">Companies</Button>
+              </NextLink>
               <NextLink href="/post-job">
                 <Button variant="ghost">Post Job</Button>
               </NextLink>
@@ -79,9 +82,9 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
                       Logout
                     </MenuItem>
                   </NextLink>
-                  <MenuItem>Mark as Draft</MenuItem>
+                  {/* <MenuItem>Mark as Draft</MenuItem>
                   <MenuItem>Delete</MenuItem>
-                  <MenuItem>Attend a Workshop</MenuItem>
+                  <MenuItem>Attend a Workshop</MenuItem> */}
                 </MenuList>
               </Menu>
             </HStack>
