@@ -1,0 +1,31 @@
+fragment workDetails on Work {
+  id
+  company_name
+  position
+  field
+  jobSeekerId
+  start_date
+  end_date
+}
+mutation AddWork($data: WorkInput!) {
+  addWork(data: $data) {
+    ...workDetails
+  }
+}
+
+mutation UpdateWork($data: WorkInput!, $id: Int!) {
+  updateWork(data: $data, id: $id) {
+    ...workDetails
+  }
+}
+
+query GetAllWork($jsId: Int!) {
+  getAllWork(jsId: $jsId) {
+    ...workDetails
+  }
+}
+query GetWorkbyId($id: Int!) {
+  getWorkbyId(id: $id) {
+    ...workDetails
+  }
+}

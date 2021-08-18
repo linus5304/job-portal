@@ -18,6 +18,7 @@ import NextLink from "next/link";
 import React, { useState } from "react";
 import { FaKeycdn } from "react-icons/fa";
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
+import {useRouter} from 'next/router'
 
 interface NavbarProps {}
 
@@ -26,6 +27,7 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
   const { data } = useMeQuery();
   const [logout] = useLogoutMutation();
   const apolloClient = useApolloClient();
+  const router = useRouter()
 
   const logoutFn = async () => {
     await logout();
@@ -69,19 +71,20 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
                   My Account
                 </MenuButton>
                 <MenuList>
-                  <NextLink href="/account/1">
+                  <NextLink href={`/account/${data?.me.id}`}>
                     <MenuItem>Info</MenuItem>
                   </NextLink>
-                  <NextLink href="/">
+                  
                     <MenuItem
                       onClick={async () => {
                         await logout();
+                        router.push('/')
                         apolloClient.resetStore();
                       }}
                     >
                       Logout
                     </MenuItem>
-                  </NextLink>
+                  
                   {/* <MenuItem>Mark as Draft</MenuItem>
                   <MenuItem>Delete</MenuItem>
                   <MenuItem>Attend a Workshop</MenuItem> */}

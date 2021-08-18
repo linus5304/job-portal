@@ -1,0 +1,35 @@
+fragment educationDetails on Education {
+  id
+  school
+  degree
+  field
+  start_date
+  end_date
+  jobSeekerId
+}
+mutation AddEducation($data: EducationInput!) {
+  addEducation(data: $data) {
+    ...educationDetails
+  }
+}
+
+mutation UpdateEducation($data: EducationInput!, $id: Int!) {
+  updateEducation(data: $data, id: $id) {
+    ...educationDetails
+  }
+}
+
+mutation DeleteEducation($id: Int!) {
+  deleteEducation(id: $id)
+}
+
+query GetAllEducation($jsId: Int!) {
+  getAllEducation(jsId: $jsId) {
+    ...educationDetails
+  }
+}
+query GetEducationbyId($id: Int!) {
+  getEducationbyId(id: $id) {
+    ...educationDetails
+  }
+}

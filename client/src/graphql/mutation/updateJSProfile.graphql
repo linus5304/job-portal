@@ -1,0 +1,10 @@
+mutation updateJsProfile($id: Int!, $data:JSProfileInput!){
+  updateJSProfile(id: $id, data:$data){
+    first_name
+    last_name
+    about_me
+    profile_pic
+    userId
+    email
+  }
+}

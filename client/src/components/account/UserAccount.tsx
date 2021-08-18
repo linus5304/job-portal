@@ -1,41 +1,49 @@
-import React, { useState } from "react";
-
+import { useApolloClient } from "@apollo/client";
 import {
-  Text,
-  Flex,
-  Box,
+  Avatar,
   Button,
+  Divider,
+  Flex,
   Heading,
-  Icon,
-  VStack,
-  Stack,
   HStack,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
-  useColorModeValue,
-  Divider,
-  Link,
-  Image,
-  Avatar,
-  IconButton,
-  useDisclosure,
+  Text,
+  VStack,
 } from "@chakra-ui/react";
+import { Form, Formik } from "formik";
+import { useRouter } from "next/router";
+import React, {useState, useEffect} from "react";
+import Dropzone from "react-dropzone";
+import { FiUploadCloud } from "react-icons/fi";
+import {
+  useFileUploadMutation,
+  useGetJsProfileQuery,
+  useUpdateJsProfileMutation,
+} from "../../generated/graphql";
 import { JobListItem } from "../JobListItem";
 import { InputField } from "./../form/InputField";
-import { Form, Formik } from "formik";
-import Dropzone from "react-dropzone";
-import { FiUploadCloud, FiPlus } from "react-icons/fi";
 import { Education } from "./Education";
 import { WorkExperience } from "./WorkExperience";
 
 interface UserAccountProps {}
 
 export const UserAccount: React.FC<UserAccountProps> = ({}) => {
+  const { data } = useGetJsProfileQuery();
+  const [updateProfile] = useUpdateJsProfileMutation();
+  const [uploadFile] = useFileUploadMutation();
+  const apolloClient = useApolloClient();
+  
+  console.log(data?.getJSProfile)
+ 
+  const router = useRouter();
+
   return (
     <>
+    
       <VStack py="6%" spacing="2%">
         <Heading>MY ACCOUNT</Heading>
         <Tabs>
@@ -58,7 +66,7 @@ export const UserAccount: React.FC<UserAccountProps> = ({}) => {
           </TabList>
           <Divider bg="black" size="lg" w="100%" />
 
-          <TabPanels >
+          <TabPanels>
             <TabPanel>
               <JobListItem
                 title="Credit analys"
@@ -81,7 +89,7 @@ export const UserAccount: React.FC<UserAccountProps> = ({}) => {
                 />
               </VStack>
             </TabPanel>
-            <TabPanel bg="#fff">
+            <TabPanel bg="#fff" borderRadius="4px">
               <VStack>
                 <HStack minW="100%" justify="space-around" align="flex-start">
                   <Text fontSize="lg" fontWeight="semibold">
@@ -90,43 +98,85 @@ export const UserAccount: React.FC<UserAccountProps> = ({}) => {
 
                   <Flex>
                     <Formik
-                      initialValues={{ name: "", email: "" }}
-                      onSubmit={(values) => {}}
-                    >
-                      {() => (
-                        <Form>
-                          <InputField name="name" label="Name" />
-                          <InputField name="email" label="Email" />
-                          <InputField name="about" label="About" textarea />
-                          <Flex alignItems="center" gridGap={5}>
-                    <Avatar
-                      size="xl"
-                      name="Segun Adebayo"
-                      src="https://bit.ly/sage-adebayo"
-                    />
-
-                    <Dropzone
-                      onDrop={() => {
-                        console.log("hello");
+                      initialValues={{
+                        first_name: data?.getJSProfile.first_name,
+                        last_name: data?.getJSProfile.last_name,
+                        email: data?.getJSProfile.email,
+                        about_me: data?.getJSProfile.about_me,
+                        profile_pic: data?.getJSProfile.about_me,
+                      }}
+                      onSubmit={async (values) => {
+                        const response = await updateProfile({
+                          variables: {
+                            id: data?.getJSProfile.id,
+                            data: values,
+                          },
+                        });
+                        // apolloClient.restore()
+                        console.log(values, data?.getJSProfile.id);
                       }}
                     >
-                      {({ getRootProps, getInputProps }) => (
-                        <Flex {...getRootProps()}>
-                          <input {...getInputProps()} name="image" />
-                          <Button leftIcon={<FiUploadCloud />}>
-                            update Image
-                          </Button>
-                          {/* {name ? (<Text>{name}</Text> ): null} */}
-                        </Flex>
-                      )}
-                    </Dropzone>
-                  </Flex>
+                      {({ isSubmitting, setFieldValue }) => (
+                        <Form>
+                          <VStack>
+                            <InputField
+                              name="first_name"
+                              label="First Name"
+                            />
+                            <InputField
+                              name="last_name"
+                              label="Last Name"
+                            />
+                            <InputField
+                              name="email"
+                              label="Email"
+                            />
+                            <InputField
+                              name="about_me"
+                              label="About"
+                              textarea
+                            />
+                            <Flex alignItems="center" gridGap={5}>
+                              <Avatar
+                                size="xl"
+                                name="ok boys"
+                                src={''}
+                              />
+                              <Dropzone
+                                onDrop={async ([file]) => {
+                                  const { data } = await uploadFile({
+                                    variables: { imgUrl: file },
+                                  });
+                                  setFieldValue(
+                                    "profile_pic",
+                                    data.fileUpload.url
+                                  );
+                                }}
+                              >
+                                {({ getRootProps, getInputProps }) => (
+                                  <Flex {...getRootProps()}>
+                                    <input
+                                      {...getInputProps()}
+                                      name="profile_pic"
+                                    />
+                                    <Button leftIcon={<FiUploadCloud />}>
+                                      update Image
+                                    </Button>
+                                    {/* {name ? (<Text>{name}</Text> ): null} */}
+                                  </Flex>
+                                )}
+                              </Dropzone>
+                            </Flex>
+                            <Button type="submit" isLoading={isSubmitting}>
+                              Update
+                            </Button>
+                          </VStack>
                         </Form>
                       )}
                     </Formik>
                   </Flex>
                 </HStack>
-                
+
                 <Divider />
                 <VStack
                   minW="100%"
@@ -134,7 +184,7 @@ export const UserAccount: React.FC<UserAccountProps> = ({}) => {
                   align="flex-start"
                   pl="10%"
                 >
-                  <Education />
+                  <Education jsId={data?.getJSProfile.id}/>
                 </VStack>
                 <Divider />
                 <VStack
@@ -143,7 +193,7 @@ export const UserAccount: React.FC<UserAccountProps> = ({}) => {
                   align="flex-start"
                   pl="10%"
                 >
-                  <WorkExperience />
+                  <WorkExperience jsId={data?.getJSProfile.id}/>
                 </VStack>
               </VStack>
             </TabPanel>

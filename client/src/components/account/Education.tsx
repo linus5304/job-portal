@@ -18,12 +18,24 @@ import {
 } from "@chakra-ui/react";
 import { FiEdit, FiPlus } from "react-icons/fi";
 import { Form, Formik } from "formik";
+import {
+  useAddEducationMutation,
+  useGetAllEducationQuery,
+} from "../../generated/graphql";
+import { EduWorkItem } from "./EduWorktem";
 
-interface EducationProps {}
+interface EducationProps {
+  jsId: number;
+}
 
-export const Education: React.FC<EducationProps> = ({}) => {
+export const Education: React.FC<EducationProps> = ({ jsId }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [addEducation] = useAddEducationMutation();
+  const { data } = useGetAllEducationQuery({
+    variables: { jsId },
+  });
 
+  console.log("id", jsId);
   return (
     <>
       <HStack justify="space-between" w="100%">
@@ -41,35 +53,48 @@ export const Education: React.FC<EducationProps> = ({}) => {
         </Flex>
       </HStack>
 
-      <Flex justifyContent="space-between" w="100%">
-        <VStack align="flex-start" spacing="2px">
-          <Text fontWeight="bold">IAI Cameroon</Text>
-          <Flex gridGap={2}>
-            <Text>Bachelor, </Text>
-            <Text>Computer Science</Text>
-          </Flex>
-          <Text>2020-2023</Text>
-        </VStack>
-        <IconButton
-          variant="outline"
-          aria-label="Call Segun"
-          size="md"
-          icon={<FiEdit fontWeight="bold" />}
+      {data?.getAllEducation.map((edu) => (
+        <EduWorkItem
+          variant="edu"
+          school={edu.school}
+          degree={edu.degree}
+          field={edu.field}
+          start={edu.start_date}
+          end={edu.end_date}
+          key={edu.id}
+          id={edu.id}
+          jsId={edu.jobSeekerId}
         />
-      </Flex>
+      ))}
 
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Add Education</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pb={6}>
-            <Formik
-              initialValues={{ name: "", email: "" }}
-              onSubmit={(values) => {}}
-            >
-              {() => (
-                <Form>
+      <Formik
+        initialValues={{
+          jobSeekerId: jsId,
+          school: "",
+          degree: "",
+          field: "",
+          start_date: "",
+          end_date: "",
+        }}
+        onSubmit={async (values) => {
+          const response = await addEducation({
+            variables: { data: values },
+          });
+          if (response.data.addEducation) {
+            console.log(values);
+          }
+          console.log(values);
+        }}
+      >
+        {({ isSubmitting }) => (
+          <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <Form>
+              <ModalContent>
+                <ModalHeader>Add Education</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody pb={6}>
+                  <InputField name="jobSeekerId" type="hidden" />
                   <InputField name="school" label="School" />
                   <InputField name="degree" label="Degree" />
                   <InputField name="field" label="Field of Study" />
@@ -81,19 +106,18 @@ export const Education: React.FC<EducationProps> = ({}) => {
                     />
                     <InputField name="end_date" label="End Date" type="date" />
                   </Flex>
-                </Form>
-              )}
-            </Formik>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3}>
-              Save
-            </Button>
-            <Button onClick={onClose}>Cancel</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+                </ModalBody>
+                <ModalFooter>
+                  <Button mr={3} type="submit" isLoading={isSubmitting}>
+                    Add
+                  </Button>
+                  <Button onClick={onClose}>Cancel</Button>
+                </ModalFooter>
+              </ModalContent>
+            </Form>
+          </Modal>
+        )}
+      </Formik>
     </>
   );
 };

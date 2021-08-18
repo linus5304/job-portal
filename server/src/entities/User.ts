@@ -5,6 +5,7 @@ import {
 import { Application } from "./Application";
 import { CompanyProfile } from "./Company";
 import { Job } from "./Job";
+import { JobSeeker } from "./JobSeeker";
 
 @ObjectType()
 @Entity()
@@ -30,6 +31,9 @@ export class User extends BaseEntity {
 
   @OneToOne(() => CompanyProfile, (companyProfile) => companyProfile.user)
   companyProfile: CompanyProfile;
+
+  @OneToOne(() => JobSeeker, (jobSeeker) => jobSeeker.user)
+  jobSeeker: JobSeeker;
 
   @OneToMany(() => Job, (job) => job.user)
   jobs: Job[];

@@ -18,11 +18,20 @@ import {
 } from "@chakra-ui/react";
 import { FiEdit, FiPlus } from "react-icons/fi";
 import { Form, Formik } from "formik";
+import { EduWorkItem } from "./EduWorktem";
+import { useGetAllWorkQuery } from "../../generated/graphql";
+import { useAddWorkMutation } from "./../../generated/graphql";
 
-interface WorkExperienceProps {}
+interface WorkExperienceProps {
+  jsId: number;
+}
 
-export const WorkExperience: React.FC<WorkExperienceProps> = ({}) => {
+export const WorkExperience: React.FC<WorkExperienceProps> = ({ jsId }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [addWk] = useAddWorkMutation();
+  const { data } = useGetAllWorkQuery({
+    variables: { jsId },
+  });
 
   return (
     <>
@@ -40,39 +49,51 @@ export const WorkExperience: React.FC<WorkExperienceProps> = ({}) => {
           />
         </Flex>
       </HStack>
-
-      <Flex justifyContent="space-between" w="100%">
-        <VStack align="flex-start" spacing="2px">
-          <Text fontWeight="bold">Yahoo Inc.</Text>
-          <Flex gridGap={2}>
-            <Text>Senior Frontend Developer </Text>
-            <Text></Text>
-          </Flex>
-          <Text>2020-2023</Text>
-        </VStack>
-        <IconButton
-          variant="outline"
-          aria-label="Call Segun"
-          size="md"
-          icon={<FiEdit fontWeight="bold" />}
+      {data?.getAllWork.map((wk) => (
+        <EduWorkItem
+          variant="work"
+          comp_name={wk.company_name}
+          position={wk.position}
+          field={wk.field}
+          start={wk.start_date}
+          end={wk.end_date}
+          key={wk.id}
+          id={wk.id}
+          jsId={wk.jobSeekerId}
         />
-      </Flex>
+      ))}
 
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Add Experience</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pb={6}>
-            <Formik
-              initialValues={{ name: "", email: "" }}
-              onSubmit={(values) => {}}
-            >
-              {() => (
-                <Form>
-                  <InputField name="school" label="School" />
-                  <InputField name="degree" label="Degree" />
-                  <InputField name="field" label="Field of Study" />
+      <Formik
+        initialValues={{
+          jobSeekerId: jsId,
+          comp_name: "",
+          position: "",
+          field: "",
+          start_date: "",
+          end_date: "",
+        }}
+        onSubmit={async (values) => {
+          const response = await addWk({
+            variables: { data: values },
+          });
+          if (response.data.addWork) {
+            console.log(values);
+          }
+          console.log(values);
+        }}
+      >
+        {({ isSubmitting }) => (
+          <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <Form>
+              <ModalContent>
+                <ModalHeader>Add Experience</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <InputField name="jobSeekerId" type="hidden" />
+                  <InputField name="company_name" label="Company Name" />
+                  <InputField name="position" label="Title" />
+                  <InputField name="field" label="Business Field" />
                   <Flex>
                     <InputField
                       name="start_date"
@@ -81,19 +102,19 @@ export const WorkExperience: React.FC<WorkExperienceProps> = ({}) => {
                     />
                     <InputField name="end_date" label="End Date" type="date" />
                   </Flex>
-                </Form>
-              )}
-            </Formik>
-          </ModalBody>
+                </ModalBody>
 
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3}>
-              Save
-            </Button>
-            <Button onClick={onClose}>Cancel</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+                <ModalFooter>
+                  <Button mr={3} isLoading={isSubmitting}>
+                    Add
+                  </Button>
+                  <Button onClick={onClose}>Cancel</Button>
+                </ModalFooter>
+              </ModalContent>
+            </Form>
+          </Modal>
+        )}
+      </Formik>
     </>
   );
 };
