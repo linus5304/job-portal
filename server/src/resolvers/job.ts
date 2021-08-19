@@ -141,10 +141,6 @@ export class JobResolver {
     `,
       replacements
     );
-    // return await getConnection()
-    //   .createQueryBuilder(Job, "jobs")
-    //   .orderBy("jobs.createdAt", "DESC")
-    //   .getMany();
     return {
       jobs: jobs.slice(0, realLimit),
       hasMore: jobs.length === realLimitPlusOne,

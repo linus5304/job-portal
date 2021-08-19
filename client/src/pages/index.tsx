@@ -1,4 +1,4 @@
-import { Button, Flex } from '@chakra-ui/react'
+import { Button, Flex , Divider, Box} from '@chakra-ui/react'
 import Link from 'next/link'
 import { Hero } from '../components/Hero'
 import { HeroContact } from '../components/HeroContact';
@@ -10,6 +10,8 @@ import { LatestJobs } from '../components/LatestJobs';
 import { withApollo } from '../utils/withApollo';
 import React from 'react';
 import { MainLayout } from "../components/layouts/MainLayout";
+import { HeroCategory } from '../components/HeroCategory';
+import { HelpSection } from '../components/HelpSection';
 
 
 export type layout = {
@@ -21,11 +23,13 @@ const IndexPage : React.FC<{}> & layout = () => {
     <>
     <MainLayout >
     <Hero/>
-    <CompanySection heading="Featured Companies"/>
-    <HeroPost/>
+    {/* <CompanySection heading="Featured Companies"/> */}
+    <HeroCategory/>
+    <HelpSection/>
     <FeaturedJobs/>
-    <LatestJobs/>
-    <HeroContact/>
+    <HeroPost/>
+    <HeroContact/>    
+    
     </MainLayout>
     </>
   )

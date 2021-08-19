@@ -60,10 +60,10 @@ export class UserResolver {
   async getCompanyUserDetails(@Ctx() { req }: MyContext) {
     const details = await getConnection()
       .createQueryBuilder(CompanyProfile, "company")
-      .where("company.userId = :userId", {userId: req.session.userId})
-      .getOne()
+      .where("company.userId = :userId", { userId: req.session.userId })
+      .getOne();
 
-      return details
+    return details;
   }
 
   @Mutation(() => UserResponse)

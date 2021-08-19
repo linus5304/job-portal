@@ -28,7 +28,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({}) => {
       bg="white"
       w="60%"
       alignSelf="center"
-      mb={["-8%", "-8%", "-8%", "-4%"]}
+      // mb={["-8%", "-8%", "-8%", "-4%"]}
       boxShadow="lg"
       borderRadius="lg"
     >

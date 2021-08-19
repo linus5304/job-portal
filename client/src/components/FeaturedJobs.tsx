@@ -10,10 +10,9 @@ export const FeaturedJobs: React.FC<FeaturedJobsProps> = ({}) => {
     variables: {limit : 3}
   })
   return (
-      <>
     <Flex
       flexDirection="column"
-      maxWidth="60%"
+      maxWidth="50%"
       justifyContent="center"
       alignItems="center"
       mx="auto"
@@ -26,7 +25,17 @@ export const FeaturedJobs: React.FC<FeaturedJobsProps> = ({}) => {
         </Text>
       </Box>
       <VStack spacing="24px" w="100%">
-      {data?.getJobs.jobs.map((job) => (
+      
+            <JobListItem
+              title="iOS Developer"
+              location="Berlyn, UK"
+              imgUrl='/bg2.jpg'
+              postDate="2021-08-02"
+              companyName="Shopify"
+              salary="XAF 150,000"
+            />
+        
+      {/* {data?.getJobs.jobs.map((job) => (
             <JobListItem
               title={job.title}
               location={job.location}
@@ -36,9 +45,8 @@ export const FeaturedJobs: React.FC<FeaturedJobsProps> = ({}) => {
               companyName={job.company.name}
               id={job.id}
             />
-          ))}
+          ))} */}
       </VStack>
     </Flex>
-    </>
   );
 };

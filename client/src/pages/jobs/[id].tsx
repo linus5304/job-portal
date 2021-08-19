@@ -1,17 +1,48 @@
 import {
   Box,
-  Button, Flex, Heading, HStack, Icon, Image, Link, Stack, Text, useColorModeValue, VStack, useToast
+  Button,
+  Flex,
+  Heading,
+  HStack,
+  Icon,
+  Image,
+  Link,
+  Stack,
+  Text,
+  useColorModeValue,
+  VStack,
+  useToast,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure
 } from "@chakra-ui/react";
+import { Formik, Form } from "formik";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import { FaChevronLeft, FaFacebook, FaInstagram, FaLinkedin, FaTwitter } from "react-icons/fa";
+import {
+  FaChevronLeft,
+  FaFacebook,
+  FaInstagram,
+  FaLinkedin,
+  FaTwitter,
+} from "react-icons/fa";
 import { FiCalendar, FiGlobe } from "react-icons/fi";
 import { MdLocationOn } from "react-icons/md";
+import { InputField } from "../../components/form/InputField";
 import { layout } from "../../utils/types";
 import { withApollo } from "../../utils/withApollo";
 import { MainLayout } from "./../../components/layouts/MainLayout";
-import { useApplyMutation, useGetJobByIdQuery } from "./../../generated/graphql";
+import {
+  useApplyMutation,
+  useGetJobByIdQuery,
+} from "./../../generated/graphql";
+import Moment  from 'react-moment';
 
 interface JobProps {}
 
@@ -26,32 +57,33 @@ const Job: React.FC<JobProps> & layout = ({}) => {
     },
   });
 
-  const toast = useToast()
-  const [apply] = useApplyMutation()
+  const toast = useToast();
+  const [apply] = useApplyMutation();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleApplication = async () => {
-    const response = await apply({variables: {jobId}})
-    if(!response.data?.apply){ 
+    const response = await apply({ variables: { jobId } });
+    if (!response.data?.apply) {
       toast({
-      title: "Application failed.",
-      position:'top-right',
-      description: "An error occured when applying",
-      status: "error",
-      duration: 4000,
-      isClosable: true,
-    })
-    toast({
-      title: "Application Successfull",
-      position:'top-right',
-      description: "You have successfully applied. Manage jobs in Myaccoount section",
-      status: "success",
-      duration: 6000,
-      isClosable: false,
-    })
-    router.push(`/account/${data.getJobById.userId}`)
-
+        title: "Application failed.",
+        position: "top-right",
+        description: "An error occured when applying",
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+      });
+      toast({
+        title: "Application Successfull",
+        position: "top-right",
+        description:
+          "You have successfully applied. Manage jobs in Myaccoount section",
+        status: "success",
+        duration: 6000,
+        isClosable: false,
+      });
+      router.push(`/account/${data.getJobById.userId}`);
     }
-  }
+  };
   return (
     <>
       <MainLayout>
@@ -95,7 +127,7 @@ const Job: React.FC<JobProps> & layout = ({}) => {
                   </Flex>
                   <Flex alignItems="center">
                     <Icon as={FiCalendar} fontSize="lg" />
-                    <Text>{data?.getJobById.createdAt}</Text>
+                    <Text><Moment format="MMM DD YYYY">{data?.getJobById.createdAt}</Moment></Text>
                   </Flex>
                 </HStack>
               </Flex>
@@ -165,7 +197,7 @@ const Job: React.FC<JobProps> & layout = ({}) => {
             justifyContent="space-between"
             flexDir={["column", "column", "column", "row", "row"]}
           >
-            <Button size="lg" ml="-15%" onClick={handleApplication}>
+            <Button size="lg" ml="-15%" onClick={onOpen}>
               APPLY NOW
             </Button>
 
@@ -187,6 +219,53 @@ const Job: React.FC<JobProps> & layout = ({}) => {
           </Flex>
         </Flex>
       </MainLayout>
+
+      <Formik
+        initialValues={{
+          jobSeekerId: null,
+          comp_name: "",
+          position: "",
+          field: "",
+          start_date: "",
+          end_date: "",
+        }}
+        onSubmit={async (values) => {
+          console.log(values);
+        }}
+      >
+        {({ isSubmitting }) => (
+          <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <Form>
+              <ModalContent>
+                <ModalHeader>Apply for Job</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <InputField name="jobSeekerId" type="hidden" />
+                  <InputField name="company_name" label="Company Name" />
+                  <InputField name="position" label="Title" />
+                  <InputField name="field" label="Business Field" />
+                  <Flex>
+                    <InputField
+                      name="start_date"
+                      label="start Date"
+                      type="date"
+                    />
+                    <InputField name="end_date" label="End Date" type="date" />
+                  </Flex>
+                </ModalBody>
+
+                <ModalFooter>
+                  <Button mr={3} isLoading={isSubmitting}>
+                    Apply
+                  </Button>
+                  <Button onClick={onClose}>Cancel</Button>
+                </ModalFooter>
+              </ModalContent>
+            </Form>
+          </Modal>
+        )}
+      </Formik>
     </>
   );
 };

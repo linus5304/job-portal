@@ -1,6 +1,5 @@
 import React from 'react';
-import { Flex, Text, Button } from '@chakra-ui/react';
-import { Stack } from '@chakra-ui/react';
+import { Flex, Text, Button, Stack , Image} from '@chakra-ui/react';
 
 
 interface HeroPostProps{
@@ -10,12 +9,17 @@ interface HeroPostProps{
 
 export const HeroPost: React.FC<HeroPostProps> = ({}) => {
         return (
-            <Flex h="300px" w="100%" flexDirection="column" bg="#470137" py={4} alignItems="center" justifyContent="center" mx="auto">
-                <Stack direction="column" spacing="30px">
-                    <Text fontSize={['2xl', '2xl','4xl','6xl' ]} fontWeight="bold" color="white" textAlign="center">Post your Job Today</Text>
-                    <Text fontSize={['xl', 'xl','2xl','2xl' ]}  color="white" textAlign="center">Job seekers will be able to find your first-class job</Text>
-                    <Button  alignSelf="center" size="lg">Post Job</Button>
+            <Flex   bg="#00b074" py="8%">
+            <Stack direction={["column","column","column","row","row"]} w="80%"  mx="auto">
+                <Stack direction="column" align="flex-start" my="auto" w={["100%","100%","100%","100%","60%"]} >
+                    <Text fontSize={['2xl', '2xl','4xl','6xl' ]} fontWeight="bold" color="white" >Get applications from the world best talents.</Text>
+                    <Text fontSize={['xl', 'xl','2xl','2xl' ]}  color="white">Capitalize on low hanging fruit to identify a ballpark value added activity to beta test. Override the digital divide with additional clickthroughs from DevOps.</Text>
+                    <Button size="lg">Post Job</Button>
                 </Stack>
+                <Flex>
+          <Image src="/content-2-img1.png" alt="smile" />
+        </Flex>
+            </Stack>
             </Flex>
         );
 };

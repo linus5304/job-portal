@@ -35,7 +35,7 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
   };
 
   return (
-    <Flex top={0} zIndex={40} bg="white" px={8} py={4} position="sticky">
+    <Flex top={0} zIndex={40} px={8} py={4} position="sticky" bg="white" >
       <Flex justifyContent="space-between" w="100%">
         <Flex>
           <NextLink href="/" passHref>
@@ -50,14 +50,9 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
           </NextLink>
         </Flex>
 
-        <Flex
-          justifyContent="space-between"
-          display={["none", "none", "none", "flex", "flex"]}
-        >
-          {data?.me ? (
-            <HStack spacing="24px">
-              <NextLink href="/jobs">
-                <Button variant="ghost">Jobs</Button>
+        <Flex>
+           <NextLink href="/jobs">
+                <Button variant="ghost" >Jobs</Button>
               </NextLink>
               <NextLink href="/company">
                 <Button variant="ghost">Companies</Button>
@@ -65,6 +60,15 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
               <NextLink href="/post-job">
                 <Button variant="ghost">Post Job</Button>
               </NextLink>
+        </Flex>
+
+        <Flex
+          justifyContent="space-between"
+          display={["none", "none", "none", "flex", "flex"]}
+        >
+          {data?.me ? (
+            <HStack spacing="24px">
+             
 
               <Menu>
                 <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
@@ -85,25 +89,17 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
                       Logout
                     </MenuItem>
                   
-                  {/* <MenuItem>Mark as Draft</MenuItem>
-                  <MenuItem>Delete</MenuItem>
-                  <MenuItem>Attend a Workshop</MenuItem> */}
+                 
                 </MenuList>
               </Menu>
             </HStack>
           ) : (
             <HStack spacing="24px">
-              <NextLink href="/jobs">
-                <Button variant="ghost">Jobs</Button>
-              </NextLink>
-              <NextLink href="/post-job">
-                <Button variant="ghost">Post Job</Button>
-              </NextLink>
               <NextLink href="/login">
-                <Button variant="ghost">Login</Button>
+                <Button variant="ghost" size="lg">Login</Button>
               </NextLink>
               <NextLink href="/register">
-                <Button>Register</Button>
+                <Button bg="#00b074" color="white" size="lg" _hover={{bg:"#00b074"}}>Register</Button>
               </NextLink>
             </HStack>
           )}

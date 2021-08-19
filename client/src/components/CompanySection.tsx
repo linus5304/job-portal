@@ -1,38 +1,32 @@
 import React from "react";
-import { Flex, Text, Stack, Wrap, WrapItem } from "@chakra-ui/react";
+import { Flex, Text, Stack, Wrap, WrapItem, VStack, HStack, Image,LinkBox, Box, LinkOverlay, Heading } from "@chakra-ui/react";
 import { CompanyCard } from "./CompanyCard";
 import { useGetCompaniesQuery } from './../generated/graphql';
 
 interface CompanySectionProps {
   heading?:string
+  
 }
 
 export const CompanySection: React.FC<CompanySectionProps> = ({heading}) => {
   const {data} = useGetCompaniesQuery()
   return (
-    <Flex
-      flexDir="column"
-      mt={["10%", "10%", "10%", "6%", "6%"]}
-      w="70%"
-      mx="auto"
-      justifyContent="center"
-      pb={8}
-    >
-      <Flex mx="auto">
-        <Text fontSize="4xl" fontWeight="bold" textAlign="center">
-          {heading}
-        </Text>
+    <Flex bg="#dddddd">
+    <Flex h="100%" w="80%" mx="auto" py="3%">
+      <VStack spacing="20px" align="flex-start">
+        <Heading>
+          Featured Companies
+        </Heading>
+        <Wrap spacing="30px" justify="space-between" w="100%">
+        <WrapItem><CompanyCard name="Apple" jobs={20}/></WrapItem>
+        <WrapItem><CompanyCard name="Apple" jobs={20}/></WrapItem>
+        <WrapItem><CompanyCard name="Apple" jobs={20}/></WrapItem>
+        </Wrap>
+      
+      
+      </VStack>
       </Flex>
-      <Wrap justify="center" mx="auto" alignItems="center">
-        {data?.getCompanies.map(company => (
-            <WrapItem>
-          <CompanyCard name={company.name} imgUrl={company.logo} description={company.description.substr(0, 30)} key={company.id} id={company.id}/>
-        </WrapItem>
-        
-        ))}
-        
-        
-      </Wrap>
-    </Flex>
+      </Flex>
+      
   );
 };

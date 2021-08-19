@@ -13,7 +13,7 @@ interface MainLayoutProps{
 export const MainLayout: React.FC<MainLayoutProps> = ({children,variant}) => {
         return (
             //header
-            <Box bg="gray.200" w="100%" >
+            <Box bg="#eaeaea" w="100%" >
                 <Navbar/>
                 <Wrapper variant={variant}>
                     {children}
