@@ -74,7 +74,7 @@ export const Register: React.FC<RegisterProps> & layout = ({}) => {
               flexDir="column"
             >
               <Flex mb="5%" flexDirection="column">
-                <Heading size="xl" textAlign="center" fontWeight="bold" mb={2}>
+                <Heading size="xl" textAlign="center" fontWeight="bold" mb={2} >
                   Register
                 </Heading>
                 <Divider />
@@ -100,14 +100,14 @@ export const Register: React.FC<RegisterProps> & layout = ({}) => {
                     label="User Type"
                     select
                   />
-                  <Button type="submit" size="lg" isLoading={isSubmitting}>
-                    Next
+                  <Button type="submit" isLoading={isSubmitting} w="100%" bg="#00b074" color="white" size="lg" _hover={{bg:"green.500"}}>
+                    Register
                   </Button>
                 </VStack>
                 <Flex gridGap="2%" fontSize="sm" mt="3%">
                   <Text fontSize="sm">Already have account?</Text>
                   <NextLink href="/login">
-                    <Link fontSize="sm" color="#470137" fontWeight="semibold">
+                    <Link fontSize="sm" color="#00b074" fontWeight="semibold">
                       Login
                     </Link>
                   </NextLink>

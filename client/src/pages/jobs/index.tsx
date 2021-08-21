@@ -5,6 +5,7 @@ import { HeroJob } from "./../../components/HeroJob";
 import { Flex, VStack, Button, Text, Box, Heading, Skeleton } from "@chakra-ui/react";
 import { Filter } from "./../../components/Filter";
 import { JobListItem } from "./../../components/JobListItem";
+import { SearchBox } from "./../../components/SearchBox";
 import { Job, useGetJobsQuery } from "./../../generated/graphql";
 import { MainLayout } from './../../components/layouts/MainLayout';
 import { withApollo } from "../../utils/withApollo";
@@ -14,7 +15,7 @@ interface indexProps {}
 export const index: React.FC<indexProps> & layout = ({}) => {
   const [newLimit, setNewLimit] = useState(5)
   const { data, loading, fetchMore, variables, error } = useGetJobsQuery({
-    variables: { limit: newLimit, cursor: null },
+    variables: { limit: 5, cursor: null },
   });
 
   // const [saveJobs, setSaveJobs] = useState([] as Job[]);
@@ -44,7 +45,8 @@ export const index: React.FC<indexProps> & layout = ({}) => {
   return (
     <>
         <MainLayout >
-      <HeroJob />
+
+      
       <Flex justify="space-between" mx="auto" w="60%" pt="10%" pb="4%">
         <VStack
           spacing="24px"
@@ -64,6 +66,8 @@ export const index: React.FC<indexProps> & layout = ({}) => {
             heading="Experience Level"
           />
         </VStack>
+        <VStack align="flex-start" w="100%" spacing="30px">
+        <SearchBox/>
         {!data && loading ? (
           <VStack spacing="24px" w="100%">
             
@@ -90,16 +94,18 @@ export const index: React.FC<indexProps> & layout = ({}) => {
             </VStack>
           
         ): (
-        <VStack spacing="24px" w="100%">
+        <VStack spacing="24px" w="100%" align="flex-start">
+        <Text>{data?.getJobs.jobs.length} results for UI Designer</Text>
           {data?.getJobs.jobs.map((job) => (
             <JobListItem
               title={job.title}
               location={job.location}
               imgUrl={job.imgUrl}
-              postDate={job.createdAt}
+              postDate={job.createdDate}
               key={job.id}
               companyName={job.company.name}
               id={job.id}
+              salary={job.salary}
             />
           ))}
           {data?.getJobs.hasMore ? (
@@ -123,6 +129,7 @@ export const index: React.FC<indexProps> & layout = ({}) => {
           ) : null}
         </VStack>
         )}
+        </VStack>
       </Flex>
       </MainLayout >
 

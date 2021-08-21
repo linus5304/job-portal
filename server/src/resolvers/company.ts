@@ -81,8 +81,8 @@ export class CompanyResolver {
   @Query(() => [CompanyProfile], { nullable: true })
   async getCompanies(): Promise<CompanyProfile[] | undefined> {
     const result = await getConnection()
-      .createQueryBuilder(CompanyProfile, "companies").orderBy('id', 'DESC').limit(3)
+      .createQueryBuilder(CompanyProfile, "companies").orderBy('id', 'DESC')
       .getMany();
-    return result;
+  return result;
   }
 }

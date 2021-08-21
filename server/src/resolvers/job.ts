@@ -131,10 +131,8 @@ export class JobResolver {
 
     const jobs: Job[] = await getConnection().query(
       `
-      select j.*, cp.name
+      select *
       from job j 
-      join company_profile cp
-      on j."userId" = cp."userId"
       ${cursor ? `where j."createdAt" < $2` : ""}
       order by j."createdAt" DESC
       limit $1

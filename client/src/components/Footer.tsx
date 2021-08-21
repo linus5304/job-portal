@@ -6,7 +6,7 @@ interface FooterProps {}
 
 export const Footer: React.FC<FooterProps> = ({}) => {
   return (
-    <Flex bg="#1d292e" h="100%" py="6%">
+    <Flex bg="#1d292e" h="100%" py="6%" bottom="0" w="100%" >
         <Flex w={["80%","80%","80%","60%"]} justifyContent="space-between" m="auto" flexDir="row" alignItems="center" flexWrap="wrap" gridGap="3%">
 
         

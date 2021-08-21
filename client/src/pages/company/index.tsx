@@ -6,6 +6,8 @@ import {CompanyCard} from '../../components/CompanyCard'
 import { MainLayout } from '../../components/layouts/MainLayout';
 import { withApollo } from '../../utils/withApollo';
 import { useGetCompaniesQuery } from './../../generated/graphql';
+import {SearchBox} from './../../components/SearchBox'
+import NextLink from 'next/link'
 
 interface CompaniesProps{
 
@@ -17,11 +19,14 @@ const Companies: React.FC<CompaniesProps> & layout = ({}) => {
         return (
             <MainLayout>
 
+<Flex w="60%" m="auto" pt="10%">
+<SearchBox />  
+</Flex>
             
-            <HeroJob/>
-            <Flex
+       
+   <Flex
       flexDir="column"
-      mt={["10%", "10%", "10%", "6%", "6%"]}
+      pt="2%"
       w="70%"
       mx="auto"
       justifyContent="center"
@@ -32,11 +37,13 @@ const Companies: React.FC<CompaniesProps> & layout = ({}) => {
           Companies
         </Text>
       </Flex>
-      <Wrap justify="center" mx="auto" alignItems="center">
+      <Wrap mx="auto" spacing="30px">
       {data?.getCompanies.map(company => (
+        <NextLink href={`/company/${company.id}`}>
             <WrapItem>
           <CompanyCard name={company.name} imgUrl={company.logo} description={company.description.substr(0, 30)} key={company.id} id={company.id}/>
         </WrapItem>
+        </NextLink>
         
         ))}
         

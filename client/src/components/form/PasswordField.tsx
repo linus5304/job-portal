@@ -42,7 +42,7 @@ export const PasswordField: React.FC<InputFieldProps> = React.forwardRef(
 					<FormLabel>{props.label}</FormLabel>
 					{props.loginOrRegister ? (
 						<Link
-							color="#470137"
+							color="#00b074"
 							fontWeight="semibold"
 							href="/forgot-password"
                             fontSize="sm"

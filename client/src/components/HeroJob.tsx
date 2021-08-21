@@ -1,6 +1,6 @@
 import { Flex, Text } from "@chakra-ui/react";
 import React from "react";
-import { SearchBox } from "./layouts/SearchBox";
+import { SearchBox } from "./SearchBox";
 
 interface HeroJobProps {}
 
@@ -10,7 +10,7 @@ export const HeroJob: React.FC<HeroJobProps> = ({}) => {
       <Flex flexDirection="column" alignItems="center" m="auto">
         
       </Flex>
-      <SearchBox />
+      
     </Flex>
   );
 };

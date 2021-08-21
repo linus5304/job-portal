@@ -90,7 +90,7 @@ const Job: React.FC<JobProps> & layout = ({}) => {
         <Flex
           w="100%"
           flexDirection="column"
-          bg="#470137"
+          bg="#00b074"
           m={0}
           h="100%"
           py="4%"
@@ -127,7 +127,7 @@ const Job: React.FC<JobProps> & layout = ({}) => {
                   </Flex>
                   <Flex alignItems="center">
                     <Icon as={FiCalendar} fontSize="lg" />
-                    <Text><Moment format="MMM DD YYYY">{data?.getJobById.createdAt}</Moment></Text>
+                    <Text><Moment format="MMM DD YYYY">{data?.getJobById.createdDate}</Moment></Text>
                   </Flex>
                 </HStack>
               </Flex>
@@ -181,7 +181,7 @@ const Job: React.FC<JobProps> & layout = ({}) => {
                   </Text>
                   <Text>{data?.getJobById.company.description}</Text>
                   <NextLink href={`/company/${data?.getJobById.company.id}`}>
-                    <Button type="submit" fontSize="md" w="100%">
+                    <Button type="submit" fontSize="md" w="100%" w="100%" bg="#00b074" color="white" size="lg" _hover={{bg:"green.500"}}>
                       Company Profile
                     </Button>
                   </NextLink>
@@ -197,7 +197,7 @@ const Job: React.FC<JobProps> & layout = ({}) => {
             justifyContent="space-between"
             flexDir={["column", "column", "column", "row", "row"]}
           >
-            <Button size="lg" ml="-15%" onClick={onOpen}>
+            <Button  ml="-15%" onClick={onOpen} bg="#00b074" color="white" size="lg" _hover={{bg:"green.500"}}>
               APPLY NOW
             </Button>
 

@@ -23,6 +23,8 @@ import {
 } from "../generated/graphql";
 import Dropzone from "react-dropzone";
 import { MainLayout } from "../components/layouts/MainLayout";
+import { DashboardLayout } from "../components/layouts/DashboardLayout";
+
 import { withApollo } from "../utils/withApollo";
 import { FiUploadCloud } from "react-icons/fi";
 
@@ -33,12 +35,12 @@ const createProfile: React.FC<createProfileProps> & layout = ({}) => {
   const [createCompanyProfile] = useCreateCompanyProfileMutation();
   const [uploadFile] = useFileUploadMutation();
   const [img, setImg] = useState(() => "");
-  const [name, setName] = useState("")
+  const [name, setName] = useState("");
 
   const toast = useToast();
 
   return (
-    <MainLayout variant="medium">
+    <DashboardLayout>
       <Formik
         initialValues={{
           name: "",
@@ -76,19 +78,19 @@ const createProfile: React.FC<createProfileProps> & layout = ({}) => {
         }}
       >
         {({ isSubmitting, setFieldValue }) => (
-          <Box py={20} px={["3%", "3%", "3%", "auto", "auto"]}>
+          <Box w="100%">
             <Flex
               bg={useColorModeValue("white", "gray.700")}
-              py="8"
               px={{ base: "4", md: "10" }}
+              py={4}
               shadow="base"
               rounded={{ sm: "lg" }}
               flexDir="column"
             >
-              <Flex mb="5%" flexDirection="column">
-                <Heading size="xl" textAlign="center" fontWeight="bold" mb={2}>
-                  Create Company Profilex
-                </Heading>
+              <Flex mb="2%" flexDirection="column">
+                <Text fontSize="1.5em" fontWeight="semibold" mb={2}>
+                  Company Profile
+                </Text>
                 <Divider />
               </Flex>
 
@@ -97,14 +99,30 @@ const createProfile: React.FC<createProfileProps> & layout = ({}) => {
                   <InputField name="login" placeholder="" label="" hidden />
                 </Flex>
 
-                <VStack spacing={4}>
-                  <InputField name="name" label="Company name" />
-                  <InputField name="website" label="Website" />
-                  <InputField name="phone" label="Phone" />
-                  <InputField name="location" label="Location" />
+                <VStack spacing={4} align="flex-start">
+                  <HStack align="flex-start" w="100%" spacing="30px">
+                    <InputField name="name" label="Company name" />
+                    <InputField name="email" label="Email" />
+                  </HStack>
+                  <HStack align="flex-start" w="100%" spacing="30px">
+                    <InputField name="phone" label="Phone" />
+                    <InputField name="location" label="Location" />
+                  </HStack>
+                  <HStack align="flex-start" w="100%" spacing="30px">
+                  <InputField name="website" label="Website Link" />
+                  <InputField name="foundedDate" label="Founded Date" />
+                  </HStack>
+                  <HStack align="flex-start" w="100%" spacing="30px">
+                  <InputField name="category" label="Category" select />
+                  <InputField name="country" label="Country" />
+                  </HStack>
+
+                 
+                  
+
                   <InputField name="description" label="Description" textarea />
 
-                  <Dropzone
+                  {/* <Dropzone
                     onDrop={async ([file]) => {
                       const { data } = await uploadFile({
                         variables: { imgUrl: file },
@@ -124,23 +142,19 @@ const createProfile: React.FC<createProfileProps> & layout = ({}) => {
                         
                       </Flex>
                     )}
-                  </Dropzone>
+                  </Dropzone> */}
 
-                  <Stack direction="row" spacing={4}>
-                    <Button type="submit" size="lg" isLoading={isSubmitting}>
-                      Create Profile
+                    <Button bg="#00b074" color="white" size="lg" _hover={{bg:"#00b074"}} type="submit" isLoading={isSubmitting}>
+                      Update Profile
                     </Button>
-                    <NextLink href="/">
-                      <Button size="lg">Skip</Button>
-                    </NextLink>
-                  </Stack>
+                    
                 </VStack>
               </Form>
             </Flex>
           </Box>
         )}
       </Formik>
-    </MainLayout>
+    </DashboardLayout>
   );
 };
 

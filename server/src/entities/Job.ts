@@ -41,9 +41,13 @@ export class Job extends BaseEntity {
   @Column()
   imgUrl: string;
 
+  @Field(() => String)
+  @CreateDateColumn()
+  createdAt: sting;
+
   @Field(() => Date)
   @CreateDateColumn()
-  createdAt: Date;
+  createdDate: date;
 
   @Field(() => Date)
   @UpdateDateColumn()

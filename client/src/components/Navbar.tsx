@@ -13,6 +13,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Avatar
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import React, { useState } from "react";
@@ -39,28 +40,18 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
       <Flex justifyContent="space-between" w="100%">
         <Flex>
           <NextLink href="/" passHref>
-            <Link>
-              <Flex alignItems="center">
-                <Icon as={FaKeycdn} fontSize="4xl" />
-                <Text fontSize="xl" fontWeight="bold">
+              <Flex alignItems="center" cursor="pointer">
+                <Icon as={FaKeycdn} fontSize="4xl" color="#00b074"/>
+                <Text fontSize="xl" fontWeight="bold" >
                   goJobs
                 </Text>
               </Flex>
-            </Link>
           </NextLink>
         </Flex>
 
-        <Flex>
-           <NextLink href="/jobs">
-                <Button variant="ghost" >Jobs</Button>
-              </NextLink>
-              <NextLink href="/company">
-                <Button variant="ghost">Companies</Button>
-              </NextLink>
-              <NextLink href="/post-job">
-                <Button variant="ghost">Post Job</Button>
-              </NextLink>
-        </Flex>
+        
+           
+        
 
         <Flex
           justifyContent="space-between"
@@ -69,14 +60,21 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
           {data?.me ? (
             <HStack spacing="24px">
              
-
+              <NextLink href="/jobs">
+                <Button variant="ghost" >Jobs</Button>
+              </NextLink>
+              <NextLink href="/company">
+                <Button variant="ghost">Companies</Button>
+              </NextLink>
+              <NextLink href="/post-job">
+                <Button variant="ghost">Post Job</Button>
+              </NextLink>
               <Menu>
-                <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                  My Account
-                </MenuButton>
+                <MenuButton as={Avatar} rightIcon={<ChevronDownIcon />} cursor="pointer"/>
+                  
                 <MenuList>
                   <NextLink href={`/account/${data?.me.id}`}>
-                    <MenuItem>Info</MenuItem>
+                    <MenuItem>My account</MenuItem>
                   </NextLink>
                   
                     <MenuItem
@@ -95,6 +93,15 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
             </HStack>
           ) : (
             <HStack spacing="24px">
+            <NextLink href="/jobs">
+                <Button variant="ghost" >Jobs</Button>
+              </NextLink>
+              <NextLink href="/company">
+                <Button variant="ghost">Companies</Button>
+              </NextLink>
+              <NextLink href="/post-job">
+                <Button variant="ghost">Post Job</Button>
+              </NextLink>
               <NextLink href="/login">
                 <Button variant="ghost" size="lg">Login</Button>
               </NextLink>

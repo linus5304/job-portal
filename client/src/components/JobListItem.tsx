@@ -69,8 +69,7 @@ export const JobListItem: React.FC<JobListItemProps> = ({
       as="article"
       rounded="lg"
       bg="white"
-      h="100%"
-      w="full"
+      w="100%"
       p={8}
       transition=".2s ease-out"
       _hover={{ boxShadow: "lg", transform: "scale(1,1)" }}
@@ -116,30 +115,47 @@ export const JobListItem: React.FC<JobListItemProps> = ({
             </Box>
           </Flex>
           <Flex
-            
             flexDir={["column", "column", "column", "row", "row"]}
             gridGap="2px"
           >
-            
-            <Button leftIcon={<MdLocationOn color="blue.400"/>} bg="blue.100" variant="solid" size="sm"  color="blue.400">
-    Location
-  </Button>
-            
-            <Button leftIcon={<MdWork color="green.400"/>} bg="green.100" variant="solid" size="sm" color="green.400">
-            Full time
-  </Button>
+            <Button
+              leftIcon={<MdLocationOn color="blue.400" />}
+              bg="blue.100"
+              variant="solid"
+              size="sm"
+              color="blue.400"
+            >
+              Location
+            </Button>
 
-            <Button  leftIcon={<MdTimer color="red.400"/>} bg="red.100" variant="solid" size="sm" color="red.400">
-            <Moment format="MMM DD YYYY">{postDate}</Moment>
-  </Button>
-            
+            <Button
+              leftIcon={<MdWork color="green.400" />}
+              bg="green.100"
+              variant="solid"
+              size="sm"
+              color="green.400"
+            >
+              Full time
+            </Button>
+
+            <Button
+              leftIcon={<MdTimer color="red.400" />}
+              bg="red.100"
+              variant="solid"
+              size="sm"
+              color="red.400"
+            >
+              <Moment format="MMM DD YYYY">{postDate}</Moment>
+            </Button>
           </Flex>
         </Flex>
         <Stack
           direction={["row", "row", "row", "column", "column"]}
           alignItems="center"
         >
-          <Text>{salary}</Text>
+          <Text fontSize="lg" fontWeight="semibold">
+            {salary}
+          </Text>
         </Stack>
       </Stack>
     </Box>

@@ -10,7 +10,8 @@ import {
   useColorModeValue,
   VStack,
   useToast,
-  Text
+  Text,
+  Icon
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import router from "next/router";
@@ -20,7 +21,7 @@ import { layout } from "../utils/types";
 import NextLink from "next/link";
 import Dropzone, {useDropzone} from "react-dropzone"
 import { usePostJobMutation, useFileUploadMutation } from './../generated/graphql';
-import { MainLayout } from "../components/layouts/MainLayout";
+import { DashboardLayout } from "../components/layouts/DashboardLayout";
 import { withApollo } from "../utils/withApollo";
 import { FiUploadCloud } from 'react-icons/fi';
 
@@ -37,7 +38,7 @@ export const postJob: React.FC<postJobProps> & layout = ({}) => {
 
 
   return (
-    <MainLayout variant="medium">
+    <DashboardLayout >
     <Formik
       initialValues={{
         title: "",
@@ -70,36 +71,35 @@ export const postJob: React.FC<postJobProps> & layout = ({}) => {
             duration: 5000,
             isClosable: true,
           });
-            router.push(`/company/${result.data.postJob.companyProfileId}`);
+            router.push(`/company/${result.data.postJob.userId}`);
         }
         console.log(values);
       }}
     >
       {({ isSubmitting, setFieldValue }) => (
-        <Box py={20} px={["3%", "3%", "3%", "auto", "auto"]}>
+        <Box w="100%" overflow="auto">
           <Flex
             bg={useColorModeValue("white", "gray.700")}
-            py="8"
+            py={4}
             px={{ base: "4", md: "10" }}
             shadow="base"
             rounded={{ sm: "lg" }}
             flexDir="column"
           >
-            <Flex mb="5%" flexDirection="column">
-              <Heading size="xl" textAlign="center" fontWeight="bold" mb={2}>
-                Post a Job
-              </Heading>
-              <Divider />
-            </Flex>
+            <Flex mb="2%" flexDirection="column">
+                <Text fontSize="1.5em" fontWeight="semibold" mb={2}>
+                  Post A Job
+                </Text>
+                <Divider />
+              </Flex>
 
             <Form>
               <Flex fontWeight="bold">
                 <InputField name="login" placeholder="" label="" hidden />
               </Flex>
 
-              <VStack spacing={4}>
+              <VStack spacing={4} align="flex-start">
                 <InputField name="title" label="Title" />
-                <InputField name="description" label="Description" textarea />
                 <HStack w="100%">
                   <InputField name="category" label="Category" select />
                   <InputField name="salary" label="Salary" type="text" />
@@ -112,6 +112,8 @@ export const postJob: React.FC<postJobProps> & layout = ({}) => {
                     type="date"
                   />
                 </HStack>
+                <InputField name="description" label="Description" textarea />
+
                 <Dropzone
 									onDrop={async ([file]) => {
                       const {data} = await uploadFile({
@@ -126,7 +128,7 @@ export const postJob: React.FC<postJobProps> & layout = ({}) => {
 									}}
 								>
 									{({ getRootProps, getInputProps }) => (
-										<Box
+										<Box border="1px dashed gray" h="100px" w="100%"
 											
 											{...getRootProps()}
 										>
@@ -134,24 +136,26 @@ export const postJob: React.FC<postJobProps> & layout = ({}) => {
 												{...getInputProps()}
 												name="imgUrl"
 											/>
-											<Button leftIcon={<FiUploadCloud />}>add Image</Button>
+                      <VStack>
+                      <Icon as={FiUploadCloud} fontSize="2em"/>
+                      <Text>Drag and drop or Click to Add Image</Text>
+                      </VStack>
                         {name ? (<Text>{name}</Text> ): null}
 										</Box>
 									)}
 								</Dropzone>
 
-                <Flex direction="row">
-                  <Button type="submit" isLoading={isSubmitting}>
-                    Post Job
-                  </Button>
-                </Flex>
+                
+                <Button bg="#00b074" color="white" size="lg" _hover={{bg:"#00b074"}} type="submit" isLoading={isSubmitting}>
+                      Post Job
+                    </Button>
               </VStack>
             </Form>
           </Flex>
         </Box>
       )}
     </Formik>
-    </MainLayout>
+    </DashboardLayout>
   );
 };
 

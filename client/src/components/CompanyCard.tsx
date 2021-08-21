@@ -5,6 +5,7 @@ import {
   Link,
   chakra,
   Image,
+  Divider,
   LinkBox, LinkOverlay,VStack, Text
 } from "@chakra-ui/react";
 import React from "react";
@@ -27,6 +28,7 @@ export const CompanyCard: React.FC<CompanyCardProps> = ({name, imgUrl, jobs}) =>
                 <Text fontSize="xl" fontWeight="semibold">{name}</Text>
                 </LinkOverlay>
                 <Text fontSize="lg">{jobs} Jobs</Text>
+                
 
             </VStack>
             </LinkBox>

@@ -5,6 +5,7 @@ import { useMeQuery } from './../../generated/graphql';
 import { layout } from "../../utils/types";
 import { MainLayout } from "../../components/layouts/MainLayout";
 import { withApollo } from "../../utils/withApollo";
+import { DashboardLayout } from './../../components/layouts/DashboardLayout';
 
 
 
@@ -27,9 +28,9 @@ export const Account: React.FC<AccountProps> & layout = ({}) => {
                 
     }
     return (
-        <MainLayout>
+        <>
     {displayData}
-    </MainLayout>
+    </>
     )
 }
 Account.value = "L2"

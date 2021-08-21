@@ -92,7 +92,8 @@ export type Job = {
   expDate: Scalars['String'];
   description: Scalars['String'];
   imgUrl: Scalars['String'];
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['String'];
+  createdDate: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
   userId: Scalars['Float'];
   company: CompanyProfile;
@@ -416,7 +417,7 @@ export type PostJobMutationVariables = Exact<{
 }>;
 
 
-export type PostJobMutation = { __typename?: 'Mutation', postJob: { __typename?: 'Job', id: number, title: string, category: string, location: string, expDate: string, description: string, createdAt: any, updatedAt: any, salary: string, userId: number } };
+export type PostJobMutation = { __typename?: 'Mutation', postJob: { __typename?: 'Job', id: number, title: string, category: string, location: string, expDate: string, description: string, createdAt: string, updatedAt: any, salary: string, userId: number } };
 
 export type RegisterMutationVariables = Exact<{
   data: RegisterInput;
@@ -443,7 +444,7 @@ export type GetCompanyByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetCompanyByIdQuery = { __typename?: 'Query', getCompanyById?: Maybe<{ __typename?: 'CompanyProfile', id: number, name: string, location: string, phone: string, logo: string, description: string, website: string, jobs: Array<{ __typename?: 'Job', id: number, title: string, location: string, category: string, salary: string, expDate: string, description: string, createdAt: any, imgUrl: string }> }> };
+export type GetCompanyByIdQuery = { __typename?: 'Query', getCompanyById?: Maybe<{ __typename?: 'CompanyProfile', id: number, name: string, location: string, phone: string, logo: string, description: string, website: string, jobs: Array<{ __typename?: 'Job', id: number, title: string, location: string, category: string, salary: string, expDate: string, description: string, createdAt: string, imgUrl: string }> }> };
 
 export type GetJsProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -455,7 +456,7 @@ export type GetJobByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetJobByIdQuery = { __typename?: 'Query', getJobById?: Maybe<{ __typename?: 'Job', id: number, title: string, location: string, category: string, description: string, imgUrl: string, createdAt: any, salary: string, expDate: string, userId: number, company: { __typename?: 'CompanyProfile', id: number, name: string, website: string, logo: string, phone: string, description: string } }> };
+export type GetJobByIdQuery = { __typename?: 'Query', getJobById?: Maybe<{ __typename?: 'Job', id: number, title: string, location: string, category: string, description: string, imgUrl: string, createdAt: string, salary: string, expDate: string, userId: number, company: { __typename?: 'CompanyProfile', id: number, name: string, website: string, logo: string, phone: string, description: string } }> };
 
 export type GetJobsQueryVariables = Exact<{
   limit: Scalars['Int'];
@@ -463,7 +464,7 @@ export type GetJobsQueryVariables = Exact<{
 }>;
 
 
-export type GetJobsQuery = { __typename?: 'Query', getJobs?: Maybe<{ __typename?: 'PaginatedJobs', hasMore: boolean, jobs: Array<{ __typename?: 'Job', id: number, title: string, location: string, category: string, expDate: string, description: string, imgUrl: string, salary: string, createdAt: any, company: { __typename?: 'CompanyProfile', name: string, website: string, phone: string } }> }> };
+export type GetJobsQuery = { __typename?: 'Query', getJobs?: Maybe<{ __typename?: 'PaginatedJobs', hasMore: boolean, jobs: Array<{ __typename?: 'Job', id: number, title: string, location: string, category: string, expDate: string, description: string, imgUrl: string, salary: string, createdAt: string, createdDate: any, company: { __typename?: 'CompanyProfile', name: string, website: string, phone: string } }> }> };
 
 export type EducationDetailsFragment = { __typename?: 'Education', id: number, school: string, degree: string, field: string, start_date?: Maybe<string>, end_date?: Maybe<string>, jobSeekerId: number };
 
@@ -1184,6 +1185,7 @@ export const GetJobsDocument = gql`
       imgUrl
       salary
       createdAt
+      createdDate
       company {
         name
         website

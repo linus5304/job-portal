@@ -51,7 +51,7 @@ const Company: React.FC<CompanyProps> & layout = ({}) => {
   return (
     <>
     <MainLayout>
-      <Flex w="100%" flexDirection="column" bg="#470137" m={0} h="100%" py="4%">
+      <Flex w="100%" flexDirection="column" bg="#00b074" m={0} h="100%" py="4%">
         <VStack my="auto" ml="10%" align="flex-start">
           <Flex align="flex-start">
             <Button size="sm" leftIcon={<FaChevronLeft/>} onClick={() => router.back()}>Back</Button>
@@ -86,9 +86,9 @@ const Company: React.FC<CompanyProps> & layout = ({}) => {
       <Flex h="100%" py="4%" ml="10%" alignItems={["center", "center", "center", "flex-start", "flex-start"]} flexDirection={['column-reverse', 'column-reverse', 'column-reverse', 'row', 'row']}>
         <Flex w="60%">
         <Tabs>
-          <TabList gridGap={10}>
-            <Tab>
-              <Text fontSize="lg" fontWeight="bold">
+          <TabList gridGap={10} color="#00b074">
+            <Tab >
+              <Text fontSize="lg" fontWeight="bold" >
                 Company Description
               </Text>
             </Tab>
@@ -162,6 +162,7 @@ const Company: React.FC<CompanyProps> & layout = ({}) => {
                       fontSize="md"
                       w="100%"
                       isLoading={isSubmitting}
+                      bg="#00b074" color="white" size="lg" _hover={{bg:"green.500"}}
                     >
                       CREATE ALERT
                     </Button>

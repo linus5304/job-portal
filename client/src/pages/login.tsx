@@ -98,16 +98,17 @@ export const login: React.FC<loginProps> & layout = ({}) => {
                 />
                 <Button
                   type="submit"
-                  size="lg"
                   fontSize="md"
                   isLoading={isSubmitting}
+                  w="100%"
+                  bg="#00b074" color="white" size="lg" _hover={{bg:"green.500"}}
                 >
                   Login
                 </Button>
               </VStack>
               <Flex gridGap="2%" fontSize="sm" mt="3%">
                   <Text fontSize="sm">Don't have account?</Text>
-                  <NextLink href="/register"><Link fontSize="sm" color="#470137" fontWeight="semibold">Register</Link></NextLink>
+                  <NextLink href="/register"><Link fontSize="sm" color="#00b074" fontWeight="semibold">Register</Link></NextLink>
               </Flex>
             </Form>
           </Flex>
