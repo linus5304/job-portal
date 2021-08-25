@@ -16,15 +16,16 @@ import { CompanyResolver } from "./resolvers/company";
 import { CompanyProfile } from "./entities/Company";
 import { Job } from "./entities/Job";
 import { JobResolver } from "./resolvers/job";
-import { graphqlUploadExpress } from 'graphql-upload';
-import path  from 'path';
-import { Application } from './entities/Application';
+import { graphqlUploadExpress } from "graphql-upload";
+import path from "path";
+import { Application } from "./entities/Application";
 import { JobSeeker } from "./entities/JobSeeker";
 import { Education } from "./entities/Education";
 import { Work } from "./entities/Work";
 import { JobSeekerResolver } from "./resolvers/jobseeker";
 import { EducationResolver } from "./resolvers/education";
 import { WorkResolver } from "./resolvers/work";
+import { ApplicationResolver } from "./resolvers/application";
 
 declare module "express-session" {
   interface Session {
@@ -42,11 +43,19 @@ const main = async () => {
     password: "toor",
     logging: true,
     synchronize: true,
-    migrations: [path.join(__dirname, './migrations/*')],
-    entities: [User, CompanyProfile, Job, Application, JobSeeker, Education, Work],
+    migrations: [path.join(__dirname, "./migrations/*")],
+    entities: [
+      User,
+      CompanyProfile,
+      Job,
+      Application,
+      JobSeeker,
+      Education,
+      Work,
+    ],
   });
 
-  await conn.runMigrations()
+  await conn.runMigrations();
 
   const app = express();
   app.use(
@@ -76,7 +85,16 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver, UserResolver, CompanyResolver, JobResolver, JobSeekerResolver, EducationResolver, WorkResolver],
+      resolvers: [
+        HelloResolver,
+        UserResolver,
+        CompanyResolver,
+        JobResolver,
+        JobSeekerResolver,
+        EducationResolver,
+        WorkResolver,
+        ApplicationResolver,
+      ],
       validate: false,
     }),
     context: ({ req, res }: MyContext) => ({ req, res, redis }),
@@ -85,15 +103,12 @@ const main = async () => {
         // options
       }),
     ],
-    
   });
 
   await apolloServer.start();
-  app.use(express.static('public'));
-
+  app.use(express.static("public"));
 
   apolloServer.applyMiddleware({ app, cors: false });
-
 
   app.listen(4000, () => {
     console.log("localhost:4000/graphql");

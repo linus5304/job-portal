@@ -9,7 +9,7 @@ import {MdLocationOn, MdSearch} from 'react-icons/md'
 interface SearchBoxProps {}
 
 export const SearchBox: React.FC<SearchBoxProps> = ({}) => {
-  const { data } = useSearchJobsQuery({
+  const { data,loading } = useSearchJobsQuery({
     variables: { input: { title: "", location: "" } },
   });
 

@@ -43,11 +43,11 @@ export class Job extends BaseEntity {
 
   @Field(() => String)
   @CreateDateColumn()
-  createdAt: sting;
+  createdAt: string;
 
   @Field(() => Date)
   @CreateDateColumn()
-  createdDate: date;
+  createdDate: Date;
 
   @Field(() => Date)
   @UpdateDateColumn()

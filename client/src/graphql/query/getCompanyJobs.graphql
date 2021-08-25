@@ -1,0 +1,23 @@
+query getCompanyJobs {
+  getCompanyJobs {
+     id
+    title
+    location
+    category
+    salary
+    expDate
+    description
+    imgUrl
+  	userId
+    createdDate
+    updatedAt
+    applications{
+      userId
+      jobId
+      appication_date
+    }
+    company{
+      name
+    }
+  }
+}

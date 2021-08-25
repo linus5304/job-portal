@@ -1,17 +1,43 @@
 import React from "react";
-import { VStack, Text, Stack, Flex, Icon } from "@chakra-ui/react";
+import { VStack, Text, Stack, Flex, Icon, Skeleton } from "@chakra-ui/react";
 import { InputField } from "./../../components/form/InputField";
 import { ManageJobItem } from "./../../components/ManageJobItem";
 import { DashboardLayout } from "../../components/layouts/DashboardLayout";
 import { withApollo } from "../../utils/withApollo";
 import { Formik, Form } from "formik";
+import { useGetCompanyJobsQuery } from "../../generated/graphql";
 
 interface MyJobsProps {}
 
 const MyJobs: React.FC<MyJobsProps> = ({}) => {
+  const {data, loading} = useGetCompanyJobsQuery()
+  
   return (
     <DashboardLayout>
-      <VStack w="100%" align="flex-start">
+      {!data && loading ? (
+        <VStack spacing="24px" w="100%">
+        <Skeleton isLoaded={!loading} w="100%">
+            
+          <ManageJobItem
+              title="Hello"
+              location="loading"
+              imgUrl="loading"
+              postDate="loading"
+              key={1}
+            />
+            </Skeleton>
+            <Skeleton isLoaded={!loading} w="100%">
+
+          <ManageJobItem
+              title="Hello"
+              location="loading"
+              imgUrl="loading"
+              postDate="loading"
+              key={2}
+            />
+            </Skeleton>
+            </VStack>
+      ): (<VStack w="100%" align="flex-start">
         <Formik
           initialValues={{ title: "", location: "" }}
           onSubmit={async (values) => {
@@ -28,15 +54,26 @@ const MyJobs: React.FC<MyJobsProps> = ({}) => {
           </Form>
         </Formik>
         <Text fontSize="1.2em" weight="semibold">
-          5 Job Postings
+          {data?.getCompanyJobs.length} Job Postings
         </Text>
-        <ManageJobItem
-          title="designer"
-          companyName="Google"
-          id={1}
-          salary="20000"
-        />
-      </VStack>
+        {data?.getCompanyJobs.map(j => (
+            <ManageJobItem
+            title={j.title}
+            companyName={j.company.name}
+            id={j.id}
+            salary={j.salary}
+            location={j.location}
+            postDate={j.updatedAt}
+            description={j.description}
+            expDate={j.expDate}
+            category={j.category}
+            applicants={j.applications.length}
+          />
+        ))}
+        
+      </VStack>)}
+      
+      
     </DashboardLayout>
   );
 };

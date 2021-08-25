@@ -73,7 +73,7 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
                 <MenuButton as={Avatar} rightIcon={<ChevronDownIcon />} cursor="pointer"/>
                   
                 <MenuList>
-                  <NextLink href={`/account/${data?.me.id}`}>
+                  <NextLink href='/account/job-seeker'>
                     <MenuItem>My account</MenuItem>
                   </NextLink>
                   

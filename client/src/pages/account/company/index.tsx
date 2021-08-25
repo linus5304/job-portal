@@ -1,46 +1,47 @@
 import {
-  Box,
-  Heading,
-  Flex,
-  Divider,
-  VStack,
-  HStack,
-  Button,
-  useColorModeValue,
-  Text,
-  Stack,
-  useToast,
-} from "@chakra-ui/react";
-import React, { useState } from "react";
-import { layout } from "../utils/types";
-import { Formik, Form } from "formik";
-import { InputField } from "../components/form/InputField";
-import NextLink from "next/link";
-import { useRouter } from "next/router";
-import {
-  useCreateCompanyProfileMutation,
-  useFileUploadMutation,
-} from "../generated/graphql";
-import Dropzone from "react-dropzone";
-import { MainLayout } from "../components/layouts/MainLayout";
-import { DashboardLayout } from "../components/layouts/DashboardLayout";
+    Box,
+    Heading,
+    Flex,
+    Divider,
+    VStack,
+    HStack,
+    Button,
+    useColorModeValue,
+    Text,
+    Stack,
+    useToast,
+  } from "@chakra-ui/react";
+  import React, { useState } from "react";
+  import { Formik, Form } from "formik";
+  import { InputField } from "../../../components/form/InputField";
+  import NextLink from "next/link";
+  import { useRouter } from "next/router";
+  import {
+    useCreateCompanyProfileMutation,
+    useFileUploadMutation,
+  } from "../../../generated/graphql";
+  import Dropzone from "react-dropzone";
+  import { MainLayout } from "../../../components/layouts/MainLayout";
+  import { DashboardLayout } from "../../../components/layouts/DashboardLayout";
+  
+  import { withApollo } from "../../../utils/withApollo"
+  import { FiUploadCloud } from "react-icons/fi";
+  
 
-import { withApollo } from "../utils/withApollo";
-import { FiUploadCloud } from "react-icons/fi";
 
-interface createProfileProps {}
+interface indexProps{
 
-const createProfile: React.FC<createProfileProps> & layout = ({}) => {
-  const router = useRouter();
+}
+
+
+export const index: React.FC<indexProps> = ({}) => {
+    const router = useRouter();
   const [createCompanyProfile] = useCreateCompanyProfileMutation();
   const [uploadFile] = useFileUploadMutation();
   const [img, setImg] = useState(() => "");
   const [name, setName] = useState("");
-
-  const toast = useToast();
-
-  return (
-    <DashboardLayout>
+        return (
+            <DashboardLayout>
       <Formik
         initialValues={{
           name: "",
@@ -54,26 +55,26 @@ const createProfile: React.FC<createProfileProps> & layout = ({}) => {
           const response = await createCompanyProfile({
             variables: { data: values },
           });
-          if (!response.data.createCompanyProfile) {
-            toast({
-              title: "Account created.",
-              position: "top-right",
-              description: "Error occured when creating your profile",
-              status: "error",
-              duration: 5000,
-              isClosable: true,
-            });
-          } else {
-            toast({
-              title: "Account created.",
-              position: "top-right",
-              description: "We've created your account for you.",
-              status: "success",
-              duration: 5000,
-              isClosable: true,
-            });
-            router.push("/");
-          }
+        //   if (!response.data.createCompanyProfile) {
+        //     toast({
+        //       title: "Account created.",
+        //       position: "top-right",
+        //       description: "Error occured when creating your profile",
+        //       status: "error",
+        //       duration: 5000,
+        //       isClosable: true,
+        //     });
+        //   } else {
+        //     toast({
+        //       title: "Account created.",
+        //       position: "top-right",
+        //       description: "We've created your account for you.",
+        //       status: "success",
+        //       duration: 5000,
+        //       isClosable: true,
+        //     });
+        //     router.push("/");
+        //   }
           console.log(values);
         }}
       >
@@ -155,9 +156,7 @@ const createProfile: React.FC<createProfileProps> & layout = ({}) => {
         )}
       </Formik>
     </DashboardLayout>
-  );
+        );
 };
 
-createProfile.value = "L2";
-createProfile.variant = "md";
-export default withApollo({ ssr: false })(createProfile);
+export default withApollo({ssr: false}) (index)

@@ -16,10 +16,13 @@ import {
 import { Formik, Form } from "formik";
 import React from "react";
 import { FiEdit } from "react-icons/fi";
+import { MdEdit, MdDelete } from "react-icons/md";
 import { InputField } from "../form/InputField";
 import {
   useUpdateEducationMutation,
   useUpdateWorkMutation,
+  useDeleteEducationMutation,
+  useDeleteWorkMutation,
 } from "./../../generated/graphql";
 
 interface EduWorkItemProps {
@@ -49,6 +52,8 @@ export const EduWorkItem: React.FC<EduWorkItemProps> = ({
 }) => {
   const [updateEdu] = useUpdateEducationMutation();
   const [updateWk] = useUpdateWorkMutation();
+  const [deleteEdu] = useDeleteEducationMutation();
+  const [deleteWk] = useDeleteWorkMutation();
   if (variant === "edu") {
     const { isOpen, onOpen, onClose } = useDisclosure();
     return (
@@ -64,13 +69,27 @@ export const EduWorkItem: React.FC<EduWorkItemProps> = ({
               {start}-{end}
             </Text>
           </VStack>
-          <IconButton
-            variant="outline"
-            aria-label="Call Segun"
-            size="md"
-            icon={<FiEdit fontWeight="bold" />}
-            onClick={onOpen}
-          />
+          <VStack>
+            <IconButton
+              aria-label="Edit"
+              icon={<MdEdit fontSize="1.3em" color="green" />}
+              bg="green.100"
+              _hover={{ bg: "green.100" }}
+              onClick={onOpen}
+            />
+            <IconButton
+              aria-label="Edit"
+              icon={<MdDelete fontSize="1.3em" color="red" />}
+              bg="red.100"
+              _hover={{ bg: "red.100" }}
+              onClick={() =>
+                deleteEdu({
+                  variables: { id },
+                  update: (cache) => cache.evict({ id: "Education:" + id }),
+                })
+              }
+            />
+          </VStack>
         </Flex>
         <Formik
           initialValues={{
@@ -84,6 +103,9 @@ export const EduWorkItem: React.FC<EduWorkItemProps> = ({
           onSubmit={async (values) => {
             const response = await updateEdu({
               variables: { data: values, id },
+              update: (cache) => {
+                cache.evict({fieldName: "getAllEducation"})
+              }
             });
             if (response.data.updateEducation) {
               console.log(values);
@@ -145,13 +167,29 @@ export const EduWorkItem: React.FC<EduWorkItemProps> = ({
               {start}-{end}
             </Text>
           </VStack>
-          <IconButton
-            variant="outline"
-            aria-label="Call Segun"
-            size="md"
-            icon={<FiEdit fontWeight="bold" />}
-            onClick={onOpen}
-          />
+          <VStack>
+            <IconButton
+              aria-label="Edit"
+              icon={<MdEdit fontSize="1.3em" color="green" />}
+              bg="green.100"
+              _hover={{ bg: "green.100" }}
+              onClick={onOpen}
+            />
+            <IconButton
+              aria-label="Edit"
+              icon={<MdDelete fontSize="1.3em" color="red" />}
+              bg="red.100"
+              _hover={{ bg: "red.100" }}
+              onClick={() =>
+                deleteWk({
+                  variables: { id },
+                  update: (cache) => {
+                    cache.evict({ id: "Work:" + id });
+                  },
+                })
+              }
+            />
+          </VStack>
         </Flex>
 
         <Formik

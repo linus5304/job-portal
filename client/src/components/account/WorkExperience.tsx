@@ -5,7 +5,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  ModalOverlay, Text, useDisclosure
+  ModalOverlay, Text, useDisclosure,Divider
 } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import React from "react";
@@ -43,6 +43,7 @@ export const WorkExperience: React.FC<WorkExperienceProps> = ({ jsId }) => {
         </Flex>
       </HStack>
       {data?.getAllWork.map((wk) => (
+        <>
         <EduWorkItem
           variant="work"
           comp_name={wk.company_name}
@@ -54,12 +55,14 @@ export const WorkExperience: React.FC<WorkExperienceProps> = ({ jsId }) => {
           id={wk.id}
           jsId={wk.jobSeekerId}
         />
+        <Divider/>
+        </>
       ))}
 
       <Formik
         initialValues={{
           jobSeekerId: jsId,
-          comp_name: "",
+          company_name: "",
           position: "",
           field: "",
           start_date: "",
@@ -72,7 +75,6 @@ export const WorkExperience: React.FC<WorkExperienceProps> = ({ jsId }) => {
           if (response.data.addWork) {
             console.log(values);
           }
-          console.log(values);
         }}
       >
         {({ isSubmitting }) => (
@@ -98,7 +100,7 @@ export const WorkExperience: React.FC<WorkExperienceProps> = ({ jsId }) => {
                 </ModalBody>
 
                 <ModalFooter>
-                  <Button mr={3} isLoading={isSubmitting}>
+                  <Button mr={3} isLoading={isSubmitting} type="submit">
                     Add
                   </Button>
                   <Button onClick={onClose}>Cancel</Button>

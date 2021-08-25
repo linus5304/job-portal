@@ -20,10 +20,10 @@ export type Scalars = {
 
 export type Application = {
   __typename?: 'Application';
-  appication_date: Scalars['String'];
+  appication_date: Scalars['DateTime'];
   updatedAt: Scalars['String'];
-  userId: Scalars['Float'];
-  jobId: Scalars['Float'];
+  userId?: Maybe<Scalars['Float']>;
+  jobId?: Maybe<Scalars['Float']>;
 };
 
 export type CompanyProfile = {
@@ -97,6 +97,8 @@ export type Job = {
   updatedAt: Scalars['DateTime'];
   userId: Scalars['Float'];
   company: CompanyProfile;
+  applications: Array<Application>;
+  userApplications: Array<Application>;
 };
 
 export type JobSeeker = {
@@ -127,6 +129,8 @@ export type Mutation = {
   createCompanyProfile: CompanyProfile;
   fileUpload: ImageUrl;
   postJob: Job;
+  updateJob: Job;
+  deleteJob: Scalars['Boolean'];
   apply: Application;
   createJSProfile: JobSeeker;
   updateJSProfile: JobSeeker;
@@ -172,6 +176,17 @@ export type MutationFileUploadArgs = {
 
 export type MutationPostJobArgs = {
   data: JobInput;
+};
+
+
+export type MutationUpdateJobArgs = {
+  id: Scalars['Int'];
+  data: JobInput;
+};
+
+
+export type MutationDeleteJobArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -235,6 +250,7 @@ export type Query = {
   me?: Maybe<User>;
   company: Scalars['String'];
   getCompanyById?: Maybe<CompanyProfile>;
+  getCompanyJobs: Array<Job>;
   getCompanies?: Maybe<Array<CompanyProfile>>;
   job: Scalars['String'];
   getJobById?: Maybe<Job>;
@@ -246,6 +262,8 @@ export type Query = {
   getEducationbyId: Education;
   getAllWork: Array<Work>;
   getWorkbyId: Work;
+  application: Scalars['String'];
+  getApplicantJobs?: Maybe<Array<Job>>;
 };
 
 
@@ -343,13 +361,13 @@ export type CompanyProfileInput = {
 };
 
 export type JobInput = {
-  title: Scalars['String'];
-  category: Scalars['String'];
-  description: Scalars['String'];
-  salary: Scalars['String'];
-  location: Scalars['String'];
-  expDate: Scalars['String'];
-  imgUrl: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
+  category?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  salary?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['String']>;
+  expDate?: Maybe<Scalars['String']>;
+  imgUrl?: Maybe<Scalars['String']>;
 };
 
 export type SearchInput = {
@@ -362,7 +380,7 @@ export type ApplyMutationVariables = Exact<{
 }>;
 
 
-export type ApplyMutation = { __typename?: 'Mutation', apply: { __typename?: 'Application', appication_date: string, userId: number, jobId: number, updatedAt: string } };
+export type ApplyMutation = { __typename?: 'Mutation', apply: { __typename?: 'Application', appication_date: any, userId?: Maybe<number>, jobId?: Maybe<number>, updatedAt: string } };
 
 export type ChangePasswordMutationVariables = Exact<{
   token: Scalars['String'];
@@ -385,6 +403,13 @@ export type CreateJsProfileMutationVariables = Exact<{
 
 
 export type CreateJsProfileMutation = { __typename?: 'Mutation', createJSProfile: { __typename?: 'JobSeeker', first_name?: Maybe<string>, last_name?: Maybe<string>, about_me?: Maybe<string>, profile_pic?: Maybe<string>, userId?: Maybe<number>, email?: Maybe<string> } };
+
+export type DeleteJobMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type DeleteJobMutation = { __typename?: 'Mutation', deleteJob: boolean };
 
 export type FileUploadMutationVariables = Exact<{
   imgUrl: Scalars['Upload'];
@@ -434,6 +459,11 @@ export type UpdateJsProfileMutationVariables = Exact<{
 
 export type UpdateJsProfileMutation = { __typename?: 'Mutation', updateJSProfile: { __typename?: 'JobSeeker', first_name?: Maybe<string>, last_name?: Maybe<string>, about_me?: Maybe<string>, profile_pic?: Maybe<string>, userId?: Maybe<number>, email?: Maybe<string> } };
 
+export type GetApplicantJobsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetApplicantJobsQuery = { __typename?: 'Query', getApplicantJobs?: Maybe<Array<{ __typename?: 'Job', id: number, title: string, location: string, category: string, salary: string, description: string, imgUrl: string, expDate: string, createdDate: any, updatedAt: any, userApplications: Array<{ __typename?: 'Application', appication_date: any, userId?: Maybe<number> }>, company: { __typename?: 'CompanyProfile', name: string, location: string, logo: string } }>> };
+
 export type GetCompaniesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -446,6 +476,11 @@ export type GetCompanyByIdQueryVariables = Exact<{
 
 export type GetCompanyByIdQuery = { __typename?: 'Query', getCompanyById?: Maybe<{ __typename?: 'CompanyProfile', id: number, name: string, location: string, phone: string, logo: string, description: string, website: string, jobs: Array<{ __typename?: 'Job', id: number, title: string, location: string, category: string, salary: string, expDate: string, description: string, createdAt: string, imgUrl: string }> }> };
 
+export type GetCompanyJobsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCompanyJobsQuery = { __typename?: 'Query', getCompanyJobs: Array<{ __typename?: 'Job', id: number, title: string, location: string, category: string, salary: string, expDate: string, description: string, imgUrl: string, userId: number, createdDate: any, updatedAt: any, applications: Array<{ __typename?: 'Application', userId?: Maybe<number>, jobId?: Maybe<number>, appication_date: any }>, company: { __typename?: 'CompanyProfile', name: string } }> };
+
 export type GetJsProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -456,7 +491,7 @@ export type GetJobByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetJobByIdQuery = { __typename?: 'Query', getJobById?: Maybe<{ __typename?: 'Job', id: number, title: string, location: string, category: string, description: string, imgUrl: string, createdAt: string, salary: string, expDate: string, userId: number, company: { __typename?: 'CompanyProfile', id: number, name: string, website: string, logo: string, phone: string, description: string } }> };
+export type GetJobByIdQuery = { __typename?: 'Query', getJobById?: Maybe<{ __typename?: 'Job', id: number, title: string, location: string, category: string, description: string, imgUrl: string, createdAt: string, salary: string, expDate: string, createdDate: any, applications: Array<{ __typename?: 'Application', userId?: Maybe<number>, jobId?: Maybe<number>, appication_date: any }>, company: { __typename?: 'CompanyProfile', id: number, name: string, website: string, logo: string, phone: string, description: string } }> };
 
 export type GetJobsQueryVariables = Exact<{
   limit: Scalars['Int'];
@@ -520,6 +555,13 @@ export type UpdateWorkMutationVariables = Exact<{
 
 
 export type UpdateWorkMutation = { __typename?: 'Mutation', updateWork: { __typename?: 'Work', id: number, company_name: string, position: string, field: string, jobSeekerId: number, start_date?: Maybe<string>, end_date?: Maybe<string> } };
+
+export type DeleteWorkMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type DeleteWorkMutation = { __typename?: 'Mutation', deleteWork: boolean };
 
 export type GetAllWorkQueryVariables = Exact<{
   jsId: Scalars['Int'];
@@ -726,6 +768,37 @@ export function useCreateJsProfileMutation(baseOptions?: Apollo.MutationHookOpti
 export type CreateJsProfileMutationHookResult = ReturnType<typeof useCreateJsProfileMutation>;
 export type CreateJsProfileMutationResult = Apollo.MutationResult<CreateJsProfileMutation>;
 export type CreateJsProfileMutationOptions = Apollo.BaseMutationOptions<CreateJsProfileMutation, CreateJsProfileMutationVariables>;
+export const DeleteJobDocument = gql`
+    mutation deleteJob($id: Int!) {
+  deleteJob(id: $id)
+}
+    `;
+export type DeleteJobMutationFn = Apollo.MutationFunction<DeleteJobMutation, DeleteJobMutationVariables>;
+
+/**
+ * __useDeleteJobMutation__
+ *
+ * To run a mutation, you first call `useDeleteJobMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteJobMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteJobMutation, { data, loading, error }] = useDeleteJobMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteJobMutation(baseOptions?: Apollo.MutationHookOptions<DeleteJobMutation, DeleteJobMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteJobMutation, DeleteJobMutationVariables>(DeleteJobDocument, options);
+      }
+export type DeleteJobMutationHookResult = ReturnType<typeof useDeleteJobMutation>;
+export type DeleteJobMutationResult = Apollo.MutationResult<DeleteJobMutation>;
+export type DeleteJobMutationOptions = Apollo.BaseMutationOptions<DeleteJobMutation, DeleteJobMutationVariables>;
 export const FileUploadDocument = gql`
     mutation FileUpload($imgUrl: Upload!) {
   fileUpload(imgUrl: $imgUrl) {
@@ -986,6 +1059,58 @@ export function useUpdateJsProfileMutation(baseOptions?: Apollo.MutationHookOpti
 export type UpdateJsProfileMutationHookResult = ReturnType<typeof useUpdateJsProfileMutation>;
 export type UpdateJsProfileMutationResult = Apollo.MutationResult<UpdateJsProfileMutation>;
 export type UpdateJsProfileMutationOptions = Apollo.BaseMutationOptions<UpdateJsProfileMutation, UpdateJsProfileMutationVariables>;
+export const GetApplicantJobsDocument = gql`
+    query getApplicantJobs {
+  getApplicantJobs {
+    id
+    title
+    location
+    category
+    salary
+    description
+    imgUrl
+    expDate
+    createdDate
+    updatedAt
+    userApplications {
+      appication_date
+      userId
+    }
+    company {
+      name
+      location
+      logo
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetApplicantJobsQuery__
+ *
+ * To run a query within a React component, call `useGetApplicantJobsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetApplicantJobsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetApplicantJobsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetApplicantJobsQuery(baseOptions?: Apollo.QueryHookOptions<GetApplicantJobsQuery, GetApplicantJobsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetApplicantJobsQuery, GetApplicantJobsQueryVariables>(GetApplicantJobsDocument, options);
+      }
+export function useGetApplicantJobsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetApplicantJobsQuery, GetApplicantJobsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetApplicantJobsQuery, GetApplicantJobsQueryVariables>(GetApplicantJobsDocument, options);
+        }
+export type GetApplicantJobsQueryHookResult = ReturnType<typeof useGetApplicantJobsQuery>;
+export type GetApplicantJobsLazyQueryHookResult = ReturnType<typeof useGetApplicantJobsLazyQuery>;
+export type GetApplicantJobsQueryResult = Apollo.QueryResult<GetApplicantJobsQuery, GetApplicantJobsQueryVariables>;
 export const GetCompaniesDocument = gql`
     query getCompanies {
   getCompanies {
@@ -1080,6 +1205,58 @@ export function useGetCompanyByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetCompanyByIdQueryHookResult = ReturnType<typeof useGetCompanyByIdQuery>;
 export type GetCompanyByIdLazyQueryHookResult = ReturnType<typeof useGetCompanyByIdLazyQuery>;
 export type GetCompanyByIdQueryResult = Apollo.QueryResult<GetCompanyByIdQuery, GetCompanyByIdQueryVariables>;
+export const GetCompanyJobsDocument = gql`
+    query getCompanyJobs {
+  getCompanyJobs {
+    id
+    title
+    location
+    category
+    salary
+    expDate
+    description
+    imgUrl
+    userId
+    createdDate
+    updatedAt
+    applications {
+      userId
+      jobId
+      appication_date
+    }
+    company {
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCompanyJobsQuery__
+ *
+ * To run a query within a React component, call `useGetCompanyJobsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCompanyJobsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCompanyJobsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCompanyJobsQuery(baseOptions?: Apollo.QueryHookOptions<GetCompanyJobsQuery, GetCompanyJobsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCompanyJobsQuery, GetCompanyJobsQueryVariables>(GetCompanyJobsDocument, options);
+      }
+export function useGetCompanyJobsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCompanyJobsQuery, GetCompanyJobsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCompanyJobsQuery, GetCompanyJobsQueryVariables>(GetCompanyJobsDocument, options);
+        }
+export type GetCompanyJobsQueryHookResult = ReturnType<typeof useGetCompanyJobsQuery>;
+export type GetCompanyJobsLazyQueryHookResult = ReturnType<typeof useGetCompanyJobsLazyQuery>;
+export type GetCompanyJobsQueryResult = Apollo.QueryResult<GetCompanyJobsQuery, GetCompanyJobsQueryVariables>;
 export const GetJsProfileDocument = gql`
     query getJSProfile {
   getJSProfile {
@@ -1132,7 +1309,12 @@ export const GetJobByIdDocument = gql`
     createdAt
     salary
     expDate
-    userId
+    createdDate
+    applications {
+      userId
+      jobId
+      appication_date
+    }
     company {
       id
       name
@@ -1460,6 +1642,37 @@ export function useUpdateWorkMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UpdateWorkMutationHookResult = ReturnType<typeof useUpdateWorkMutation>;
 export type UpdateWorkMutationResult = Apollo.MutationResult<UpdateWorkMutation>;
 export type UpdateWorkMutationOptions = Apollo.BaseMutationOptions<UpdateWorkMutation, UpdateWorkMutationVariables>;
+export const DeleteWorkDocument = gql`
+    mutation deleteWork($id: Int!) {
+  deleteWork(id: $id)
+}
+    `;
+export type DeleteWorkMutationFn = Apollo.MutationFunction<DeleteWorkMutation, DeleteWorkMutationVariables>;
+
+/**
+ * __useDeleteWorkMutation__
+ *
+ * To run a mutation, you first call `useDeleteWorkMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteWorkMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteWorkMutation, { data, loading, error }] = useDeleteWorkMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteWorkMutation(baseOptions?: Apollo.MutationHookOptions<DeleteWorkMutation, DeleteWorkMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteWorkMutation, DeleteWorkMutationVariables>(DeleteWorkDocument, options);
+      }
+export type DeleteWorkMutationHookResult = ReturnType<typeof useDeleteWorkMutation>;
+export type DeleteWorkMutationResult = Apollo.MutationResult<DeleteWorkMutation>;
+export type DeleteWorkMutationOptions = Apollo.BaseMutationOptions<DeleteWorkMutation, DeleteWorkMutationVariables>;
 export const GetAllWorkDocument = gql`
     query GetAllWork($jsId: Int!) {
   getAllWork(jsId: $jsId) {

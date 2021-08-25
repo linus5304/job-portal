@@ -19,6 +19,10 @@ mutation UpdateWork($data: WorkInput!, $id: Int!) {
   }
 }
 
+mutation deleteWork($id: Int!) {
+  deleteWork(id:$id)
+}
+
 query GetAllWork($jsId: Int!) {
   getAllWork(jsId: $jsId) {
     ...workDetails
@@ -28,4 +32,8 @@ query GetWorkbyId($id: Int!) {
   getWorkbyId(id: $id) {
     ...workDetails
   }
+
+
+
+  
 }

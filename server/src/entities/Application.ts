@@ -8,7 +8,7 @@ import { User } from "./User";
 @Entity()
 @ObjectType()
 export class Application extends BaseEntity {
-  @Field(() => String)
+  @Field(() => Date)
   @CreateDateColumn()
   appication_date: Date;
 
@@ -16,14 +16,14 @@ export class Application extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Field()
+  @Field({nullable: true})
   @PrimaryColumn()
   userId: number;
 
   @ManyToOne(() => User, (user) => user.application)
   user: User;
 
-  @Field()
+  @Field({nullable: true})
   @PrimaryColumn()
   jobId: number;
 

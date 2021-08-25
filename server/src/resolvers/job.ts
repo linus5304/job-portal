@@ -19,29 +19,29 @@ import path from "path";
 import { generate } from "randomstring";
 import fs from "fs";
 import { CompanyProfile } from "./../entities/Company";
-import { Application } from './../entities/Application';
+import { Application } from "./../entities/Application";
 
 @InputType()
 class jobInput {
-  @Field()
-  title: string;
-  @Field()
-  category: string;
+  @Field({ nullable: true })
+  title?: string;
+  @Field({ nullable: true })
+  category?: string;
 
-  @Field()
-  description: string;
+  @Field({ nullable: true })
+  description?: string;
 
-  @Field()
-  salary: string;
+  @Field({ nullable: true })
+  salary?: string;
 
-  @Field()
-  location: string;
+  @Field({ nullable: true })
+  location?: string;
 
-  @Field()
-  expDate: string;
+  @Field({ nullable: true })
+  expDate?: string;
 
-  @Field()
-  imgUrl: string;
+  @Field({ nullable: true })
+  imgUrl?: string;
 }
 @ObjectType()
 export class ImageUrl {
@@ -75,6 +75,22 @@ export class JobResolver {
   @FieldResolver(() => CompanyProfile)
   async company(@Root() job: Job) {
     return await CompanyProfile.findOne(job.userId);
+  }
+
+  @FieldResolver(() => [Application])
+  async applications(@Root() job: Job) {
+    return await getConnection()
+      .createQueryBuilder(Application, "app")
+      .where('"jobId" = :jobId', { jobId: job.id })
+      .getMany();
+  }
+  
+  @FieldResolver(() => [Application])
+  async userApplications(@Root() job: Job, @Ctx() {req} : MyContext) {
+    return await getConnection()
+      .createQueryBuilder(Application, "app")
+      .where('"userId" = :userId', { userId: req.session.userId })
+      .getMany();
   }
 
   @Mutation(() => ImageUrl)
@@ -114,6 +130,34 @@ export class JobResolver {
     @Arg("id", () => Int!) id: number
   ): Promise<Job | undefined> {
     return await Job.findOne(id);
+  }
+
+  @Mutation(() => Job)
+  async updateJob(
+    @Arg("data") data: jobInput,
+    @Arg("id", () => Int) id: number,
+    @Ctx() { req }: MyContext
+  ): Promise<Job> {
+    const result = await getConnection()
+      .createQueryBuilder()
+      .update(Job)
+      .set(data)
+      .where('id = :id and "userId" = :userId', {
+        id,
+        userId: req.session.userId,
+      })
+      .returning("*")
+      .execute();
+    return result.raw[0];
+  }
+
+  @Mutation(() => Boolean)
+  async deleteJob(
+    @Arg("id", () => Int!) id: number,
+    @Ctx() { req }: MyContext
+  ) {
+    await Job.delete({ id, userId: req.session.userId });
+    return true;
   }
 
   @Query(() => PaginatedJobs, { nullable: true })
@@ -162,7 +206,10 @@ export class JobResolver {
   }
 
   @Mutation(() => Application)
-  apply(@Arg("jobId", () => Int) jobId: number, @Ctx() { req }: MyContext) : Promise<Application>{
-    return Application.create({jobId,userId: req.session.userId}).save()
+  apply(
+    @Arg("jobId", () => Int) jobId: number,
+    @Ctx() { req }: MyContext
+  ): Promise<Application> {
+    return Application.create({ jobId, userId: req.session.userId }).save();
   }
 }

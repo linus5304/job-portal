@@ -52,7 +52,7 @@ export const login: React.FC<loginProps> & layout = ({}) => {
             duration: 3000,
             isClosable: false,
           })
-          router.push(`/account/${response.data.login.user.id}`)
+          router.push(`/account/`)
         }
       }}
     >

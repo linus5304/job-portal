@@ -15,10 +15,12 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Divider
 } from "@chakra-ui/react";
 import { FiEdit, FiPlus } from "react-icons/fi";
 import { Form, Formik } from "formik";
 import {
+  GetAllEducationDocument,
   useAddEducationMutation,
   useGetAllEducationQuery,
 } from "../../generated/graphql";
@@ -54,6 +56,7 @@ export const Education: React.FC<EducationProps> = ({ jsId }) => {
       </HStack>
 
       {data?.getAllEducation.map((edu) => (
+        <>
         <EduWorkItem
           variant="edu"
           school={edu.school}
@@ -65,6 +68,8 @@ export const Education: React.FC<EducationProps> = ({ jsId }) => {
           id={edu.id}
           jsId={edu.jobSeekerId}
         />
+        <Divider/>
+        </>
       ))}
 
       <Formik
@@ -79,11 +84,14 @@ export const Education: React.FC<EducationProps> = ({ jsId }) => {
         onSubmit={async (values) => {
           const response = await addEducation({
             variables: { data: values },
+            update: (cache, {data}) => {
+              const newEdu = data.
+              const newData = cache.readQuery({query: GetAllEducationDocument})
+            }
           });
           if (response.data.addEducation) {
             console.log(values);
           }
-          console.log(values);
         }}
       >
         {({ isSubmitting }) => (
@@ -94,7 +102,7 @@ export const Education: React.FC<EducationProps> = ({ jsId }) => {
                 <ModalHeader>Add Education</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody pb={6}>
-                  <InputField name="jobSeekerId" type="hidden" />
+                  <InputField name="jobSeekerId" type="hidden" value={jsId} />
                   <InputField name="school" label="School" />
                   <InputField name="degree" label="Degree" />
                   <InputField name="field" label="Field of Study" />

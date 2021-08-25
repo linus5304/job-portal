@@ -34,6 +34,7 @@ import {
 } from "react-icons/md";
 import Moment from "react-moment";
 import NextLink from "next/link";
+import { useDeleteJobMutation } from "../generated/graphql";
 
 interface ManageJobItemProps {
   id?: number;
@@ -41,6 +42,12 @@ interface ManageJobItemProps {
   companyName?: string;
   salary?: string;
   postDate?: string;
+  location?:string
+  description?:string
+  imgUrl?:string
+  category?:string
+  expDate?:string
+  applicants?:number
 }
 
 export const ManageJobItem: React.FC<ManageJobItemProps> = ({
@@ -49,10 +56,19 @@ export const ManageJobItem: React.FC<ManageJobItemProps> = ({
   companyName,
   salary,
   postDate,
+  location,
+  description,
+  imgUrl,
+  category,
+  expDate,
+  applicants
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
   const [modal, setModal] = useState("");
+  const [deleteJob] = useDeleteJobMutation()
+
+
 
   return (
     <>
@@ -92,7 +108,7 @@ export const ManageJobItem: React.FC<ManageJobItemProps> = ({
                 size="sm"
                 color="blue.400"
               >
-                Location
+                {location}
               </Button>
 
               <Button
@@ -121,7 +137,7 @@ export const ManageJobItem: React.FC<ManageJobItemProps> = ({
               <Text fontWeight="semibold">0 Views</Text>
               <Divider orientation="vertical" h="30px" />
               <Link>
-                <Text fontWeight="semibold">0 Applicants</Text>
+                <Text fontWeight="semibold">{applicants} Applicants</Text>
               </Link>
             </HStack>
             <HStack align="flex-start">
@@ -156,13 +172,13 @@ export const ManageJobItem: React.FC<ManageJobItemProps> = ({
       {modal === "edit" ? (
         <Formik
           initialValues={{
-            title: "",
-            category: "",
-            salary: "",
-            location: "",
-            expDate: "",
-            description: "",
-            imgUrl: "",
+            title: title,
+            category: category,
+            salary: salary,
+            location: location,
+            expDate: expDate,
+            description: description,
+            imgUrl: imgUrl,
           }}
           onSubmit={async (values) => {
             console.log(values);
@@ -218,12 +234,12 @@ export const ManageJobItem: React.FC<ManageJobItemProps> = ({
 
                         <Dropzone
                           onDrop={async ([file]) => {
-                            const { data } = await uploadFile({
-                              variables: { imgUrl: file },
-                            });
-                            setFieldValue("imgUrl", data.fileUpload.url);
-                            setImg((img) => (img = data.fileUpload.url));
-                            setName((name) => (name = file.name));
+                            // const { data } = await uploadFile({
+                            //   variables: { imgUrl: file },
+                            // });
+                            // setFieldValue("imgUrl", data.fileUpload.url);
+                            // setImg((img) => (img = data.fileUpload.url));
+                            // setName((name) => (name = file.name));
 
                             console.log(file);
                           }}
@@ -277,7 +293,12 @@ export const ManageJobItem: React.FC<ManageJobItemProps> = ({
                   <Divider />
                 </Flex>
                 <HStack spacing="2%">
-                  <Button bg="red.400" _hover={{ bg: "red.400" }}>
+                  <Button bg="red.400" _hover={{ bg: "red.400" }} onClick={()=>{deleteJob({
+                    variables:{id}
+                    
+                  })
+                  onClose()
+                  }}>
                     Delete
                   </Button>
                   <Button onClick={onClose}> Cancel</Button>

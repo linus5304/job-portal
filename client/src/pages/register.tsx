@@ -19,6 +19,8 @@ import NextLink from "next/link";
 import {
   useRegisterMutation,
   useCreateJsProfileMutation,
+  MeQuery,
+  MeDocument,
 } from "./../generated/graphql";
 import { toErrorMap } from "../utils/errorMap";
 import { useRouter } from "next/router";
@@ -37,13 +39,25 @@ export const Register: React.FC<RegisterProps> & layout = ({}) => {
       <Formik
         initialValues={{ username: "", email: "", password: "", user_type: "" }}
         onSubmit={async (values, { setErrors }) => {
+          console.log(values)
           const response = await register({
             variables: { data: values },
+            update: (cache, {data}) => {
+              cache.writeQuery<MeQuery>({
+                query: MeDocument,
+                data:{
+                  __typename:"Query",
+                  me: data.register.user
+                }
+              })
+            }
           });
 
-          if (response.data?.register.user.user_type === "job seeker") {
+          if (response?.data?.register?.user?.user_type === "job seeker") {
             await createProfile({
-              variables: { data: {email: response.data?.register.user.email} },
+              variables: {
+                data: { email: response.data?.register.user.email },
+              },
             });
           }
 
@@ -74,7 +88,7 @@ export const Register: React.FC<RegisterProps> & layout = ({}) => {
               flexDir="column"
             >
               <Flex mb="5%" flexDirection="column">
-                <Heading size="xl" textAlign="center" fontWeight="bold" mb={2} >
+                <Heading size="xl" textAlign="center" fontWeight="bold" mb={2}>
                   Register
                 </Heading>
                 <Divider />
@@ -99,8 +113,17 @@ export const Register: React.FC<RegisterProps> & layout = ({}) => {
                     placeholder="Select a user"
                     label="User Type"
                     select
+                    
                   />
-                  <Button type="submit" isLoading={isSubmitting} w="100%" bg="#00b074" color="white" size="lg" _hover={{bg:"green.500"}}>
+                  <Button
+                    type="submit"
+                    isLoading={isSubmitting}
+                    w="100%"
+                    bg="#00b074"
+                    color="white"
+                    size="lg"
+                    _hover={{ bg: "green.500" }}
+                  >
                     Register
                   </Button>
                 </VStack>

@@ -9,8 +9,13 @@ query GetJobById($id: Int!){
     createdAt
     salary
     expDate
-    userId
-    company{
+    createdDate
+    applications {
+      userId
+      jobId
+      appication_date
+    }
+    company {
       id
       name
       website

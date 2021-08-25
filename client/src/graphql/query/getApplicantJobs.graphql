@@ -1,0 +1,23 @@
+query getApplicantJobs{
+  getApplicantJobs {
+    id
+    title
+    location
+    category
+    salary
+    description
+    imgUrl
+    expDate
+    createdDate
+    updatedAt
+    userApplications{
+      appication_date
+      userId
+    }
+    company {
+      name
+      location
+      logo
+    }
+  }
+}

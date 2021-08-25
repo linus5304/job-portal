@@ -78,10 +78,19 @@ export class CompanyResolver {
     return CompanyProfile.findOne(id);
   }
 
+  @Query(() => [Job])
+  async getCompanyJobs(@Ctx() {req}: MyContext){
+    const jobs = await getConnection()
+      .createQueryBuilder(Job, "job")
+      .where("job.userId = :id", { id: req.session.userId })
+      .getMany();
+    return jobs;
+  }
+
   @Query(() => [CompanyProfile], { nullable: true })
   async getCompanies(): Promise<CompanyProfile[] | undefined> {
     const result = await getConnection()
-      .createQueryBuilder(CompanyProfile, "companies").orderBy('id', 'DESC')
+      .createQueryBuilder(CompanyProfile, "companies")
       .getMany();
   return result;
   }

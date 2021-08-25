@@ -9,6 +9,7 @@ import { useGetCompaniesQuery } from './../../generated/graphql';
 import {SearchBox} from './../../components/SearchBox'
 import NextLink from 'next/link'
 
+
 interface CompaniesProps{
 
 }
