@@ -10,70 +10,67 @@ import { useGetCompanyJobsQuery } from "../../generated/graphql";
 interface MyJobsProps {}
 
 const MyJobs: React.FC<MyJobsProps> = ({}) => {
-  const {data, loading} = useGetCompanyJobsQuery()
-  
+  const { data, loading } = useGetCompanyJobsQuery();
+
   return (
     <DashboardLayout>
       {!data && loading ? (
         <VStack spacing="24px" w="100%">
-        <Skeleton isLoaded={!loading} w="100%">
-            
-          <ManageJobItem
+          <Skeleton isLoaded={!loading} w="100%">
+            <ManageJobItem
               title="Hello"
               location="loading"
               imgUrl="loading"
               postDate="loading"
               key={1}
             />
-            </Skeleton>
-            <Skeleton isLoaded={!loading} w="100%">
-
-          <ManageJobItem
+          </Skeleton>
+          <Skeleton isLoaded={!loading} w="100%">
+            <ManageJobItem
               title="Hello"
               location="loading"
               imgUrl="loading"
               postDate="loading"
               key={2}
             />
-            </Skeleton>
-            </VStack>
-      ): (<VStack w="100%" align="flex-start">
-        <Formik
-          initialValues={{ title: "", location: "" }}
-          onSubmit={async (values) => {
-            console.log(values);
-          }}
-        >
-          <Form>
-            <InputField
-              type="search"
-              placeholder="Job Title"
-              name="title"
-              bg="#fff"
-            />
-          </Form>
-        </Formik>
-        <Text fontSize="1.2em" weight="semibold">
-          {data?.getCompanyJobs.length} Job Postings
-        </Text>
-        {data?.getCompanyJobs.map(j => (
+          </Skeleton>
+        </VStack>
+      ) : (
+        <VStack w="100%" align="flex-start">
+          <Formik
+            initialValues={{ title: "", location: "" }}
+            onSubmit={async (values) => {
+              console.log(values);
+            }}
+          >
+            <Form>
+              <InputField
+                type="search"
+                placeholder="Job Title"
+                name="title"
+                bg="#fff"
+              />
+            </Form>
+          </Formik>
+          <Text fontSize="1.2em" weight="semibold">
+            {data?.getCompanyJobs.length} Job Postings
+          </Text>
+          {data?.getCompanyJobs.map((j) => (
             <ManageJobItem
-            title={j.title}
-            companyName={j.company.name}
-            id={j.id}
-            salary={j.salary}
-            location={j.location}
-            postDate={j.updatedAt}
-            description={j.description}
-            expDate={j.expDate}
-            category={j.category}
-            applicants={j.applications.length}
-          />
-        ))}
-        
-      </VStack>)}
-      
-      
+              title={j.title}
+              companyName={j.company.name}
+              id={j.id}
+              salary={j.salary}
+              location={j.location}
+              postDate={j.updatedAt}
+              description={j.description}
+              expDate={j.expDate}
+              category={j.category}
+              applicants={j.applications.length}
+            />
+          ))}
+        </VStack>
+      )}
     </DashboardLayout>
   );
 };

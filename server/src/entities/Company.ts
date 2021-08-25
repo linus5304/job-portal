@@ -13,28 +13,36 @@ export class CompanyProfile extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Field()
-  @Column()
+  @Field({nullable: true})
+  @Column({nullable: true})
   name: string;
 
-  @Field()
-  @Column()
+  @Field({nullable: true})
+  @Column({nullable: true})
   location: string;
 
-  @Field()
-  @Column()
+  @Field({nullable: true})
+  @Column({nullable: true})
   website: string;
 
-  @Field()
-  @Column()
+  @Field({nullable: true})
+  @Column({nullable: true})
   phone: string;
 
-  @Field()
-  @Column()
+  @Field({nullable: true})
+  @Column({nullable: true})
   logo: string;
 
-  @Field()
-  @Column()
+  @Field({nullable: true})
+  @Column({nullable: true})
+  founded_date: string;
+
+  @Field({nullable: true})
+  @Column({nullable: true})
+  email: string;
+
+  @Field({nullable: true})
+  @Column({nullable: true})
   description: string;
 
   @Field(() => String)

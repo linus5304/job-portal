@@ -6,7 +6,7 @@ import { HStack, VStack } from "@chakra-ui/react";
 import { Navbar } from "../Navbar";
 import { MainLayout } from "./MainLayout";
 import { useMeQuery } from "../../generated/graphql";
-import { JsSidebar } from './../dashboard/JsSidebar';
+import { JsSidebar } from "./../dashboard/JsSidebar";
 
 interface DashboardLayoutProps {}
 
@@ -14,15 +14,19 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   children,
 }) => {
   const { data, loading } = useMeQuery();
-  
+
+  if (!data && loading) {
+    return <div>loading</div>;
+  }
+
   return (
     <>
       <MainLayout>
         <Flex mx="auto" w="80%" mt={50}>
-          {data?.me.user_type === "company" ? (<Sidebar />) : (<JsSidebar />)}
-          
+          {data?.me.user_type === "company" ? <Sidebar /> : <JsSidebar />}
+
           <Flex overflow="auto" w="100%" px="8%" mb="3%">
-          {children}
+            {children}
           </Flex>
         </Flex>
       </MainLayout>

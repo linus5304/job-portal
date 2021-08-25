@@ -90,7 +90,7 @@ export const Sidebar: React.FC<SidebarProps> = ({}) => {
 
           {/* sidebar Items */}
           <VStack pt="5%" w="100%">
-            <NextLink href="/create-profile">
+            <NextLink href="/account/company">
               <Flex
                 alignItems="center"
                 cursor="pointer"

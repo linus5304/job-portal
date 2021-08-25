@@ -35,6 +35,7 @@ import {
 import Moment from "react-moment";
 import NextLink from "next/link";
 import { useDeleteJobMutation } from "../generated/graphql";
+import { cache } from "../utils/withApollo";
 
 interface ManageJobItemProps {
   id?: number;
@@ -42,12 +43,12 @@ interface ManageJobItemProps {
   companyName?: string;
   salary?: string;
   postDate?: string;
-  location?:string
-  description?:string
-  imgUrl?:string
-  category?:string
-  expDate?:string
-  applicants?:number
+  location?: string;
+  description?: string;
+  imgUrl?: string;
+  category?: string;
+  expDate?: string;
+  applicants?: number;
 }
 
 export const ManageJobItem: React.FC<ManageJobItemProps> = ({
@@ -61,14 +62,12 @@ export const ManageJobItem: React.FC<ManageJobItemProps> = ({
   imgUrl,
   category,
   expDate,
-  applicants
+  applicants,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
   const [modal, setModal] = useState("");
-  const [deleteJob] = useDeleteJobMutation()
-
-
+  const [deleteJob] = useDeleteJobMutation();
 
   return (
     <>
@@ -293,12 +292,17 @@ export const ManageJobItem: React.FC<ManageJobItemProps> = ({
                   <Divider />
                 </Flex>
                 <HStack spacing="2%">
-                  <Button bg="red.400" _hover={{ bg: "red.400" }} onClick={()=>{deleteJob({
-                    variables:{id}
-                    
-                  })
-                  onClose()
-                  }}>
+                  <Button
+                    bg="red.400"
+                    _hover={{ bg: "red.400" }}
+                    onClick={() => {
+                      deleteJob({
+                        variables: { id },
+                        update: (cache) => cache.evict({ id: "Job:" + id }),
+                      });
+                      onClose();
+                    }}
+                  >
                     Delete
                   </Button>
                   <Button onClick={onClose}> Cancel</Button>

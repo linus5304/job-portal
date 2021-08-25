@@ -27,6 +27,8 @@ class JSProfileInput {
   @Field({ nullable: true })
   about_me?: string;
   @Field({ nullable: true })
+  headline?: string;
+  @Field({ nullable: true })
   email?: string;
   @Field({ nullable: true })
   profile_pic?: string;
@@ -98,5 +100,15 @@ export class JobSeekerResolver {
   ): Promise<JobSeeker | undefined> {
     return await JobSeeker.findOne({ where: { userId: req.session.userId } });
   }
-  
+
+  @Query(() => [JobSeeker])
+  async getAllJSProfile() {
+    const result = await getConnection().query(
+      `
+      select * from job_seeker js 
+where first_name is not null and last_name is not null 
+      `
+    );
+    return result;
+  }
 }

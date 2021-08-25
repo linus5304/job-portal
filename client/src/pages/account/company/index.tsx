@@ -1,80 +1,86 @@
 import {
-    Box,
-    Heading,
-    Flex,
-    Divider,
-    VStack,
-    HStack,
-    Button,
-    useColorModeValue,
-    Text,
-    Stack,
-    useToast,
-  } from "@chakra-ui/react";
-  import React, { useState } from "react";
-  import { Formik, Form } from "formik";
-  import { InputField } from "../../../components/form/InputField";
-  import NextLink from "next/link";
-  import { useRouter } from "next/router";
-  import {
-    useCreateCompanyProfileMutation,
-    useFileUploadMutation,
-  } from "../../../generated/graphql";
-  import Dropzone from "react-dropzone";
-  import { MainLayout } from "../../../components/layouts/MainLayout";
-  import { DashboardLayout } from "../../../components/layouts/DashboardLayout";
-  
-  import { withApollo } from "../../../utils/withApollo"
-  import { FiUploadCloud } from "react-icons/fi";
-  
+  Box,
+  Heading,
+  Flex,
+  Divider,
+  VStack,
+  HStack,
+  Button,
+  useColorModeValue,
+  Text,
+  Stack,
+  useToast,
+} from "@chakra-ui/react";
+import React, { useState } from "react";
+import { Formik, Form } from "formik";
+import { InputField } from "../../../components/form/InputField";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
+import {
+  useCreateCompanyProfileMutation,
+  useFileUploadMutation,
+  useGetCompanyByIdQuery,
+  useGetCompanyProfileQuery,
+  useUpdateCompanyProfileMutation,
+} from "../../../generated/graphql";
+import Dropzone from "react-dropzone";
+import { MainLayout } from "../../../components/layouts/MainLayout";
+import { DashboardLayout } from "../../../components/layouts/DashboardLayout";
 
+import { withApollo } from "../../../utils/withApollo";
+import { FiUploadCloud } from "react-icons/fi";
 
-interface indexProps{
-
-}
-
+interface indexProps {}
 
 export const index: React.FC<indexProps> = ({}) => {
-    const router = useRouter();
-  const [createCompanyProfile] = useCreateCompanyProfileMutation();
+  const router = useRouter();
   const [uploadFile] = useFileUploadMutation();
   const [img, setImg] = useState(() => "");
   const [name, setName] = useState("");
-        return (
-            <DashboardLayout>
+  const { data, loading } = useGetCompanyProfileQuery();
+  const [updateCompProfile] = useUpdateCompanyProfileMutation();
+
+  if (!data && loading) {
+    return <div>loading</div>;
+  }
+
+  return (
+    <DashboardLayout>
       <Formik
         initialValues={{
-          name: "",
-          website: "",
-          phone: "",
-          location: "",
-          logo: "",
-          description: "",
+          name: data?.getCompanyProfile.name,
+          website: data?.getCompanyProfile.website,
+          phone: data?.getCompanyProfile.phone,
+          location: data?.getCompanyProfile.location,
+          logo: data?.getCompanyProfile.logo,
+          description: data?.getCompanyProfile.description,
+          email: data?.getCompanyProfile.email,
+          founded_date: data?.getCompanyProfile.founded_date
         }}
         onSubmit={async (values) => {
-          const response = await createCompanyProfile({
-            variables: { data: values },
+          const response = await updateCompProfile({
+            variables: { data: values, id: data.getCompanyProfile.id },
           });
-        //   if (!response.data.createCompanyProfile) {
-        //     toast({
-        //       title: "Account created.",
-        //       position: "top-right",
-        //       description: "Error occured when creating your profile",
-        //       status: "error",
-        //       duration: 5000,
-        //       isClosable: true,
-        //     });
-        //   } else {
-        //     toast({
-        //       title: "Account created.",
-        //       position: "top-right",
-        //       description: "We've created your account for you.",
-        //       status: "success",
-        //       duration: 5000,
-        //       isClosable: true,
-        //     });
-        //     router.push("/");
-        //   }
+          //   if (!response.data.createCompanyProfile) {
+          //     toast({
+          //       title: "Account created.",
+          //       position: "top-right",
+          //       description: "Error occured when creating your profile",
+          //       status: "error",
+          //       duration: 5000,
+          //       isClosable: true,
+          //     });
+          //   } else {
+          //     toast({
+          //       title: "Account created.",
+          //       position: "top-right",
+          //       description: "We've created your account for you.",
+          //       status: "success",
+          //       duration: 5000,
+          //       isClosable: true,
+          //     });
+          //     router.push("/");
+          //   }
           console.log(values);
         }}
       >
@@ -110,15 +116,9 @@ export const index: React.FC<indexProps> = ({}) => {
                     <InputField name="location" label="Location" />
                   </HStack>
                   <HStack align="flex-start" w="100%" spacing="30px">
-                  <InputField name="website" label="Website Link" />
-                  <InputField name="foundedDate" label="Founded Date" />
+                    <InputField name="website" label="Website Link" />
+                    <InputField name="founded_date" label="Founded Date" />
                   </HStack>
-                  <HStack align="flex-start" w="100%" spacing="30px">
-                  <InputField name="category" label="Category" select />
-                  <InputField name="country" label="Country" />
-                  </HStack>
-
-                 
                   
 
                   <InputField name="description" label="Description" textarea />
@@ -130,8 +130,8 @@ export const index: React.FC<indexProps> = ({}) => {
                       });
                       setFieldValue("logo", data.fileUpload.url);
                       setImg((img) => (img = data.fileUpload.url));
-                      setName(name => name = file.name)
-                      
+                      setName((name) => (name = file.name));
+
                       console.log(file, data.fileUpload.url);
                     }}
                   >
@@ -139,16 +139,21 @@ export const index: React.FC<indexProps> = ({}) => {
                       <Flex {...getRootProps()}>
                         <input {...getInputProps()} name="logo" />
                         <Button leftIcon={<FiUploadCloud />}>add Image</Button>
-                        {name ? (<Text>{name}</Text> ): null}
-                        
+                        {name ? <Text>{name}</Text> : null}
                       </Flex>
                     )}
                   </Dropzone>
 
-                    <Button bg="#00b074" color="white" size="lg" _hover={{bg:"#00b074"}} type="submit" isLoading={isSubmitting}>
-                      Update Profile
-                    </Button>
-                    
+                  <Button
+                    bg="#00b074"
+                    color="white"
+                    size="lg"
+                    _hover={{ bg: "#00b074" }}
+                    type="submit"
+                    isLoading={isSubmitting}
+                  >
+                    Update Profile
+                  </Button>
                 </VStack>
               </Form>
             </Flex>
@@ -156,7 +161,7 @@ export const index: React.FC<indexProps> = ({}) => {
         )}
       </Formik>
     </DashboardLayout>
-        );
+  );
 };
 
-export default withApollo({ssr: false}) (index)
+export default withApollo({ ssr: false })(index);

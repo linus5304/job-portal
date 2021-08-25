@@ -21,6 +21,7 @@ import {
   useCreateJsProfileMutation,
   MeQuery,
   MeDocument,
+  useCreateCompanyProfileMutation,
 } from "./../generated/graphql";
 import { toErrorMap } from "../utils/errorMap";
 import { useRouter } from "next/router";
@@ -31,7 +32,8 @@ interface RegisterProps {}
 
 export const Register: React.FC<RegisterProps> & layout = ({}) => {
   const [register] = useRegisterMutation();
-  const [createProfile] = useCreateJsProfileMutation();
+  const [createJSProfile] = useCreateJsProfileMutation();
+  const [createCompProfile] = useCreateCompanyProfileMutation()
   const router = useRouter();
   const toast = useToast();
   return (
@@ -54,9 +56,16 @@ export const Register: React.FC<RegisterProps> & layout = ({}) => {
           });
 
           if (response?.data?.register?.user?.user_type === "job seeker") {
-            await createProfile({
+            await createJSProfile({
               variables: {
                 data: { email: response.data?.register.user.email },
+              },
+            });
+          }
+          if (response?.data?.register?.user?.user_type === "company") {
+            await createCompProfile({
+              variables: {
+                data: { email: response.data?.register?.user.email},
               },
             });
           }

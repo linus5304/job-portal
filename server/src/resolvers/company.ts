@@ -18,21 +18,28 @@ import { Job } from "./../entities/Job";
 
 @InputType()
 class companyProfileInput {
-  @Field()
+  @Field({nullable: true})
   name: string;
-  @Field()
+
+  @Field({nullable: true})
   location: string;
 
-  @Field()
+  @Field({nullable: true})
   website: string;
 
-  @Field()
+  @Field({nullable: true})
   phone: string;
 
-  @Field()
+  @Field({nullable: true})
   logo: string;
 
-  @Field()
+  @Field({nullable: true})
+  founded_date: string;
+
+  @Field({nullable: true})
+  email: string;
+
+  @Field({nullable: true})
   description: string;
 }
 
@@ -60,6 +67,32 @@ export class CompanyResolver {
       ...data,
       userId: req.session.userId,
     }).save();
+  }
+
+  @Query(() => CompanyProfile)
+  async getCompanyProfile(
+    @Ctx() { req }: MyContext
+  ): Promise<CompanyProfile | undefined> {
+    return await CompanyProfile.findOne({ where: { userId: req.session.userId } });
+  }
+
+  @Mutation(() => CompanyProfile)
+  async updateCompanyProfile(
+    @Arg("data") data: companyProfileInput,
+    @Arg("id", () => Int) id: number,
+    @Ctx() { req }: MyContext
+  ): Promise<CompanyProfile> {
+    const result = await getConnection()
+      .createQueryBuilder()
+      .update(CompanyProfile)
+      .set(data)
+      .where('id = :id and "userId" = :userId', {
+        id,
+        userId: req.session.userId,
+      })
+      .returning("*")
+      .execute();
+    return result.raw[0];
   }
 
   @FieldResolver(() => [Job])

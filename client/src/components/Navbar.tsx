@@ -73,9 +73,16 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
                 <MenuButton as={Avatar} rightIcon={<ChevronDownIcon />} cursor="pointer"/>
                   
                 <MenuList>
-                  <NextLink href='/account/job-seeker'>
+                  {data.me.user_type === "company" ? (
+                    <NextLink href='/account/company'>
                     <MenuItem>My account</MenuItem>
                   </NextLink>
+                  ) : (
+                    <NextLink href='/account/job-seeker'>
+                    <MenuItem>My account</MenuItem>
+                  </NextLink>
+                  )}
+                  
                   
                     <MenuItem
                       onClick={async () => {

@@ -8,7 +8,8 @@ import { InputField } from "../../../components/form/InputField";
 import { DashboardLayout } from "../../../components/layouts/DashboardLayout";
 import {
   useFileUploadMutation,
-  useGetJsProfileQuery
+  useGetJsProfileQuery,
+  useUpdateJsProfileMutation
 } from "../../../generated/graphql";
 import { withApollo } from "../../../utils/withApollo";
   
@@ -22,6 +23,7 @@ import { withApollo } from "../../../utils/withApollo";
   
     const { data, loading } = useGetJsProfileQuery();
     const [uploadFile] = useFileUploadMutation();
+    const [update] = useUpdateJsProfileMutation()
   
     const toast = useToast();
   
@@ -36,9 +38,22 @@ import { withApollo } from "../../../utils/withApollo";
             email: data?.getJSProfile.email,
             about_me: data?.getJSProfile.about_me,
             profile_pic: data?.getJSProfile.about_me,
+            headline: data?.getJSProfile.headline
           }}
           onSubmit={async (values) => {
-            
+            const result = await update({
+              variables: {data:values, id: data?.getJSProfile.id}
+            })
+            if(result){
+              toast({
+                title: "Profile Updated.",
+                position: "top-right",
+                description: "Update successful\n ",
+                status: "success",
+                duration: 6000,
+                isClosable: false,
+              });
+            }
             console.log(values);
           }}
         >
@@ -71,6 +86,7 @@ import { withApollo } from "../../../utils/withApollo";
                     </HStack>
                     <HStack align="flex-start" w="100%" spacing="30px">
                       <InputField name="email" label="Email" />
+                      <InputField name="headline" label="Headline" />
                     </HStack>
   
                     <InputField name="about_me" label="About" textarea />

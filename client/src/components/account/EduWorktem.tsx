@@ -103,9 +103,7 @@ export const EduWorkItem: React.FC<EduWorkItemProps> = ({
           onSubmit={async (values) => {
             const response = await updateEdu({
               variables: { data: values, id },
-              update: (cache) => {
-                cache.evict({fieldName: "getAllEducation"})
-              }
+              
             });
             if (response.data.updateEducation) {
               console.log(values);

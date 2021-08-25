@@ -1,12 +1,11 @@
-query getJSProfile{
-  getJSProfile{
-    id
+query getAllJSProfile {
+  getAllJSProfile {
     first_name
     last_name
-    about_me
     profile_pic
-    userId
+    about_me
     email
+    id
     headline
   }
 }

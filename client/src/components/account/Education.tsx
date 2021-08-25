@@ -85,8 +85,7 @@ export const Education: React.FC<EducationProps> = ({ jsId }) => {
           const response = await addEducation({
             variables: { data: values },
             update: (cache, {data}) => {
-              const newEdu = data.
-              const newData = cache.readQuery({query: GetAllEducationDocument})
+              
             }
           });
           if (response.data.addEducation) {

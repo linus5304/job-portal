@@ -1,0 +1,30 @@
+mutation CreateCompanyProfile($data: companyProfileInput!) {
+  createCompanyProfile(data: $data) {
+    id
+    name
+    website
+    location
+    phone
+    logo
+    founded_date
+    description
+    createdAt
+    updatedAt
+  }
+}
+
+mutation updateCompanyProfile($id:Int!, $data: companyProfileInput!){
+  updateCompanyProfile(id: $id, data: $data){
+    id
+    name
+    location
+    website
+    phone
+    logo
+    description
+    email
+    createdAt
+    updatedAt
+    founded_date
+  }
+}

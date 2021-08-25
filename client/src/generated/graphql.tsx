@@ -29,12 +29,14 @@ export type Application = {
 export type CompanyProfile = {
   __typename?: 'CompanyProfile';
   id: Scalars['Float'];
-  name: Scalars['String'];
-  location: Scalars['String'];
-  website: Scalars['String'];
-  phone: Scalars['String'];
-  logo: Scalars['String'];
-  description: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['String']>;
+  website?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  logo?: Maybe<Scalars['String']>;
+  founded_date?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
   jobs: Array<Job>;
@@ -78,6 +80,7 @@ export type JsProfileInput = {
   first_name?: Maybe<Scalars['String']>;
   last_name?: Maybe<Scalars['String']>;
   about_me?: Maybe<Scalars['String']>;
+  headline?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   profile_pic?: Maybe<Scalars['String']>;
 };
@@ -107,6 +110,7 @@ export type JobSeeker = {
   first_name?: Maybe<Scalars['String']>;
   last_name?: Maybe<Scalars['String']>;
   about_me?: Maybe<Scalars['String']>;
+  headline?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   profile_pic?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['Float']>;
@@ -127,6 +131,7 @@ export type Mutation = {
   login: UserResponse;
   logout: Scalars['Boolean'];
   createCompanyProfile: CompanyProfile;
+  updateCompanyProfile: CompanyProfile;
   fileUpload: ImageUrl;
   postJob: Job;
   updateJob: Job;
@@ -165,6 +170,12 @@ export type MutationLoginArgs = {
 
 
 export type MutationCreateCompanyProfileArgs = {
+  data: CompanyProfileInput;
+};
+
+
+export type MutationUpdateCompanyProfileArgs = {
+  id: Scalars['Int'];
   data: CompanyProfileInput;
 };
 
@@ -249,6 +260,7 @@ export type Query = {
   getCompanyUserDetails: CompanyProfile;
   me?: Maybe<User>;
   company: Scalars['String'];
+  getCompanyProfile: CompanyProfile;
   getCompanyById?: Maybe<CompanyProfile>;
   getCompanyJobs: Array<Job>;
   getCompanies?: Maybe<Array<CompanyProfile>>;
@@ -258,6 +270,7 @@ export type Query = {
   searchJobs?: Maybe<Array<Job>>;
   jobSeeker: Scalars['String'];
   getJSProfile: JobSeeker;
+  getAllJSProfile: Array<JobSeeker>;
   getAllEducation: Array<Education>;
   getEducationbyId: Education;
   getAllWork: Array<Work>;
@@ -352,12 +365,14 @@ export type WorkInput = {
 };
 
 export type CompanyProfileInput = {
-  name: Scalars['String'];
-  location: Scalars['String'];
-  website: Scalars['String'];
-  phone: Scalars['String'];
-  logo: Scalars['String'];
-  description: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['String']>;
+  website?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  logo?: Maybe<Scalars['String']>;
+  founded_date?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
 };
 
 export type JobInput = {
@@ -390,19 +405,27 @@ export type ChangePasswordMutationVariables = Exact<{
 
 export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, user?: Maybe<{ __typename?: 'User', username: string, email: string, user_type: string }> } };
 
-export type CreateCompanyProfileMutationVariables = Exact<{
-  data: CompanyProfileInput;
-}>;
-
-
-export type CreateCompanyProfileMutation = { __typename?: 'Mutation', createCompanyProfile: { __typename?: 'CompanyProfile', id: number, name: string, website: string, location: string, phone: string, logo: string, description: string, createdAt: string, updatedAt: string } };
-
 export type CreateJsProfileMutationVariables = Exact<{
   data: JsProfileInput;
 }>;
 
 
 export type CreateJsProfileMutation = { __typename?: 'Mutation', createJSProfile: { __typename?: 'JobSeeker', first_name?: Maybe<string>, last_name?: Maybe<string>, about_me?: Maybe<string>, profile_pic?: Maybe<string>, userId?: Maybe<number>, email?: Maybe<string> } };
+
+export type CreateCompanyProfileMutationVariables = Exact<{
+  data: CompanyProfileInput;
+}>;
+
+
+export type CreateCompanyProfileMutation = { __typename?: 'Mutation', createCompanyProfile: { __typename?: 'CompanyProfile', id: number, name?: Maybe<string>, website?: Maybe<string>, location?: Maybe<string>, phone?: Maybe<string>, logo?: Maybe<string>, founded_date?: Maybe<string>, description?: Maybe<string>, createdAt: string, updatedAt: string } };
+
+export type UpdateCompanyProfileMutationVariables = Exact<{
+  id: Scalars['Int'];
+  data: CompanyProfileInput;
+}>;
+
+
+export type UpdateCompanyProfileMutation = { __typename?: 'Mutation', updateCompanyProfile: { __typename?: 'CompanyProfile', id: number, name?: Maybe<string>, location?: Maybe<string>, website?: Maybe<string>, phone?: Maybe<string>, logo?: Maybe<string>, description?: Maybe<string>, email?: Maybe<string>, createdAt: string, updatedAt: string, founded_date?: Maybe<string> } };
 
 export type DeleteJobMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -459,39 +482,49 @@ export type UpdateJsProfileMutationVariables = Exact<{
 
 export type UpdateJsProfileMutation = { __typename?: 'Mutation', updateJSProfile: { __typename?: 'JobSeeker', first_name?: Maybe<string>, last_name?: Maybe<string>, about_me?: Maybe<string>, profile_pic?: Maybe<string>, userId?: Maybe<number>, email?: Maybe<string> } };
 
+export type GetAllJsProfileQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllJsProfileQuery = { __typename?: 'Query', getAllJSProfile: Array<{ __typename?: 'JobSeeker', first_name?: Maybe<string>, last_name?: Maybe<string>, profile_pic?: Maybe<string>, about_me?: Maybe<string>, email?: Maybe<string>, id: number, headline?: Maybe<string> }> };
+
 export type GetApplicantJobsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetApplicantJobsQuery = { __typename?: 'Query', getApplicantJobs?: Maybe<Array<{ __typename?: 'Job', id: number, title: string, location: string, category: string, salary: string, description: string, imgUrl: string, expDate: string, createdDate: any, updatedAt: any, userApplications: Array<{ __typename?: 'Application', appication_date: any, userId?: Maybe<number> }>, company: { __typename?: 'CompanyProfile', name: string, location: string, logo: string } }>> };
+export type GetApplicantJobsQuery = { __typename?: 'Query', getApplicantJobs?: Maybe<Array<{ __typename?: 'Job', id: number, title: string, location: string, category: string, salary: string, description: string, imgUrl: string, expDate: string, createdDate: any, updatedAt: any, userApplications: Array<{ __typename?: 'Application', appication_date: any, userId?: Maybe<number> }>, company: { __typename?: 'CompanyProfile', name?: Maybe<string>, location?: Maybe<string>, logo?: Maybe<string> } }>> };
 
 export type GetCompaniesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCompaniesQuery = { __typename?: 'Query', getCompanies?: Maybe<Array<{ __typename?: 'CompanyProfile', id: number, name: string, location: string, website: string, phone: string, logo: string, description: string, createdAt: string }>> };
+export type GetCompaniesQuery = { __typename?: 'Query', getCompanies?: Maybe<Array<{ __typename?: 'CompanyProfile', id: number, name?: Maybe<string>, location?: Maybe<string>, website?: Maybe<string>, phone?: Maybe<string>, logo?: Maybe<string>, description?: Maybe<string>, createdAt: string }>> };
 
 export type GetCompanyByIdQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type GetCompanyByIdQuery = { __typename?: 'Query', getCompanyById?: Maybe<{ __typename?: 'CompanyProfile', id: number, name: string, location: string, phone: string, logo: string, description: string, website: string, jobs: Array<{ __typename?: 'Job', id: number, title: string, location: string, category: string, salary: string, expDate: string, description: string, createdAt: string, imgUrl: string }> }> };
+export type GetCompanyByIdQuery = { __typename?: 'Query', getCompanyById?: Maybe<{ __typename?: 'CompanyProfile', id: number, name?: Maybe<string>, location?: Maybe<string>, phone?: Maybe<string>, logo?: Maybe<string>, description?: Maybe<string>, website?: Maybe<string>, email?: Maybe<string>, jobs: Array<{ __typename?: 'Job', id: number, title: string, location: string, category: string, salary: string, expDate: string, description: string, createdAt: string, imgUrl: string }> }> };
 
 export type GetCompanyJobsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCompanyJobsQuery = { __typename?: 'Query', getCompanyJobs: Array<{ __typename?: 'Job', id: number, title: string, location: string, category: string, salary: string, expDate: string, description: string, imgUrl: string, userId: number, createdDate: any, updatedAt: any, applications: Array<{ __typename?: 'Application', userId?: Maybe<number>, jobId?: Maybe<number>, appication_date: any }>, company: { __typename?: 'CompanyProfile', name: string } }> };
+export type GetCompanyJobsQuery = { __typename?: 'Query', getCompanyJobs: Array<{ __typename?: 'Job', id: number, title: string, location: string, category: string, salary: string, expDate: string, description: string, imgUrl: string, userId: number, createdDate: any, updatedAt: any, applications: Array<{ __typename?: 'Application', userId?: Maybe<number>, jobId?: Maybe<number>, appication_date: any }>, company: { __typename?: 'CompanyProfile', name?: Maybe<string> } }> };
+
+export type GetCompanyProfileQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCompanyProfileQuery = { __typename?: 'Query', getCompanyProfile: { __typename?: 'CompanyProfile', id: number, name?: Maybe<string>, email?: Maybe<string>, location?: Maybe<string>, website?: Maybe<string>, phone?: Maybe<string>, logo?: Maybe<string>, description?: Maybe<string>, founded_date?: Maybe<string>, createdAt: string, updatedAt: string } };
 
 export type GetJsProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetJsProfileQuery = { __typename?: 'Query', getJSProfile: { __typename?: 'JobSeeker', id: number, first_name?: Maybe<string>, last_name?: Maybe<string>, about_me?: Maybe<string>, profile_pic?: Maybe<string>, userId?: Maybe<number>, email?: Maybe<string> } };
+export type GetJsProfileQuery = { __typename?: 'Query', getJSProfile: { __typename?: 'JobSeeker', id: number, first_name?: Maybe<string>, last_name?: Maybe<string>, about_me?: Maybe<string>, profile_pic?: Maybe<string>, userId?: Maybe<number>, email?: Maybe<string>, headline?: Maybe<string> } };
 
 export type GetJobByIdQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type GetJobByIdQuery = { __typename?: 'Query', getJobById?: Maybe<{ __typename?: 'Job', id: number, title: string, location: string, category: string, description: string, imgUrl: string, createdAt: string, salary: string, expDate: string, createdDate: any, applications: Array<{ __typename?: 'Application', userId?: Maybe<number>, jobId?: Maybe<number>, appication_date: any }>, company: { __typename?: 'CompanyProfile', id: number, name: string, website: string, logo: string, phone: string, description: string } }> };
+export type GetJobByIdQuery = { __typename?: 'Query', getJobById?: Maybe<{ __typename?: 'Job', id: number, title: string, location: string, category: string, description: string, imgUrl: string, createdAt: string, salary: string, expDate: string, createdDate: any, applications: Array<{ __typename?: 'Application', userId?: Maybe<number>, jobId?: Maybe<number>, appication_date: any }>, company: { __typename?: 'CompanyProfile', id: number, name?: Maybe<string>, website?: Maybe<string>, logo?: Maybe<string>, phone?: Maybe<string>, description?: Maybe<string> } }> };
 
 export type GetJobsQueryVariables = Exact<{
   limit: Scalars['Int'];
@@ -499,7 +532,7 @@ export type GetJobsQueryVariables = Exact<{
 }>;
 
 
-export type GetJobsQuery = { __typename?: 'Query', getJobs?: Maybe<{ __typename?: 'PaginatedJobs', hasMore: boolean, jobs: Array<{ __typename?: 'Job', id: number, title: string, location: string, category: string, expDate: string, description: string, imgUrl: string, salary: string, createdAt: string, createdDate: any, company: { __typename?: 'CompanyProfile', name: string, website: string, phone: string } }> }> };
+export type GetJobsQuery = { __typename?: 'Query', getJobs?: Maybe<{ __typename?: 'PaginatedJobs', hasMore: boolean, jobs: Array<{ __typename?: 'Job', id: number, title: string, location: string, category: string, expDate: string, description: string, imgUrl: string, salary: string, createdAt: string, createdDate: any, company: { __typename?: 'CompanyProfile', name?: Maybe<string>, website?: Maybe<string>, phone?: Maybe<string> } }> }> };
 
 export type EducationDetailsFragment = { __typename?: 'Education', id: number, school: string, degree: string, field: string, start_date?: Maybe<string>, end_date?: Maybe<string>, jobSeekerId: number };
 
@@ -587,7 +620,7 @@ export type SearchJobsQueryVariables = Exact<{
 }>;
 
 
-export type SearchJobsQuery = { __typename?: 'Query', searchJobs?: Maybe<Array<{ __typename?: 'Job', id: number, title: string, location: string, category: string, salary: string, description: string, imgUrl: string, company: { __typename?: 'CompanyProfile', id: number, name: string, website: string, phone: string, logo: string, location: string } }>> };
+export type SearchJobsQuery = { __typename?: 'Query', searchJobs?: Maybe<Array<{ __typename?: 'Job', id: number, title: string, location: string, category: string, salary: string, description: string, imgUrl: string, company: { __typename?: 'CompanyProfile', id: number, name?: Maybe<string>, website?: Maybe<string>, phone?: Maybe<string>, logo?: Maybe<string>, location?: Maybe<string> } }>> };
 
 export const EducationDetailsFragmentDoc = gql`
     fragment educationDetails on Education {
@@ -689,47 +722,6 @@ export function useChangePasswordMutation(baseOptions?: Apollo.MutationHookOptio
 export type ChangePasswordMutationHookResult = ReturnType<typeof useChangePasswordMutation>;
 export type ChangePasswordMutationResult = Apollo.MutationResult<ChangePasswordMutation>;
 export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<ChangePasswordMutation, ChangePasswordMutationVariables>;
-export const CreateCompanyProfileDocument = gql`
-    mutation CreateCompanyProfile($data: companyProfileInput!) {
-  createCompanyProfile(data: $data) {
-    id
-    name
-    website
-    location
-    phone
-    logo
-    description
-    createdAt
-    updatedAt
-  }
-}
-    `;
-export type CreateCompanyProfileMutationFn = Apollo.MutationFunction<CreateCompanyProfileMutation, CreateCompanyProfileMutationVariables>;
-
-/**
- * __useCreateCompanyProfileMutation__
- *
- * To run a mutation, you first call `useCreateCompanyProfileMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateCompanyProfileMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createCompanyProfileMutation, { data, loading, error }] = useCreateCompanyProfileMutation({
- *   variables: {
- *      data: // value for 'data'
- *   },
- * });
- */
-export function useCreateCompanyProfileMutation(baseOptions?: Apollo.MutationHookOptions<CreateCompanyProfileMutation, CreateCompanyProfileMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateCompanyProfileMutation, CreateCompanyProfileMutationVariables>(CreateCompanyProfileDocument, options);
-      }
-export type CreateCompanyProfileMutationHookResult = ReturnType<typeof useCreateCompanyProfileMutation>;
-export type CreateCompanyProfileMutationResult = Apollo.MutationResult<CreateCompanyProfileMutation>;
-export type CreateCompanyProfileMutationOptions = Apollo.BaseMutationOptions<CreateCompanyProfileMutation, CreateCompanyProfileMutationVariables>;
 export const CreateJsProfileDocument = gql`
     mutation createJSProfile($data: JSProfileInput!) {
   createJSProfile(data: $data) {
@@ -768,6 +760,92 @@ export function useCreateJsProfileMutation(baseOptions?: Apollo.MutationHookOpti
 export type CreateJsProfileMutationHookResult = ReturnType<typeof useCreateJsProfileMutation>;
 export type CreateJsProfileMutationResult = Apollo.MutationResult<CreateJsProfileMutation>;
 export type CreateJsProfileMutationOptions = Apollo.BaseMutationOptions<CreateJsProfileMutation, CreateJsProfileMutationVariables>;
+export const CreateCompanyProfileDocument = gql`
+    mutation CreateCompanyProfile($data: companyProfileInput!) {
+  createCompanyProfile(data: $data) {
+    id
+    name
+    website
+    location
+    phone
+    logo
+    founded_date
+    description
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export type CreateCompanyProfileMutationFn = Apollo.MutationFunction<CreateCompanyProfileMutation, CreateCompanyProfileMutationVariables>;
+
+/**
+ * __useCreateCompanyProfileMutation__
+ *
+ * To run a mutation, you first call `useCreateCompanyProfileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCompanyProfileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCompanyProfileMutation, { data, loading, error }] = useCreateCompanyProfileMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateCompanyProfileMutation(baseOptions?: Apollo.MutationHookOptions<CreateCompanyProfileMutation, CreateCompanyProfileMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateCompanyProfileMutation, CreateCompanyProfileMutationVariables>(CreateCompanyProfileDocument, options);
+      }
+export type CreateCompanyProfileMutationHookResult = ReturnType<typeof useCreateCompanyProfileMutation>;
+export type CreateCompanyProfileMutationResult = Apollo.MutationResult<CreateCompanyProfileMutation>;
+export type CreateCompanyProfileMutationOptions = Apollo.BaseMutationOptions<CreateCompanyProfileMutation, CreateCompanyProfileMutationVariables>;
+export const UpdateCompanyProfileDocument = gql`
+    mutation updateCompanyProfile($id: Int!, $data: companyProfileInput!) {
+  updateCompanyProfile(id: $id, data: $data) {
+    id
+    name
+    location
+    website
+    phone
+    logo
+    description
+    email
+    createdAt
+    updatedAt
+    founded_date
+  }
+}
+    `;
+export type UpdateCompanyProfileMutationFn = Apollo.MutationFunction<UpdateCompanyProfileMutation, UpdateCompanyProfileMutationVariables>;
+
+/**
+ * __useUpdateCompanyProfileMutation__
+ *
+ * To run a mutation, you first call `useUpdateCompanyProfileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCompanyProfileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCompanyProfileMutation, { data, loading, error }] = useUpdateCompanyProfileMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateCompanyProfileMutation(baseOptions?: Apollo.MutationHookOptions<UpdateCompanyProfileMutation, UpdateCompanyProfileMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateCompanyProfileMutation, UpdateCompanyProfileMutationVariables>(UpdateCompanyProfileDocument, options);
+      }
+export type UpdateCompanyProfileMutationHookResult = ReturnType<typeof useUpdateCompanyProfileMutation>;
+export type UpdateCompanyProfileMutationResult = Apollo.MutationResult<UpdateCompanyProfileMutation>;
+export type UpdateCompanyProfileMutationOptions = Apollo.BaseMutationOptions<UpdateCompanyProfileMutation, UpdateCompanyProfileMutationVariables>;
 export const DeleteJobDocument = gql`
     mutation deleteJob($id: Int!) {
   deleteJob(id: $id)
@@ -1059,6 +1137,46 @@ export function useUpdateJsProfileMutation(baseOptions?: Apollo.MutationHookOpti
 export type UpdateJsProfileMutationHookResult = ReturnType<typeof useUpdateJsProfileMutation>;
 export type UpdateJsProfileMutationResult = Apollo.MutationResult<UpdateJsProfileMutation>;
 export type UpdateJsProfileMutationOptions = Apollo.BaseMutationOptions<UpdateJsProfileMutation, UpdateJsProfileMutationVariables>;
+export const GetAllJsProfileDocument = gql`
+    query getAllJSProfile {
+  getAllJSProfile {
+    first_name
+    last_name
+    profile_pic
+    about_me
+    email
+    id
+    headline
+  }
+}
+    `;
+
+/**
+ * __useGetAllJsProfileQuery__
+ *
+ * To run a query within a React component, call `useGetAllJsProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllJsProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllJsProfileQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllJsProfileQuery(baseOptions?: Apollo.QueryHookOptions<GetAllJsProfileQuery, GetAllJsProfileQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllJsProfileQuery, GetAllJsProfileQueryVariables>(GetAllJsProfileDocument, options);
+      }
+export function useGetAllJsProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllJsProfileQuery, GetAllJsProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllJsProfileQuery, GetAllJsProfileQueryVariables>(GetAllJsProfileDocument, options);
+        }
+export type GetAllJsProfileQueryHookResult = ReturnType<typeof useGetAllJsProfileQuery>;
+export type GetAllJsProfileLazyQueryHookResult = ReturnType<typeof useGetAllJsProfileLazyQuery>;
+export type GetAllJsProfileQueryResult = Apollo.QueryResult<GetAllJsProfileQuery, GetAllJsProfileQueryVariables>;
 export const GetApplicantJobsDocument = gql`
     query getApplicantJobs {
   getApplicantJobs {
@@ -1162,6 +1280,7 @@ export const GetCompanyByIdDocument = gql`
     logo
     description
     website
+    email
     jobs {
       id
       title
@@ -1257,6 +1376,50 @@ export function useGetCompanyJobsLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetCompanyJobsQueryHookResult = ReturnType<typeof useGetCompanyJobsQuery>;
 export type GetCompanyJobsLazyQueryHookResult = ReturnType<typeof useGetCompanyJobsLazyQuery>;
 export type GetCompanyJobsQueryResult = Apollo.QueryResult<GetCompanyJobsQuery, GetCompanyJobsQueryVariables>;
+export const GetCompanyProfileDocument = gql`
+    query getCompanyProfile {
+  getCompanyProfile {
+    id
+    name
+    email
+    location
+    website
+    phone
+    logo
+    description
+    founded_date
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+/**
+ * __useGetCompanyProfileQuery__
+ *
+ * To run a query within a React component, call `useGetCompanyProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCompanyProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCompanyProfileQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCompanyProfileQuery(baseOptions?: Apollo.QueryHookOptions<GetCompanyProfileQuery, GetCompanyProfileQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCompanyProfileQuery, GetCompanyProfileQueryVariables>(GetCompanyProfileDocument, options);
+      }
+export function useGetCompanyProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCompanyProfileQuery, GetCompanyProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCompanyProfileQuery, GetCompanyProfileQueryVariables>(GetCompanyProfileDocument, options);
+        }
+export type GetCompanyProfileQueryHookResult = ReturnType<typeof useGetCompanyProfileQuery>;
+export type GetCompanyProfileLazyQueryHookResult = ReturnType<typeof useGetCompanyProfileLazyQuery>;
+export type GetCompanyProfileQueryResult = Apollo.QueryResult<GetCompanyProfileQuery, GetCompanyProfileQueryVariables>;
 export const GetJsProfileDocument = gql`
     query getJSProfile {
   getJSProfile {
@@ -1267,6 +1430,7 @@ export const GetJsProfileDocument = gql`
     profile_pic
     userId
     email
+    headline
   }
 }
     `;

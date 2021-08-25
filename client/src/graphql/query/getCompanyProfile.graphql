@@ -1,0 +1,15 @@
+query getCompanyProfile{
+  getCompanyProfile{
+    id
+    name
+    email
+    location
+    website
+    phone
+    logo
+    description
+    founded_date
+    createdAt
+    updatedAt
+  }
+}
