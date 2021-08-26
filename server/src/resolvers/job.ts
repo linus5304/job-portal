@@ -84,9 +84,9 @@ export class JobResolver {
       .where('"jobId" = :jobId', { jobId: job.id })
       .getMany();
   }
-  
+
   @FieldResolver(() => [Application])
-  async userApplications(@Root() job: Job, @Ctx() {req} : MyContext) {
+  async userApplications(@Root() job: Job, @Ctx() { req }: MyContext) {
     return await getConnection()
       .createQueryBuilder(Application, "app")
       .where('"userId" = :userId', { userId: req.session.userId })
@@ -193,16 +193,15 @@ export class JobResolver {
   async searchJobs(
     @Arg("input") { title, location }: searchInput
   ): Promise<Job[]> {
-    let jobsQB = getConnection().getRepository(Job).createQueryBuilder("j");
-    if (title) {
-      jobsQB = jobsQB.andWhere("j.title ilike :title", { title: `%${title}%` });
-    }
-    if (location) {
-      jobsQB = jobsQB.andWhere("j.location ilike :location", {
-        location: `%${location}%`,
-      });
-    }
-    return jobsQB.getMany();
+    const jobsQB: Job[] = await getConnection().query(
+      `select * from job j 
+      where j.title ilike '%'||$1||'%' 
+      or j."location" ilike '%'||$2||'%'`,
+
+      [title, location]
+    );
+
+    return jobsQB;
   }
 
   @Mutation(() => Application)

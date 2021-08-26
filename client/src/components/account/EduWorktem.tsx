@@ -36,6 +36,7 @@ interface EduWorkItemProps {
   position?: string;
   id?: number;
   jsId?: number;
+  company_name?: string;
 }
 
 export const EduWorkItem: React.FC<EduWorkItemProps> = ({
@@ -47,6 +48,7 @@ export const EduWorkItem: React.FC<EduWorkItemProps> = ({
   field,
   school,
   variant,
+  company_name,
   id,
   jsId,
 }) => {
@@ -103,10 +105,10 @@ export const EduWorkItem: React.FC<EduWorkItemProps> = ({
           onSubmit={async (values) => {
             const response = await updateEdu({
               variables: { data: values, id },
-              
             });
             if (response.data.updateEducation) {
               console.log(values);
+              onClose();
             }
             console.log(values);
           }}
@@ -193,7 +195,7 @@ export const EduWorkItem: React.FC<EduWorkItemProps> = ({
         <Formik
           initialValues={{
             jobSeekerId: jsId,
-            comp_name: comp_name,
+            company_name: company_name,
             position: position,
             field: field,
             start_date: start,
@@ -203,8 +205,10 @@ export const EduWorkItem: React.FC<EduWorkItemProps> = ({
             const response = await updateWk({
               variables: { data: values, id },
             });
+
             if (response.data.updateWork) {
               console.log(values);
+              onClose();
             }
             console.log(values);
           }}
@@ -214,7 +218,7 @@ export const EduWorkItem: React.FC<EduWorkItemProps> = ({
               <ModalOverlay />
               <Form>
                 <ModalContent>
-                  <ModalHeader>Add Education</ModalHeader>
+                  <ModalHeader>Update Work Experience</ModalHeader>
                   <ModalCloseButton />
                   <ModalBody pb={6}>
                     <InputField name="company_name" label="Company Name" />

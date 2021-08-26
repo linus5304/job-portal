@@ -1,5 +1,5 @@
-query SearchJobs($input:searchInput!){
-  searchJobs(input:$input){
+query searchJobs($input: searchInput!){
+  searchJobs(input: $input) {
     id
     title
     location
@@ -7,13 +7,12 @@ query SearchJobs($input:searchInput!){
     salary
     description
     imgUrl
+    createdDate
+    userId
     company{
-      id
       name
-      website
-      phone
-      logo
       location
+      website
     }
   }
 }

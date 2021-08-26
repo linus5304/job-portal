@@ -113,11 +113,11 @@ export const index: React.FC<indexProps> = ({}) => {
                   </HStack>
                   <HStack align="flex-start" w="100%" spacing="30px">
                     <InputField name="phone" label="Phone" />
-                    <InputField name="location" label="Location" />
+                    <InputField name="location" label="Location" select/>
                   </HStack>
                   <HStack align="flex-start" w="100%" spacing="30px">
                     <InputField name="website" label="Website Link" />
-                    <InputField name="founded_date" label="Founded Date" />
+                    <InputField name="founded_date" label="Founded Date" type="date"/>
                   </HStack>
                   
 

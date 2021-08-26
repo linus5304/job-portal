@@ -620,7 +620,7 @@ export type SearchJobsQueryVariables = Exact<{
 }>;
 
 
-export type SearchJobsQuery = { __typename?: 'Query', searchJobs?: Maybe<Array<{ __typename?: 'Job', id: number, title: string, location: string, category: string, salary: string, description: string, imgUrl: string, company: { __typename?: 'CompanyProfile', id: number, name?: Maybe<string>, website?: Maybe<string>, phone?: Maybe<string>, logo?: Maybe<string>, location?: Maybe<string> } }>> };
+export type SearchJobsQuery = { __typename?: 'Query', searchJobs?: Maybe<Array<{ __typename?: 'Job', id: number, title: string, location: string, category: string, salary: string, description: string, imgUrl: string, createdDate: any, userId: number, company: { __typename?: 'CompanyProfile', name?: Maybe<string>, location?: Maybe<string>, website?: Maybe<string> } }>> };
 
 export const EducationDetailsFragmentDoc = gql`
     fragment educationDetails on Education {
@@ -1945,7 +1945,7 @@ export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const SearchJobsDocument = gql`
-    query SearchJobs($input: searchInput!) {
+    query searchJobs($input: searchInput!) {
   searchJobs(input: $input) {
     id
     title
@@ -1954,13 +1954,12 @@ export const SearchJobsDocument = gql`
     salary
     description
     imgUrl
+    createdDate
+    userId
     company {
-      id
       name
-      website
-      phone
-      logo
       location
+      website
     }
   }
 }

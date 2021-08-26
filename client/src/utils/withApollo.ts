@@ -21,6 +21,7 @@ export const cache = new InMemoryCache({
             };
           },
         },
+        
         getAllEducation:{
           keyArgs: []
         }

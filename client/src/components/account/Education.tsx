@@ -15,11 +15,12 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Divider
+  Divider,
 } from "@chakra-ui/react";
 import { FiEdit, FiPlus } from "react-icons/fi";
 import { Form, Formik } from "formik";
 import {
+  AddEducationDocument,
   GetAllEducationDocument,
   useAddEducationMutation,
   useGetAllEducationQuery,
@@ -57,18 +58,18 @@ export const Education: React.FC<EducationProps> = ({ jsId }) => {
 
       {data?.getAllEducation.map((edu) => (
         <>
-        <EduWorkItem
-          variant="edu"
-          school={edu.school}
-          degree={edu.degree}
-          field={edu.field}
-          start={edu.start_date}
-          end={edu.end_date}
-          key={edu.id}
-          id={edu.id}
-          jsId={edu.jobSeekerId}
-        />
-        <Divider/>
+          <EduWorkItem
+            variant="edu"
+            school={edu.school}
+            degree={edu.degree}
+            field={edu.field}
+            start={edu.start_date}
+            end={edu.end_date}
+            key={edu.id}
+            id={edu.id}
+            jsId={edu.jobSeekerId}
+          />
+          <Divider />
         </>
       ))}
 
@@ -84,12 +85,19 @@ export const Education: React.FC<EducationProps> = ({ jsId }) => {
         onSubmit={async (values) => {
           const response = await addEducation({
             variables: { data: values },
-            update: (cache, {data}) => {
-              
-            }
+            update: (cache) => {
+              cache.evict({ fieldName: "getAllEducation" });
+            },
           });
           if (response.data.addEducation) {
             console.log(values);
+            values.degree=""
+            values.end_date=""
+            values.field=""
+            values.jobSeekerId=null
+            values.school=""
+            values.start_date=""
+            onClose();
           }
         }}
       >

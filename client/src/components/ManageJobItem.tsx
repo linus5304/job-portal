@@ -181,6 +181,7 @@ export const ManageJobItem: React.FC<ManageJobItemProps> = ({
           }}
           onSubmit={async (values) => {
             console.log(values);
+            onClose();
           }}
         >
           {({ isSubmitting, setFieldValue }) => (

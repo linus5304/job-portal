@@ -1,11 +1,18 @@
 import {
-  Button, Flex, HStack, IconButton, Modal,
+  Button,
+  Flex,
+  HStack,
+  IconButton,
+  Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
-  ModalOverlay, Text, useDisclosure,Divider
+  ModalOverlay,
+  Text,
+  useDisclosure,
+  Divider,
 } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import React from "react";
@@ -44,18 +51,18 @@ export const WorkExperience: React.FC<WorkExperienceProps> = ({ jsId }) => {
       </HStack>
       {data?.getAllWork.map((wk) => (
         <>
-        <EduWorkItem
-          variant="work"
-          comp_name={wk.company_name}
-          position={wk.position}
-          field={wk.field}
-          start={wk.start_date}
-          end={wk.end_date}
-          key={wk.id}
-          id={wk.id}
-          jsId={wk.jobSeekerId}
-        />
-        <Divider/>
+          <EduWorkItem
+            variant="work"
+            comp_name={wk.company_name}
+            position={wk.position}
+            field={wk.field}
+            start={wk.start_date}
+            end={wk.end_date}
+            key={wk.id}
+            id={wk.id}
+            jsId={wk.jobSeekerId}
+          />
+          <Divider />
         </>
       ))}
 
@@ -71,9 +78,19 @@ export const WorkExperience: React.FC<WorkExperienceProps> = ({ jsId }) => {
         onSubmit={async (values) => {
           const response = await addWk({
             variables: { data: values },
+            update: (cache) => {
+              cache.evict({fieldName: "getAllWork"})
+            }
           });
           if (response.data.addWork) {
             console.log(values);
+            onClose();
+            values.jobSeekerId = jsId;
+            values.company_name = "";
+            values.position = "";
+            values.field = "";
+            values.start_date = "";
+            values.end_date = "";
           }
         }}
       >
