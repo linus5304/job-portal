@@ -21,10 +21,23 @@ export const cache = new InMemoryCache({
             };
           },
         },
-        
-        getAllEducation:{
-          keyArgs: []
-        }
+        searchJobs: {
+          keyArgs: ['title', 'location'],
+          // merge(
+          //   existing: PaginatedJobs | undefined,
+          //   incoming: PaginatedJobs
+          // ): PaginatedJobs {
+          //   console.log(existing, incoming);
+          //   return {
+          //     ...incoming,
+          //     jobs: [...(existing?.jobs || []), ...incoming.jobs],
+          //   };
+          // },
+        },
+
+        getAllEducation: {
+          keyArgs: [],
+        },
       },
     },
   },
@@ -42,6 +55,4 @@ const client = new ApolloClient({
   credentials: "include",
 });
 
-
-
-export const withApollo = createWithApollo(client)
+export const withApollo = createWithApollo(client);

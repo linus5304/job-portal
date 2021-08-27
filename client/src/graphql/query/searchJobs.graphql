@@ -1,18 +1,34 @@
-query searchJobs($input: searchInput!){
-  searchJobs(input: $input) {
-    id
-    title
-    location
-    category
-    salary
-    description
-    imgUrl
-    createdDate
-    userId
-    company{
-      name
+query searchJobs(
+  $title: String
+  $location: String
+  $limit: Int!
+  $cursor: String
+) {
+  searchJobs(
+    title: $title
+    location: $location
+    limit: $limit
+    cursor: $cursor
+  ) {
+    jobs {
+      id
+      title
+      expDate
+      category
       location
-      website
+      salary
+      description
+      imgUrl
+      createdDate
+      createdAt
+      company {
+        name
+        website
+        logo
+        location
+      }
     }
+
+    hasMore
   }
 }

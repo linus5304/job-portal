@@ -14,9 +14,7 @@ import { useSearchJobsQuery } from "./../generated/graphql";
 import { useRouter } from "next/router";
 import { MdLocationOn, MdSearch } from "react-icons/md";
 
-interface SearchBoxProps {
-  
-}
+interface SearchBoxProps {}
 
 export const SearchBox: React.FC<SearchBoxProps> = ({}) => {
   // const { data, loading } = useSearchJobsQuery({
@@ -25,22 +23,21 @@ export const SearchBox: React.FC<SearchBoxProps> = ({}) => {
 
   const [title, setTitle] = useState(() => "");
   const [location, setLocation] = useState(() => "");
-  
 
   const router = useRouter();
-  router.query.title = title
-  router.query.location = location
-
-  
-
+  // router.query.title = title
+  // router.query.location = location
 
   return (
     <Formik
       initialValues={{ title, location }}
       onSubmit={async (values) => {
-        setTitle(title)
-        setLocation(location)
-        router.push({pathname: '/jobs/search', query: {title, location}})
+        setTitle(values.title);
+        setLocation(values.location);
+        router.push({
+          pathname: "/jobs/search",
+          query: { title: values.title, location: values.location },
+        });
         console.log(values);
       }}
     >

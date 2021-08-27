@@ -267,7 +267,7 @@ export type Query = {
   job: Scalars['String'];
   getJobById?: Maybe<Job>;
   getJobs?: Maybe<PaginatedJobs>;
-  searchJobs?: Maybe<Array<Job>>;
+  searchJobs?: Maybe<PaginatedJobs>;
   jobSeeker: Scalars['String'];
   getJSProfile: JobSeeker;
   getAllJSProfile: Array<JobSeeker>;
@@ -297,7 +297,10 @@ export type QueryGetJobsArgs = {
 
 
 export type QuerySearchJobsArgs = {
-  input: SearchInput;
+  cursor?: Maybe<Scalars['String']>;
+  limit: Scalars['Int'];
+  location?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
 };
 
 
@@ -383,11 +386,6 @@ export type JobInput = {
   location?: Maybe<Scalars['String']>;
   expDate?: Maybe<Scalars['String']>;
   imgUrl?: Maybe<Scalars['String']>;
-};
-
-export type SearchInput = {
-  title?: Maybe<Scalars['String']>;
-  location?: Maybe<Scalars['String']>;
 };
 
 export type ApplyMutationVariables = Exact<{
@@ -616,11 +614,14 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, username: string, email: string, user_type: string }> };
 
 export type SearchJobsQueryVariables = Exact<{
-  input: SearchInput;
+  title?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['String']>;
+  limit: Scalars['Int'];
+  cursor?: Maybe<Scalars['String']>;
 }>;
 
 
-export type SearchJobsQuery = { __typename?: 'Query', searchJobs?: Maybe<Array<{ __typename?: 'Job', id: number, title: string, location: string, category: string, salary: string, description: string, imgUrl: string, createdDate: any, userId: number, company: { __typename?: 'CompanyProfile', name?: Maybe<string>, location?: Maybe<string>, website?: Maybe<string> } }>> };
+export type SearchJobsQuery = { __typename?: 'Query', searchJobs?: Maybe<{ __typename?: 'PaginatedJobs', hasMore: boolean, jobs: Array<{ __typename?: 'Job', id: number, title: string, expDate: string, category: string, location: string, salary: string, description: string, imgUrl: string, createdDate: any, createdAt: string, company: { __typename?: 'CompanyProfile', name?: Maybe<string>, website?: Maybe<string>, logo?: Maybe<string>, location?: Maybe<string> } }> }> };
 
 export const EducationDetailsFragmentDoc = gql`
     fragment educationDetails on Education {
@@ -1945,22 +1946,27 @@ export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const SearchJobsDocument = gql`
-    query searchJobs($input: searchInput!) {
-  searchJobs(input: $input) {
-    id
-    title
-    location
-    category
-    salary
-    description
-    imgUrl
-    createdDate
-    userId
-    company {
-      name
+    query searchJobs($title: String, $location: String, $limit: Int!, $cursor: String) {
+  searchJobs(title: $title, location: $location, limit: $limit, cursor: $cursor) {
+    jobs {
+      id
+      title
+      expDate
+      category
       location
-      website
+      salary
+      description
+      imgUrl
+      createdDate
+      createdAt
+      company {
+        name
+        website
+        logo
+        location
+      }
     }
+    hasMore
   }
 }
     `;
@@ -1977,7 +1983,10 @@ export const SearchJobsDocument = gql`
  * @example
  * const { data, loading, error } = useSearchJobsQuery({
  *   variables: {
- *      input: // value for 'input'
+ *      title: // value for 'title'
+ *      location: // value for 'location'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *   },
  * });
  */

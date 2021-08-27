@@ -9,14 +9,14 @@ interface HeroSearchBoxProps {}
 
 export const HeroSearchBox: React.FC<HeroSearchBoxProps> = ({}) => {
   const router = useRouter();
-  const { data, loading, error } = useSearchJobsQuery({
-    variables: {
-      input: {
-        title: router.query.title as string,
-        location: router.query.location as string,
-      },
-    },
-  });
+  // const { data, loading, error } = useSearchJobsQuery({
+  //   variables: {
+  //     input: {
+  //       title: router.query.title as string,
+  //       location: router.query.location as string,
+  //     },
+  //   },
+  // });
   return (
     <>
       <Flex
