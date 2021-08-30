@@ -21,11 +21,14 @@ query searchJobs(
       imgUrl
       createdDate
       createdAt
-      company {
-        name
-        website
-        logo
-        location
+      user {
+        username
+        companyProfile {
+          name
+          website
+          logo
+          location
+        }
       }
     }
 

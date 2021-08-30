@@ -29,12 +29,14 @@ export class User extends BaseEntity {
   @Column()
   user_type: string;
 
+  @Field(()=> CompanyProfile, {nullable: true})
   @OneToOne(() => CompanyProfile, (companyProfile) => companyProfile.user)
   companyProfile: CompanyProfile;
 
   @OneToOne(() => JobSeeker, (jobSeeker) => jobSeeker.user)
   jobSeeker: JobSeeker;
 
+  
   @OneToMany(() => Job, (job) => job.user)
   jobs: Job[];
 

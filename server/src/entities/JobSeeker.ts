@@ -30,10 +30,18 @@ export class JobSeeker extends BaseEntity {
   @Field({ nullable: true })
   @Column({nullable: true})
   about_me: string;
+  
+  @Field({ nullable: true })
+  @Column({nullable: true})
+  phone: string;
 
   @Field({ nullable: true })
   @Column({nullable: true})
   headline: string;
+
+  @Field({ nullable: true })
+  @Column({nullable: true})
+  cv: string;
 
   @Field({ nullable: true })
   @Column({nullable: true})

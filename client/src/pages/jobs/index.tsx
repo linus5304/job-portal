@@ -31,6 +31,7 @@ interface indexProps {}
 export const index: React.FC<indexProps> & layout = ({}) => {
   const { data, loading, fetchMore, variables, error } = useGetJobsQuery({
     variables: { limit: 5, cursor: null },
+    // fetchPolicy: "no-cache"
   });
 
   const [title, setTitle] = useState("");
@@ -141,7 +142,7 @@ export const index: React.FC<indexProps> & layout = ({}) => {
                     imgUrl={job.imgUrl}
                     postDate={job.createdDate}
                     key={job.id}
-                    companyName={job.company.name}
+                    companyName={job.user.companyProfile.name}
                     id={job.id}
                     salary={job.salary}
                   />

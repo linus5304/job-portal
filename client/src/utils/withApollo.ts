@@ -22,7 +22,7 @@ export const cache = new InMemoryCache({
           },
         },
         searchJobs: {
-          keyArgs: ['title', 'location'],
+          keyArgs: ["title", "location"],
           // merge(
           //   existing: PaginatedJobs | undefined,
           //   incoming: PaginatedJobs
@@ -49,7 +49,18 @@ const link = createUploadLink({
   },
   credentials: "include",
 });
+// const enhancedFetch = (url: RequestInfo, init: RequestInit) => {
+//   return fetch(url, {
+//     ...init,
+//     headers: {
+//       ...init.headers,
+//       'Access-Control-Allow-Origin':'*',
+//       Cookie: headers.
+//     }
+//   })
+// }
 const client = new ApolloClient({
+  ssrMode: typeof window === "undefined",
   cache: cache,
   link,
   credentials: "include",

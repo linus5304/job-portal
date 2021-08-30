@@ -97,7 +97,7 @@ export const search: React.FC<searchProps> & layout = ({}) => {
                     imgUrl={job.imgUrl}
                     postDate={job.createdDate}
                     key={job.id}
-                    companyName={job.company.name}
+                    companyName={job.user.companyProfile.name}
                     id={job.id}
                     salary={job.salary}
                   />
@@ -133,4 +133,4 @@ export const search: React.FC<searchProps> & layout = ({}) => {
 
 search.value = "L2";
 
-export default withApollo({ ssr: false })(search);
+export default withApollo({ ssr: true })(search);

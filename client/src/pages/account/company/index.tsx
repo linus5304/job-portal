@@ -55,7 +55,7 @@ export const index: React.FC<indexProps> = ({}) => {
           logo: data?.getCompanyProfile.logo,
           description: data?.getCompanyProfile.description,
           email: data?.getCompanyProfile.email,
-          founded_date: data?.getCompanyProfile.founded_date
+          founded_date: data?.getCompanyProfile.founded_date,
         }}
         onSubmit={async (values) => {
           const response = await updateCompProfile({
@@ -113,36 +113,18 @@ export const index: React.FC<indexProps> = ({}) => {
                   </HStack>
                   <HStack align="flex-start" w="100%" spacing="30px">
                     <InputField name="phone" label="Phone" />
-                    <InputField name="location" label="Location" select/>
+                    <InputField name="location" label="Location" select />
                   </HStack>
                   <HStack align="flex-start" w="100%" spacing="30px">
                     <InputField name="website" label="Website Link" />
-                    <InputField name="founded_date" label="Founded Date" type="date"/>
+                    <InputField
+                      name="founded_date"
+                      label="Founded Date"
+                      type="date"
+                    />
                   </HStack>
-                  
 
                   <InputField name="description" label="Description" textarea />
-
-                  <Dropzone
-                    onDrop={async ([file]) => {
-                      const { data } = await uploadFile({
-                        variables: { imgUrl: file },
-                      });
-                      setFieldValue("logo", data.fileUpload.url);
-                      setImg((img) => (img = data.fileUpload.url));
-                      setName((name) => (name = file.name));
-
-                      console.log(file, data.fileUpload.url);
-                    }}
-                  >
-                    {({ getRootProps, getInputProps }) => (
-                      <Flex {...getRootProps()}>
-                        <input {...getInputProps()} name="logo" />
-                        <Button leftIcon={<FiUploadCloud />}>add Image</Button>
-                        {name ? <Text>{name}</Text> : null}
-                      </Flex>
-                    )}
-                  </Dropzone>
 
                   <Button
                     bg="#00b074"

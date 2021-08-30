@@ -33,7 +33,7 @@ interface RegisterProps {}
 export const Register: React.FC<RegisterProps> & layout = ({}) => {
   const [register] = useRegisterMutation();
   const [createJSProfile] = useCreateJsProfileMutation();
-  const [createCompProfile] = useCreateCompanyProfileMutation()
+  const [createCompProfile] = useCreateCompanyProfileMutation();
   const router = useRouter();
   const toast = useToast();
   return (
@@ -41,18 +41,12 @@ export const Register: React.FC<RegisterProps> & layout = ({}) => {
       <Formik
         initialValues={{ username: "", email: "", password: "", user_type: "" }}
         onSubmit={async (values, { setErrors }) => {
-          console.log(values)
+          console.log(values);
           const response = await register({
             variables: { data: values },
-            update: (cache, {data}) => {
-              cache.writeQuery<MeQuery>({
-                query: MeDocument,
-                data:{
-                  __typename:"Query",
-                  me: data.register.user
-                }
-              })
-            }
+            update: (cache) => {
+              cache.evict({ fieldName: "register" });
+            },
           });
 
           if (response?.data?.register?.user?.user_type === "job seeker") {
@@ -61,28 +55,15 @@ export const Register: React.FC<RegisterProps> & layout = ({}) => {
                 data: { email: response.data?.register.user.email },
               },
             });
+            router.push({ pathname: "/account/job-seeker" });
           }
           if (response?.data?.register?.user?.user_type === "company") {
             await createCompProfile({
               variables: {
-                data: { email: response.data?.register?.user.email},
+                data: { email: response.data?.register?.user.email },
               },
             });
-          }
-
-          if (response.data.register.errors) {
-            setErrors(toErrorMap(response.data.register.errors));
-          } else if (response.data?.register.user) {
-            console.log(values);
-            toast({
-              title: "Account created.",
-              position: "top-right",
-              description: "Please Update profile \n in the MyAccout section",
-              status: "success",
-              duration: 6000,
-              isClosable: false,
-            });
-            router.push(`/account/${response.data.register.user.id}`);
+            router.push({ pathname: "/account/company" });
           }
         }}
       >
@@ -122,7 +103,6 @@ export const Register: React.FC<RegisterProps> & layout = ({}) => {
                     placeholder="Select a user"
                     label="User Type"
                     select
-                    
                   />
                   <Button
                     type="submit"

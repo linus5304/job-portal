@@ -8,5 +8,7 @@ query getJSProfile{
     userId
     email
     headline
+    phone
+    cv
   }
 }

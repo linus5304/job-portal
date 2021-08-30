@@ -1,7 +1,13 @@
 import { Field, ObjectType } from "type-graphql";
 import {
-  BaseEntity, Column,
-  CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { Application } from "./Application";
 import { User } from "./User";
@@ -57,9 +63,11 @@ export class Job extends BaseEntity {
   @Column()
   userId: number;
 
+  @Field(() => User, { nullable: true })
   @ManyToOne(() => User, (user) => user.jobs)
   user: User;
 
+  @Field(() => [Application], { nullable: true })
   @OneToMany(() => Application, (application) => application.job)
   application: Application[];
 }

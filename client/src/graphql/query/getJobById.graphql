@@ -1,5 +1,5 @@
-query GetJobById($id: Int!){
-  getJobById(id: $id){
+query GetJobById($id: Int!) {
+  getJobById(id: $id) {
     id
     title
     location
@@ -10,18 +10,23 @@ query GetJobById($id: Int!){
     salary
     expDate
     createdDate
-    applications {
+    application {
       userId
       jobId
       appication_date
     }
-    company {
+    user{
       id
-      name
-      website
-      logo
-      phone
-      description
+      email
+      companyProfile{
+        name
+        logo
+        id
+        email
+        location
+        description
+        website
+      }
     }
   }
 }

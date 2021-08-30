@@ -32,21 +32,10 @@ class JSProfileInput {
   email?: string;
   @Field({ nullable: true })
   profile_pic?: string;
-}
-@InputType()
-class EducationInput {
   @Field({ nullable: true })
-  school?: string;
+  phone?: string;
   @Field({ nullable: true })
-  degree?: string;
-  @Field({ nullable: true })
-  field?: string;
-  @Field({ nullable: true })
-  start_date?: string;
-  @Field({ nullable: true })
-  end_date?: string;
-  @Field()
-  jobSeekerId: number;
+  cv?: string;
 }
 
 @ObjectType()

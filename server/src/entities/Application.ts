@@ -1,6 +1,12 @@
 import { Field, ObjectType } from "type-graphql";
 import {
-    BaseEntity, CreateDateColumn, Entity, ManyToOne, PrimaryColumn, UpdateDateColumn
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { Job } from "./Job";
 import { User } from "./User";
@@ -16,14 +22,22 @@ export class Application extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
   @PrimaryColumn()
   userId: number;
 
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  email: string;
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  phone: string;
+
+  @Field(() => User, {nullable: true})
   @ManyToOne(() => User, (user) => user.application)
   user: User;
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
   @PrimaryColumn()
   jobId: number;
 

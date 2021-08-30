@@ -1,8 +1,9 @@
-mutation Apply($jobId: Int!){
-  apply(jobId: $jobId){
-   appication_date
-    userId
+mutation Apply($input: applyInput!){
+  apply(input:$input){
+    email
+    phone
     jobId
-    updatedAt
+    appication_date
+    userId
   }
 }

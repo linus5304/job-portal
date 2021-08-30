@@ -1,4 +1,4 @@
-query getApplicantJobs{
+query getApplicantJobs {
   getApplicantJobs {
     id
     title
@@ -10,14 +10,18 @@ query getApplicantJobs{
     expDate
     createdDate
     updatedAt
-    userApplications{
+    user {
+      companyProfile {
+        name
+        location
+        website
+      }
+    }
+    application {
       appication_date
       userId
-    }
-    company {
-      name
-      location
-      logo
+      email
+      jobId
     }
   }
 }

@@ -115,6 +115,8 @@ export class CompanyResolver {
   async getCompanyJobs(@Ctx() {req}: MyContext){
     const jobs = await getConnection()
       .createQueryBuilder(Job, "job")
+      .leftJoinAndSelect('job.user', 'user')
+      .leftJoinAndSelect('user.companyProfile', 'cp')
       .where("job.userId = :id", { id: req.session.userId })
       .getMany();
     return jobs;

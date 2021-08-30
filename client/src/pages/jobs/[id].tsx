@@ -19,12 +19,12 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  useDisclosure
+  useDisclosure,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
 import {
   FaChevronLeft,
   FaFacebook,
@@ -32,7 +32,7 @@ import {
   FaLinkedin,
   FaTwitter,
 } from "react-icons/fa";
-import { FiCalendar, FiGlobe } from "react-icons/fi";
+import { FiCalendar, FiGlobe, FiUploadCloud } from "react-icons/fi";
 import { MdLocationOn } from "react-icons/md";
 import { InputField } from "../../components/form/InputField";
 import { layout } from "../../utils/types";
@@ -40,9 +40,14 @@ import { withApollo } from "../../utils/withApollo";
 import { MainLayout } from "./../../components/layouts/MainLayout";
 import {
   useApplyMutation,
+  useFileUploadMutation,
   useGetJobByIdQuery,
+  useGetJsProfileQuery,
+  useMeQuery,
+  usePostJobMutation,
 } from "./../../generated/graphql";
-import Moment  from 'react-moment';
+import Moment from "react-moment";
+import Dropzone, { useDropzone } from "react-dropzone";
 
 interface JobProps {}
 
@@ -51,39 +56,28 @@ const Job: React.FC<JobProps> & layout = ({}) => {
   const { id } = router.query;
   const jobId = parseInt(id as string);
 
+  const [uploadFile] = useFileUploadMutation();
+  const [name, setName] = useState("");
+  const { data: jsData, loading } = useGetJsProfileQuery();
+  const toast = useToast();
+  const [apply] = useApplyMutation();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {data: meData } = useMeQuery()
+
+  const { acceptedFiles, fileRejections, getRootProps, getInputProps } =
+    useDropzone({ accept: ".doc,.docx,.pdf" });
+
   const { data } = useGetJobByIdQuery({
     variables: {
       id: jobId,
     },
   });
 
-  const toast = useToast();
-  const [apply] = useApplyMutation();
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const handleApplication = async () => {
-    const response = await apply({ variables: { jobId } });
-    if (!response.data?.apply) {
-      toast({
-        title: "Application failed.",
-        position: "top-right",
-        description: "An error occured when applying",
-        status: "error",
-        duration: 4000,
-        isClosable: true,
-      });
-      toast({
-        title: "Application Successfull",
-        position: "top-right",
-        description:
-          "You have successfully applied. Manage jobs in Myaccoount section",
-        status: "success",
-        duration: 6000,
-        isClosable: false,
-      });
-      router.push(`/account/${data.getJobById.userId}`);
-    }
-  };
+  if (!data && !jsData && !meData && loading) {
+    return <div>loading...</div>;
+  }
+
   return (
     <>
       <MainLayout>
@@ -123,11 +117,15 @@ const Job: React.FC<JobProps> & layout = ({}) => {
                   </Flex>
                   <Flex alignItems="center">
                     <Icon as={FiGlobe} fontSize="lg" />
-                    <Link>{data?.getJobById.company.website}</Link>
+                    <Link>{data?.getJobById.user.companyProfile.website}</Link>
                   </Flex>
                   <Flex alignItems="center">
                     <Icon as={FiCalendar} fontSize="lg" />
-                    <Text><Moment format="MMM DD YYYY">{data?.getJobById.createdDate}</Moment></Text>
+                    <Text>
+                      <Moment format="MMM DD YYYY">
+                        {data?.getJobById.createdDate}
+                      </Moment>
+                    </Text>
                   </Flex>
                 </HStack>
               </Flex>
@@ -171,17 +169,25 @@ const Job: React.FC<JobProps> & layout = ({}) => {
               >
                 <VStack spacing={6}>
                   <Image
-                    src={data?.getJobById.company.logo}
+                    src={data?.getJobById.user.companyProfile.logo}
                     alt="logo"
                     width="100px"
                     height="100px"
                   />
                   <Text fontSize="xl">
-                    About {data?.getJobById.company.name} Employer
+                    About {data?.getJobById.user.companyProfile.name} Employer
                   </Text>
-                  <Text>{data?.getJobById.company.description}</Text>
-                  <NextLink href={`/company/${data?.getJobById.company.id}`}>
-                    <Button type="submit" fontSize="md" w="100%" w="100%" bg="#00b074" color="white" size="lg" _hover={{bg:"green.500"}}>
+                  <Text>{data?.getJobById.user.companyProfile.description}</Text>
+                  <NextLink href={`/company/${data?.getJobById.user.companyProfile.id}`}>
+                    <Button
+                      type="submit"
+                      fontSize="md"
+                      w="100%"
+                      bg="#00b074"
+                      color="white"
+                      size="lg"
+                      _hover={{ bg: "green.500" }}
+                    >
                       Company Profile
                     </Button>
                   </NextLink>
@@ -197,7 +203,15 @@ const Job: React.FC<JobProps> & layout = ({}) => {
             justifyContent="space-between"
             flexDir={["column", "column", "column", "row", "row"]}
           >
-            <Button  ml="-15%" onClick={onOpen} bg="#00b074" color="white" size="lg" _hover={{bg:"green.500"}}>
+            <Button
+              ml="-15%"
+              onClick={onOpen}
+              bg="#00b074"
+              color="white"
+              size="lg"
+              _hover={{ bg: "green.500" }}
+              disabled={meData?.me.user_type === "company" ? true : false}
+            >
               APPLY NOW
             </Button>
 
@@ -222,18 +236,41 @@ const Job: React.FC<JobProps> & layout = ({}) => {
 
       <Formik
         initialValues={{
-          jobSeekerId: null,
-          comp_name: "",
-          position: "",
-          field: "",
-          start_date: "",
-          end_date: "",
+          jobId,
+          email: jsData?.getJSProfile.email,
+          phone: jsData?.getJSProfile.phone,
+          cv: "",
+          cover_letter: "",
         }}
         onSubmit={async (values) => {
-          console.log(values);
+          const response = await apply({
+            variables: { input: values },
+          });
+          if (!response.data?.apply) {
+            toast({
+              title: "Application failed.",
+              position: "top-right",
+              description: "An error occured when applying",
+              status: "error",
+              duration: 4000,
+              isClosable: true,
+            });
+          }
+          toast({
+            title: "Application Successfull",
+            position: "top-right",
+            description:
+              "You have successfully applied. Manage jobs in Myaccoount section",
+            status: "success",
+            duration: 6000,
+            isClosable: false,
+          });
+          onClose();
+
+          console.log("values", values);
         }}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, setFieldValue }) => (
           <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <Form>
@@ -241,22 +278,52 @@ const Job: React.FC<JobProps> & layout = ({}) => {
                 <ModalHeader>Apply for Job</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                  <InputField name="jobSeekerId" type="hidden" />
-                  <InputField name="company_name" label="Company Name" />
-                  <InputField name="position" label="Title" />
-                  <InputField name="field" label="Business Field" />
-                  <Flex>
+                  <VStack>
+                    <InputField name="jobId" label="" hidden />
+                    <InputField name="email" label="Email" />
+                    <InputField name="phone" label="Phone" />
                     <InputField
-                      name="start_date"
-                      label="start Date"
-                      type="date"
+                      name="cover_letter"
+                      label="Cover Letter"
+                      textarea
                     />
-                    <InputField name="end_date" label="End Date" type="date" />
-                  </Flex>
+                    <Dropzone
+                      onDrop={async ([file]) => {
+                        const { data } = await uploadFile({
+                          variables: { imgUrl: file },
+                        });
+                        setFieldValue("cv", data.fileUpload.url);
+                        // setImg((img) => (img = data.fileUpload.url));
+                        setName((name) => (name = file.name));
+
+                        console.log(file);
+                      }}
+                    >
+                      {({ getRootProps, getInputProps }) => (
+                        <Box
+                          border="1px dashed gray"
+                          h="100px"
+                          w="100%"
+                          {...getRootProps()}
+                        >
+                          <input {...getInputProps()} name="cv" />
+                          <VStack>
+                            <Icon as={FiUploadCloud} fontSize="2em" />
+                            <Text>Drag and drop or Click to Add your CV</Text>
+                          </VStack>
+                          {name ? (
+                            <Text fontSize="lg" fontWeight="semibold">
+                              {name}
+                            </Text>
+                          ) : null}
+                        </Box>
+                      )}
+                    </Dropzone>
+                  </VStack>
                 </ModalBody>
 
                 <ModalFooter>
-                  <Button mr={3} isLoading={isSubmitting}>
+                  <Button mr={3} isLoading={isSubmitting} type="submit">
                     Apply
                   </Button>
                   <Button onClick={onClose}>Cancel</Button>

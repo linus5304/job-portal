@@ -143,7 +143,7 @@ export const JsSidebar: React.FC<JsSidebarProps> = ({}) => {
               </Text>
             </Flex>
           </NextLink>
-          <NextLink href="/jobs/my-jobs">
+          {/* <NextLink href="/jobs/my-jobs">
             <Flex
               alignItems="center"
               cursor="pointer"
@@ -172,7 +172,7 @@ export const JsSidebar: React.FC<JsSidebarProps> = ({}) => {
             <Text fontSize="xl" fontWeight="bold">
               Applicants
             </Text>
-          </Flex>
+          </Flex> */}
 
           <Flex
             alignItems="center"

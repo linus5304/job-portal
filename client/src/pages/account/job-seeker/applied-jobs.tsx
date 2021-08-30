@@ -17,8 +17,8 @@ const appliedJobs: React.FC<appliedJobsProps> = ({}) => {
         {data?.getApplicantJobs.map((j) => (
           <AppliedJobItem
             title={j.title}
-            companyName={j.company.name}
-            postDate={j.userApplications[0].appication_date}
+            companyName={j.user.companyProfile.name}
+            postDate={j.application[0].appication_date}
             location={j.location}
           />
         ))}

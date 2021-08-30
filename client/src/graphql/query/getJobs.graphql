@@ -11,10 +11,12 @@ query getJobs($limit: Int!, $cursor: String) {
       salary
       createdAt
       createdDate
-      company {
-        name
-        website
-        phone
+      userId
+      user {
+        companyProfile {
+          name
+          website
+        }
       }
     }
     hasMore
