@@ -66,9 +66,7 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
               <NextLink href="/company">
                 <Button variant="ghost">Companies</Button>
               </NextLink>
-              <NextLink href="/post-job">
-                <Button variant="ghost">Post Job</Button>
-              </NextLink>
+              
               <Menu>
                 <MenuButton as={Avatar} rightIcon={<ChevronDownIcon />} cursor="pointer"/>
                   
@@ -106,9 +104,7 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
               <NextLink href="/company">
                 <Button variant="ghost">Companies</Button>
               </NextLink>
-              <NextLink href="/post-job">
-                <Button variant="ghost">Post Job</Button>
-              </NextLink>
+              
               <NextLink href="/login">
                 <Button variant="ghost" size="lg">Login</Button>
               </NextLink>
@@ -157,9 +153,7 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
                 <NextLink href="/jobs">
                   <Button variant="ghost">Jobs</Button>
                 </NextLink>
-                <NextLink href="/post-job">
-                  <Button variant="ghost">Post Job</Button>
-                </NextLink>
+              
                 <NextLink href="">
                   <Button
                     variant="ghost"
@@ -182,11 +176,8 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
                     Jobs
                   </Button>
                 </NextLink>
-                <NextLink href="/post-job">
-                  <Button variant="ghost" onClick={() => changeDisplay("none")}>
-                    Post Job
-                  </Button>
-                </NextLink>
+               
+
                 <NextLink href="/login">
                   <Button variant="ghost" onClick={() => changeDisplay("none")}>
                     Login

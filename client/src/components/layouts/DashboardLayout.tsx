@@ -19,12 +19,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     return <div>loading</div>;
   }
 
-
   return (
     <>
       <MainLayout>
         <Flex mx="auto" w="80%" mt={50}>
-          {data?.me?.user_type === "company" ? <Sidebar /> : <JsSidebar />}
+          {data?.me?.user_type === "company" ? <Sidebar username={data?.me?.username}/> : <JsSidebar username={data?.me?.username} />}
 
           <Flex overflow="auto" w="100%" px="8%" mb="3%">
             {children}

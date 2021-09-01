@@ -1,31 +1,57 @@
 import { useApolloClient } from "@apollo/client";
 import {
-    Avatar, Box, Flex, Icon, IconButton, Text, VStack
+  Avatar,
+  Box,
+  Flex,
+  Icon,
+  IconButton,
+  Text,
+  VStack,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
+import { useEffect } from "react";
+import { useState } from "react";
 import Dropzone from "react-dropzone";
 import { FaUser } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 import { IoDocumentText } from "react-icons/io5";
+import { MdEdit, MdPeople, MdWork, MdFavoriteBorder } from "react-icons/md";
 import {
-    MdEdit, MdPeople,
-    MdWork, MdFavoriteBorder
-} from "react-icons/md";
-import {
-    useFileUploadMutation, useLogoutMutation, useUpdateJsProfileMutation
+  useFileUploadMutation,
+  useGetJsProfileQuery,
+  useLogoutMutation,
+  useUpdateJsProfileMutation,
 } from "../../generated/graphql";
 
-interface JsSidebarProps {}
+interface JsSidebarProps {
+  username?: string;
+}
 
-export const JsSidebar: React.FC<JsSidebarProps> = ({}) => {
+export const JsSidebar: React.FC<JsSidebarProps> = ({ username }) => {
   const apolloClient = useApolloClient();
   const router = useRouter();
   const [logout] = useLogoutMutation();
   const [uploadFile] = useFileUploadMutation();
-  const [update] = useUpdateJsProfileMutation()
+  const [update] = useUpdateJsProfileMutation();
+  const [profileImage, setprofileImage] = useState(
+    "https://bit.ly/broken-link"
+  );
+  const { data, loading } = useGetJsProfileQuery();
 
+  if(!data && loading) return <div>Loading....</div>
+
+  // useEffect(() => {
+  //   if (profileImage !== "https://bit.ly/broken-link") {
+  //     update({
+  //       variables: {
+  //         data: { profile_pic: profileImage },
+  //         id: data?.getJSProfile.id,
+  //       },
+  //     });
+  //   }
+  // }, [profileImage]);
 
   return (
     <Flex w="300px" minH="100%" overflow="hidden" mb={50}>
@@ -40,13 +66,14 @@ export const JsSidebar: React.FC<JsSidebarProps> = ({}) => {
           transition=".2s ease-out"
           _hover={{ boxShadow: "lg", transform: "scale(1,1)" }}
         >
-          <Avatar size="2xl" name="Segun Adebayo">
+          <Avatar size="2xl" src={profileImage}>
             <Dropzone
               onDrop={async ([file]) => {
                 const { data } = await uploadFile({
                   variables: { imgUrl: file },
                 });
                 console.log(data.fileUpload.url);
+                setprofileImage(data.fileUpload.url);
               }}
             >
               {({ getRootProps, getInputProps }) => (
@@ -69,7 +96,7 @@ export const JsSidebar: React.FC<JsSidebarProps> = ({}) => {
             </Dropzone>
           </Avatar>
           <Text fontSize="2em" fontWeight="bold">
-            @Job seeker
+            @{username}
           </Text>
         </VStack>
 
@@ -134,8 +161,6 @@ export const JsSidebar: React.FC<JsSidebarProps> = ({}) => {
               p="5%"
               _hover={{ bg: "green.100" }}
               w="100%"
-              // onClick={(isa) =>setIsActive(!isa)}
-              // bg={isActive ? "green.100" : null}
             >
               <Icon as={IoDocumentText} fontSize="4xl" color="#00b074" />
               <Text fontSize="xl" fontWeight="bold">
@@ -143,37 +168,6 @@ export const JsSidebar: React.FC<JsSidebarProps> = ({}) => {
               </Text>
             </Flex>
           </NextLink>
-          {/* <NextLink href="/jobs/my-jobs">
-            <Flex
-              alignItems="center"
-              cursor="pointer"
-              gridGap="4%"
-              p="5%"
-              _hover={{ bg: "green.100" }}
-              w="100%"
-            >
-              <Icon as={MdWork} fontSize="4xl" color="#00b074" />
-              <Text fontSize="xl" fontWeight="bold">
-                Manage Jobs
-              </Text>
-            </Flex>
-          </NextLink>
-          <Flex
-            alignItems="center"
-            cursor="pointer"
-            gridGap="4%"
-            p="5%"
-            _hover={{ bg: "green.100" }}
-            w="100%"
-            // onClick={() =>setIsActive(!isActive)}
-            // bg={isActive ? "green.100" : null}
-          >
-            <Icon as={MdPeople} fontSize="4xl" color="#00b074" />
-            <Text fontSize="xl" fontWeight="bold">
-              Applicants
-            </Text>
-          </Flex> */}
-
           <Flex
             alignItems="center"
             cursor="pointer"

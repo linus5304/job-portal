@@ -4,7 +4,7 @@ import { WorkExperience } from "../../../components/account/WorkExperience";
 import { DashboardLayout } from "../../../components/layouts/DashboardLayout";
 import { useGetJsProfileQuery } from "../../../generated/graphql";
 import { withApollo } from "../../../utils/withApollo";
-import { VStack, Text } from "@chakra-ui/react";
+import { VStack, Text, Box } from "@chakra-ui/react";
 
 interface resumeProps {}
 
@@ -22,7 +22,7 @@ const resume: React.FC<resumeProps> = ({}) => {
           <>
             <Education jsId={data?.getJSProfile.id} />
             <WorkExperience jsId={data?.getJSProfile.id} />
-          </>
+            </>
         )}
       </VStack>
     </DashboardLayout>

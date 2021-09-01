@@ -72,7 +72,7 @@ export const postJob: React.FC<postJobProps> & layout = ({}) => {
               duration: 5000,
               isClosable: true,
             });
-            router.push(`/company/${result.data.postJob.userId}`);
+            // router.push(`/company/${result.data.postJob.userId}`);
           }
           console.log(values);
         }}

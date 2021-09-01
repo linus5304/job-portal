@@ -10,8 +10,10 @@ import {
   Text,
   Stack,
   useToast,
+  Avatar,
+  IconButton,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import { InputField } from "../../../components/form/InputField";
 import NextLink from "next/link";
@@ -29,21 +31,24 @@ import { DashboardLayout } from "../../../components/layouts/DashboardLayout";
 
 import { withApollo } from "../../../utils/withApollo";
 import { FiUploadCloud } from "react-icons/fi";
+import { MdEdit } from "react-icons/md";
 
 interface indexProps {}
 
 export const index: React.FC<indexProps> = ({}) => {
   const router = useRouter();
   const [uploadFile] = useFileUploadMutation();
-  const [img, setImg] = useState(() => "");
-  const [name, setName] = useState("");
   const { data, loading } = useGetCompanyProfileQuery();
   const [updateCompProfile] = useUpdateCompanyProfileMutation();
+  const toast = useToast()
+
+  const [profileImage, setprofileImage] = useState(() =>"");
 
   if (!data && loading) {
     return <div>loading</div>;
   }
-
+  console.log('image ',data?.getCompanyProfile.logo);
+  
   return (
     <DashboardLayout>
       <Formik
@@ -61,26 +66,26 @@ export const index: React.FC<indexProps> = ({}) => {
           const response = await updateCompProfile({
             variables: { data: values, id: data.getCompanyProfile.id },
           });
-          //   if (!response.data.createCompanyProfile) {
-          //     toast({
-          //       title: "Account created.",
-          //       position: "top-right",
-          //       description: "Error occured when creating your profile",
-          //       status: "error",
-          //       duration: 5000,
-          //       isClosable: true,
-          //     });
-          //   } else {
-          //     toast({
-          //       title: "Account created.",
-          //       position: "top-right",
-          //       description: "We've created your account for you.",
-          //       status: "success",
-          //       duration: 5000,
-          //       isClosable: true,
-          //     });
-          //     router.push("/");
-          //   }
+            if (!response.data.updateCompanyProfile) {
+              toast({
+                title: "Error.",
+                position: "top-right",
+                description: "Error occured when Udating your profile",
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+              });
+            } else {
+              toast({
+                title: "Profile sucessfully Updated",
+                position: "top-right",
+                description: "We've created your account for you.",
+                status: "success",
+                duration: 5000,
+                isClosable: true,
+              });
+              
+            }
           console.log(values);
         }}
       >
@@ -98,10 +103,55 @@ export const index: React.FC<indexProps> = ({}) => {
                 <Text fontSize="1.5em" fontWeight="semibold" mb={2}>
                   Company Profile
                 </Text>
+
                 <Divider />
               </Flex>
 
               <Form>
+                <VStack
+                  p="8%"
+                  border="1px solid #fff"
+                  borderRadius="2%"
+                  bg="#fff"
+                  spacing="10px"
+                  w="100%"
+                  transition=".2s ease-out"
+                  _hover={{ boxShadow: "lg", transform: "scale(1,1)" }}
+                >
+                  <Avatar size="2xl" src={profileImage}>
+                    <Dropzone
+                      onDrop={async ([file]) => {
+                        const { data } = await uploadFile({
+                          variables: { imgUrl: file },
+                        });
+                        console.log(data.fileUpload.url);
+                        setFieldValue("logo", data.fileUpload.url);
+                        setprofileImage((profileImage) =>  profileImage = data.fileUpload.url);
+                      }}
+                    >
+                      {({ getRootProps, getInputProps }) => (
+                        <Box {...getRootProps()}>
+                          <input {...getInputProps()} name="logo"/>
+                          <IconButton
+                            aria-label="Search database"
+                            icon={<MdEdit fontSize="1.5em" />}
+                            position="absolute"
+                            top="0"
+                            right="0"
+                            size="sm"
+                            variant="outline"
+                            bg="#00b074"
+                            color="white"
+                            _hover={{ bg: "#00b074" }}
+                          />
+                        </Box>
+                      )}
+                    </Dropzone>
+                  </Avatar>
+                  <Text fontSize="2em" fontWeight="bold">
+                    {/* @{username} */}
+                  </Text>
+                </VStack>
                 <Flex fontWeight="bold">
                   <InputField name="login" placeholder="" label="" hidden />
                 </Flex>
@@ -109,7 +159,7 @@ export const index: React.FC<indexProps> = ({}) => {
                 <VStack spacing={4} align="flex-start">
                   <HStack align="flex-start" w="100%" spacing="30px">
                     <InputField name="name" label="Company name" />
-                    <InputField name="email" label="Email" />
+                    <InputField name="email"  label="Email"/>
                   </HStack>
                   <HStack align="flex-start" w="100%" spacing="30px">
                     <InputField name="phone" label="Phone" />
