@@ -83,7 +83,7 @@ export type JsProfileInput = {
   first_name?: Maybe<Scalars['String']>;
   last_name?: Maybe<Scalars['String']>;
   about_me?: Maybe<Scalars['String']>;
-  headline?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   profile_pic?: Maybe<Scalars['String']>;
   phone?: Maybe<Scalars['String']>;
@@ -115,13 +115,15 @@ export type JobSeeker = {
   last_name?: Maybe<Scalars['String']>;
   about_me?: Maybe<Scalars['String']>;
   phone?: Maybe<Scalars['String']>;
-  headline?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
   cv?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   profile_pic?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['Float']>;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
+  education?: Maybe<Array<Education>>;
+  work_experience?: Maybe<Array<Work>>;
 };
 
 export type LoginInput = {
@@ -276,6 +278,7 @@ export type Query = {
   searchJobs?: Maybe<PaginatedJobs>;
   jobSeeker: Scalars['String'];
   getJSProfile: JobSeeker;
+  getJSProfileById: JobSeeker;
   getAllJSProfile: Array<JobSeeker>;
   getAllEducation: Array<Education>;
   getEducationbyId: Education;
@@ -307,6 +310,11 @@ export type QuerySearchJobsArgs = {
   limit: Scalars['Int'];
   location?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryGetJsProfileByIdArgs = {
+  id?: Maybe<Scalars['Int']>;
 };
 
 
@@ -498,7 +506,7 @@ export type UpdateJsProfileMutation = { __typename?: 'Mutation', updateJSProfile
 export type GetAllJsProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllJsProfileQuery = { __typename?: 'Query', getAllJSProfile: Array<{ __typename?: 'JobSeeker', first_name?: Maybe<string>, last_name?: Maybe<string>, profile_pic?: Maybe<string>, about_me?: Maybe<string>, email?: Maybe<string>, id: number, headline?: Maybe<string> }> };
+export type GetAllJsProfileQuery = { __typename?: 'Query', getAllJSProfile: Array<{ __typename?: 'JobSeeker', first_name?: Maybe<string>, last_name?: Maybe<string>, profile_pic?: Maybe<string>, about_me?: Maybe<string>, email?: Maybe<string>, id: number, title?: Maybe<string> }> };
 
 export type GetApplicantJobsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -530,7 +538,14 @@ export type GetCompanyProfileQuery = { __typename?: 'Query', getCompanyProfile: 
 export type GetJsProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetJsProfileQuery = { __typename?: 'Query', getJSProfile: { __typename?: 'JobSeeker', id: number, first_name?: Maybe<string>, last_name?: Maybe<string>, about_me?: Maybe<string>, profile_pic?: Maybe<string>, userId?: Maybe<number>, email?: Maybe<string>, headline?: Maybe<string>, phone?: Maybe<string>, cv?: Maybe<string> } };
+export type GetJsProfileQuery = { __typename?: 'Query', getJSProfile: { __typename?: 'JobSeeker', id: number, first_name?: Maybe<string>, last_name?: Maybe<string>, about_me?: Maybe<string>, phone?: Maybe<string>, title?: Maybe<string>, email?: Maybe<string>, profile_pic?: Maybe<string>, updatedAt: string, cv?: Maybe<string>, userId?: Maybe<number>, createdAt: string } };
+
+export type GetJsProfileByIdQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type GetJsProfileByIdQuery = { __typename?: 'Query', getJSProfileById: { __typename?: 'JobSeeker', id: number, first_name?: Maybe<string>, last_name?: Maybe<string>, about_me?: Maybe<string>, profile_pic?: Maybe<string>, userId?: Maybe<number>, email?: Maybe<string>, phone?: Maybe<string>, title?: Maybe<string>, cv?: Maybe<string>, updatedAt: string, education?: Maybe<Array<{ __typename?: 'Education', id: number, school: string, field: string, degree: string, start_date?: Maybe<string>, end_date?: Maybe<string>, jobSeekerId: number }>>, work_experience?: Maybe<Array<{ __typename?: 'Work', id: number, company_name: string, position: string, field: string, start_date?: Maybe<string>, end_date?: Maybe<string>, jobSeekerId: number }>> } };
 
 export type GetJobByIdQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -1163,7 +1178,7 @@ export const GetAllJsProfileDocument = gql`
     about_me
     email
     id
-    headline
+    title
   }
 }
     `;
@@ -1449,12 +1464,14 @@ export const GetJsProfileDocument = gql`
     first_name
     last_name
     about_me
-    profile_pic
-    userId
-    email
-    headline
     phone
+    title
+    email
+    profile_pic
+    updatedAt
     cv
+    userId
+    createdAt
   }
 }
     `;
@@ -1485,6 +1502,70 @@ export function useGetJsProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type GetJsProfileQueryHookResult = ReturnType<typeof useGetJsProfileQuery>;
 export type GetJsProfileLazyQueryHookResult = ReturnType<typeof useGetJsProfileLazyQuery>;
 export type GetJsProfileQueryResult = Apollo.QueryResult<GetJsProfileQuery, GetJsProfileQueryVariables>;
+export const GetJsProfileByIdDocument = gql`
+    query getJSProfileById($id: Int!) {
+  getJSProfileById(id: $id) {
+    id
+    first_name
+    last_name
+    about_me
+    profile_pic
+    userId
+    email
+    phone
+    title
+    cv
+    updatedAt
+    education {
+      id
+      school
+      field
+      school
+      degree
+      start_date
+      end_date
+      jobSeekerId
+    }
+    work_experience {
+      id
+      company_name
+      position
+      field
+      start_date
+      end_date
+      jobSeekerId
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetJsProfileByIdQuery__
+ *
+ * To run a query within a React component, call `useGetJsProfileByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetJsProfileByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetJsProfileByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetJsProfileByIdQuery(baseOptions: Apollo.QueryHookOptions<GetJsProfileByIdQuery, GetJsProfileByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetJsProfileByIdQuery, GetJsProfileByIdQueryVariables>(GetJsProfileByIdDocument, options);
+      }
+export function useGetJsProfileByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetJsProfileByIdQuery, GetJsProfileByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetJsProfileByIdQuery, GetJsProfileByIdQueryVariables>(GetJsProfileByIdDocument, options);
+        }
+export type GetJsProfileByIdQueryHookResult = ReturnType<typeof useGetJsProfileByIdQuery>;
+export type GetJsProfileByIdLazyQueryHookResult = ReturnType<typeof useGetJsProfileByIdLazyQuery>;
+export type GetJsProfileByIdQueryResult = Apollo.QueryResult<GetJsProfileByIdQuery, GetJsProfileByIdQueryVariables>;
 export const GetJobByIdDocument = gql`
     query GetJobById($id: Int!) {
   getJobById(id: $id) {

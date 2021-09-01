@@ -37,7 +37,7 @@ export class JobSeeker extends BaseEntity {
 
   @Field({ nullable: true })
   @Column({nullable: true})
-  headline: string;
+  title: string;
 
   @Field({ nullable: true })
   @Column({nullable: true})
@@ -67,9 +67,11 @@ export class JobSeeker extends BaseEntity {
   @JoinColumn()
   user: User;
 
+  @Field(() => [Education],{nullable: true})
   @OneToMany(() => Education, (education) => education.jobSeeker)
   education: Education[];
 
+  @Field(() => [Work],{nullable: true})
   @OneToMany(() => Work, (work_experience) => work_experience.jobSeeker)
   work_experience: Work[];
 }

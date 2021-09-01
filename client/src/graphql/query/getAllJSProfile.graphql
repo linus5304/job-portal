@@ -6,6 +6,6 @@ query getAllJSProfile {
     about_me
     email
     id
-    headline
+    title
   }
 }

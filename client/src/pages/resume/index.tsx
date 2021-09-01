@@ -12,6 +12,7 @@ interface indexProps {}
 
 export const index: React.FC<indexProps> = ({}) => {
   const { data, loading } = useGetAllJsProfileQuery();
+  
 
   if (!data && loading) {
     return <div>Loading</div>;
@@ -20,7 +21,7 @@ export const index: React.FC<indexProps> = ({}) => {
     <>
       <MainLayout>
         <Flex justify="space-between" mx="auto" w="60%" pt="10%" pb="4%">
-          <VStack
+          {/* <VStack
             spacing="24px"
             align="flex-start"
             display={["none", "none", "none", "flex", "flex"]}
@@ -37,7 +38,7 @@ export const index: React.FC<indexProps> = ({}) => {
               values={["All", "Senior", "Mid", "Junior"]}
               heading="Experience Level"
             />
-          </VStack>
+          </VStack> */}
           <VStack align="flex-start" w="100%" spacing="30px">
             <SearchBox />
             {/* {!data && loading ? (
@@ -105,11 +106,11 @@ export const index: React.FC<indexProps> = ({}) => {
             {data?.getAllJSProfile.map((js) => (
               <ResumeListItem
                 name={`${js.first_name} ${js.last_name}`}
-                position={js.about_me.slice(0,50)}
+                position={js.about_me.slice(0, 50)}
                 location="Yaounde"
                 imgUrl={js.profile_pic}
                 description={js.about_me}
-                headline={js.headline}
+                title={js.title}
                 id={js.id}
               />
             ))}

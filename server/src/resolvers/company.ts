@@ -15,31 +15,33 @@ import {
 import { CompanyProfile } from "./../entities/Company";
 import { getConnection } from "typeorm";
 import { Job } from "./../entities/Job";
+import { JobSeeker } from "../entities/JobSeeker";
+import { Application } from "../entities/Application";
 
 @InputType()
 class companyProfileInput {
-  @Field({nullable: true})
+  @Field({ nullable: true })
   name: string;
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
   location: string;
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
   website: string;
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
   phone: string;
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
   logo: string;
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
   founded_date: string;
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
   email: string;
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
   description: string;
 }
 
@@ -73,7 +75,9 @@ export class CompanyResolver {
   async getCompanyProfile(
     @Ctx() { req }: MyContext
   ): Promise<CompanyProfile | undefined> {
-    return await CompanyProfile.findOne({ where: { userId: req.session.userId } });
+    return await CompanyProfile.findOne({
+      where: { userId: req.session.userId },
+    });
   }
 
   @Mutation(() => CompanyProfile)
@@ -112,11 +116,11 @@ export class CompanyResolver {
   }
 
   @Query(() => [Job])
-  async getCompanyJobs(@Ctx() {req}: MyContext){
+  async getCompanyJobs(@Ctx() { req }: MyContext) {
     const jobs = await getConnection()
       .createQueryBuilder(Job, "job")
-      .leftJoinAndSelect('job.user', 'user')
-      .leftJoinAndSelect('user.companyProfile', 'cp')
+      .leftJoinAndSelect("job.user", "user")
+      .leftJoinAndSelect("user.companyProfile", "cp")
       .where("job.userId = :id", { id: req.session.userId })
       .getMany();
     return jobs;
@@ -127,6 +131,15 @@ export class CompanyResolver {
     const result = await getConnection()
       .createQueryBuilder(CompanyProfile, "companies")
       .getMany();
-  return result;
+    return result;
+  }
+
+  @Query(() => [JobSeeker], { nullable: true })
+  async getCompanyJobApplicants(): Promise<JobSeeker[] | undefined> {
+    const result = await getConnection()
+      .createQueryBuilder(JobSeeker, "js")
+      .leftJoinAndSelect('ap."jobId"', "")
+      .getMany();
+    return result;
   }
 }

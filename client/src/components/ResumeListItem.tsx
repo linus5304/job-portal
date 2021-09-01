@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Flex,
+  HStack,
   Icon,
   Image,
   Link,
@@ -21,7 +22,7 @@ interface ResumeListItemProps {
   imgUrl?: string;
   location?: string;
   name?: string;
-  headline?: string;
+  title?: string;
   id?: number;
 }
 
@@ -32,7 +33,7 @@ export const ResumeListItem: React.FC<ResumeListItemProps> = ({
   name,
   location,
   id,
-  headline
+  title,
 }) => {
   return (
     <Box
@@ -66,20 +67,21 @@ export const ResumeListItem: React.FC<ResumeListItemProps> = ({
                 gridGap="4%"
                 w="100%"
                 alignItems="center"
+                align="center"
                 
               >
                 <Flex alignItems="center" gridGap="4px">
                   <Icon as={MdWork} fontSize="1.2em" color="gray.300" />
                   <Text fontSize="lg" fontWeight="semibold">
-                    {headline}{" "}
+                    {title}{" "}
                   </Text>
                 </Flex>
-                <Flex alignItems="center" gridGap="4px">
+                <HStack alignItems="center" gridGap="4px">
                   <Icon as={MdLocationOn} fontSize="1.2em" color="gray.300" />
                   <Text fontSize="lg" fontWeight="semibold">
                     {location}{" "}
                   </Text>
-                </Flex>
+                </HStack>
               </Stack>
               <Text fontSize="lg">{description} </Text>
             </Box>

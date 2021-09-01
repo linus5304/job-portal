@@ -68,6 +68,7 @@ export const Education: React.FC<EducationProps> = ({ jsId }) => {
             key={edu.id}
             id={edu.id}
             jsId={edu.jobSeekerId}
+            
           />
           <Divider />
         </>

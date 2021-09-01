@@ -27,7 +27,7 @@ class JSProfileInput {
   @Field({ nullable: true })
   about_me?: string;
   @Field({ nullable: true })
-  headline?: string;
+  title?: string;
   @Field({ nullable: true })
   email?: string;
   @Field({ nullable: true })
@@ -88,6 +88,19 @@ export class JobSeekerResolver {
     @Ctx() { req }: MyContext
   ): Promise<JobSeeker | undefined> {
     return await JobSeeker.findOne({ where: { userId: req.session.userId } });
+  }
+  @Query(() => JobSeeker)
+  async getJSProfileById(
+    @Arg("id", () => Int, { nullable: true }) id: number
+  ): Promise<JobSeeker | undefined> {
+    // return await JobSeeker.findOne(id);
+
+    return await getConnection()
+      .createQueryBuilder(JobSeeker, "js")
+      .leftJoinAndSelect("js.education", "edu")
+      .leftJoinAndSelect("js.work_experience", "wk")
+      .where("js.id = :id", { id: id })
+      .getOne();
   }
 
   @Query(() => [JobSeeker])

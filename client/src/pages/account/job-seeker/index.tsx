@@ -1,5 +1,13 @@
 import {
-  Box, Button, Divider, Flex, HStack, Text, useColorModeValue, useToast, VStack
+  Box,
+  Button,
+  Divider,
+  Flex,
+  HStack,
+  Text,
+  useColorModeValue,
+  useToast,
+  VStack,
 } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/router";
@@ -9,42 +17,42 @@ import { DashboardLayout } from "../../../components/layouts/DashboardLayout";
 import {
   useFileUploadMutation,
   useGetJsProfileQuery,
-  useUpdateJsProfileMutation
+  useUpdateJsProfileMutation,
 } from "../../../generated/graphql";
 import { withApollo } from "../../../utils/withApollo";
-  
-  
-  interface createProfileProps {}
-  
-  const index: React.FC<{}> = ({}) => {
-    const router = useRouter();
-    const [img, setImg] = useState(() => "");
-    const [name, setName] = useState("");
-  
-    const { data, loading } = useGetJsProfileQuery();
-    const [uploadFile] = useFileUploadMutation();
-    const [update] = useUpdateJsProfileMutation()
-  
-    const toast = useToast();
-  
-    return (
-      <DashboardLayout>
-        {!data && loading ? (
-          <Text>Loading</Text>
-        ):(<Formik
+
+interface createProfileProps {}
+
+const index: React.FC<{}> = ({}) => {
+  const router = useRouter();
+  const [img, setImg] = useState(() => "");
+  const [name, setName] = useState("");
+
+  const { data, loading } = useGetJsProfileQuery();
+  const [uploadFile] = useFileUploadMutation();
+  const [update] = useUpdateJsProfileMutation();
+
+  const toast = useToast();
+
+  return (
+    <DashboardLayout>
+      {!data && loading ? (
+        <Text>Loading</Text>
+      ) : (
+        <Formik
           initialValues={{
             first_name: data?.getJSProfile.first_name,
             last_name: data?.getJSProfile.last_name,
             email: data?.getJSProfile.email,
             about_me: data?.getJSProfile.about_me,
             profile_pic: data?.getJSProfile.about_me,
-            headline: data?.getJSProfile.headline
+            title: data?.getJSProfile.title,
           }}
           onSubmit={async (values) => {
             const result = await update({
-              variables: {data:values, id: data?.getJSProfile.id}
-            })
-            if(result){
+              variables: { data: values, id: data?.getJSProfile.id },
+            });
+            if (result) {
               toast({
                 title: "Profile Updated.",
                 position: "top-right",
@@ -73,12 +81,12 @@ import { withApollo } from "../../../utils/withApollo";
                   </Text>
                   <Divider />
                 </Flex>
-  
+
                 <Form>
                   <Flex fontWeight="bold">
                     <InputField name="login" placeholder="" label="" hidden />
                   </Flex>
-  
+
                   <VStack spacing={4} align="flex-start">
                     <HStack align="flex-start" w="100%" spacing="30px">
                       <InputField name="first_name" label="First Name" />
@@ -86,11 +94,11 @@ import { withApollo } from "../../../utils/withApollo";
                     </HStack>
                     <HStack align="flex-start" w="100%" spacing="30px">
                       <InputField name="email" label="Email" />
-                      <InputField name="headline" label="Headline" />
+                      <InputField name="title" label="Title" />
                     </HStack>
-  
+
                     <InputField name="about_me" label="About" textarea />
-                    
+
                     <Button
                       bg="#00b074"
                       color="white"
@@ -106,10 +114,9 @@ import { withApollo } from "../../../utils/withApollo";
               </Flex>
             </Box>
           )}
-        </Formik>)}
-        
-      </DashboardLayout>
-    );
-  };
-  export default withApollo({ ssr: false })(index);
-  
+        </Formik>
+      )}
+    </DashboardLayout>
+  );
+};
+export default withApollo({ ssr: false })(index);

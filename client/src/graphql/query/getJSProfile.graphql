@@ -4,11 +4,48 @@ query getJSProfile{
     first_name
     last_name
     about_me
+    phone
+    title
+    email
+    profile_pic
+    updatedAt
+    cv
+    userId
+    createdAt
+  }
+}
+
+query getJSProfileById($id: Int!) {
+  getJSProfileById(id: $id) {
+    id
+    first_name
+    last_name
+    about_me
     profile_pic
     userId
     email
-    headline
     phone
-    cv
+    title
+		cv
+    updatedAt
+    education {
+      id
+      school
+      field
+      school
+      degree
+      start_date
+      end_date
+      jobSeekerId
+    }
+    work_experience {
+      id
+      company_name
+      position
+      field
+      start_date
+      end_date
+      jobSeekerId
+    }
   }
 }

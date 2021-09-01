@@ -34,7 +34,7 @@ export class Application extends BaseEntity {
   phone: string;
 
   @Field(() => User, {nullable: true})
-  @ManyToOne(() => User, (user) => user.application)
+  @ManyToOne(() => User, (user) => user.application, {onDelete: 'CASCADE'})
   user: User;
 
   @Field({ nullable: true })

@@ -9,18 +9,17 @@ import {
   VStack,
   Button,
   Link,
-  useToast
+  useToast,
 } from "@chakra-ui/react";
 import { InputField } from "../components/form/InputField";
 import { Form, Formik } from "formik";
 import { PasswordField } from "../components/form/PasswordField";
-import NextLink from 'next/link'
+import NextLink from "next/link";
 import { useLoginMutation } from "../generated/graphql";
 import { toErrorMap } from "../utils/errorMap";
 import { MainLayout } from "../components/layouts/MainLayout";
 import { withApollo } from "../utils/withApollo";
-import {useRouter} from 'next/router'
-
+import { useRouter } from "next/router";
 
 interface loginProps {}
 
@@ -30,91 +29,105 @@ export type layout = {
 };
 
 export const login: React.FC<loginProps> & layout = ({}) => {
-  const [login] = useLoginMutation()
-  const toast = useToast()
-  const router = useRouter()
+  const [login] = useLoginMutation();
+  const toast = useToast();
+  const router = useRouter();
+
   return (
     <MainLayout variant="small">
-    <Formik
-      initialValues={{ usernameOrEmail: "", password: "" }}
-      onSubmit={async (values, {setErrors}) => {
-        const response = await login({
-          variables: {data: values}
-        })
-        if(response.data.login.errors){
-          setErrors(toErrorMap(response.data.login.errors))
-        }else if(response.data.login.user){
-          console.log(values)
-          toast({
-            position:'top-right',
-            description: "You are logged in",
-            status: "success",
-            duration: 3000,
-            isClosable: false,
-          })
-          router.push(`/account/`)
-        }
-      }}
-    >
-      {({ isSubmitting }) => (
-        <Box py={20} px={['3%', '3%', '3%','auto', 'auto']}>
-          <Flex
-            bg={useColorModeValue("white", "gray.700")}
-            py="8"
-            px={{ base: "4", md: "10" }}
-            shadow="base"
-            rounded={{ sm: "lg" }}  
-            flexDir="column"
-          >
-            <Flex mb="5%" flexDirection="column">
-              <Heading size="xl" textAlign="center" fontWeight="bold" mb={2}>
-                Login
-              </Heading>
-              <Divider />
-            </Flex>
-
-            <Form>
-             <Flex fontWeight="bold" >
-             <InputField
-                  name="login"
-                  placeholder=""
-                  label=""
-                  hidden
-                  
-                />
-               </Flex> 
-            
-              <VStack spacing={6}>
-                <InputField
-                  name="usernameOrEmail"
-                  placeholder="Username or Email"
-                  label="Username or Email"
-                />
-                <PasswordField
-                  label="Password"
-                  placeholder="Password"
-                  name="password"
-                  loginOrRegister={true}
-                />
-                <Button
-                  type="submit"
-                  fontSize="md"
-                  isLoading={isSubmitting}
-                  w="100%"
-                  bg="#00b074" color="white" size="lg" _hover={{bg:"green.500"}}
-                >
+      <Formik
+        initialValues={{ usernameOrEmail: "", password: "" }}
+        onSubmit={async (values, { setErrors }) => {
+          const response = await login({
+            variables: { data: values },
+          });
+          if (response.data.login.errors) {
+            setErrors(toErrorMap(response.data.login.errors));
+          }
+          if (response?.data?.login.user.user_type === "company") {
+            console.log(values);
+            toast({
+              position: "top-right",
+              description: "You are logged in",
+              status: "success",
+              duration: 3000,
+              isClosable: false,
+            });
+            router.push(`/account/company`);
+          }
+          if (response?.data?.login.user.user_type === "job seeker") {
+            console.log(values);
+            toast({
+              position: "top-right",
+              description: "You are logged in",
+              status: "success",
+              duration: 3000,
+              isClosable: false,
+            });
+            router.push(`/account/job-seeker`);
+          }
+        }}
+      >
+        {({ isSubmitting }) => (
+          <Box py={20} px={["3%", "3%", "3%", "auto", "auto"]}>
+            <Flex
+              bg={useColorModeValue("white", "gray.700")}
+              py="8"
+              px={{ base: "4", md: "10" }}
+              shadow="base"
+              rounded={{ sm: "lg" }}
+              flexDir="column"
+            >
+              <Flex mb="5%" flexDirection="column">
+                <Heading size="xl" textAlign="center" fontWeight="bold" mb={2}>
                   Login
-                </Button>
-              </VStack>
-              <Flex gridGap="2%" fontSize="sm" mt="3%">
-                  <Text fontSize="sm">Don't have account?</Text>
-                  <NextLink href="/register"><Link fontSize="sm" color="#00b074" fontWeight="semibold">Register</Link></NextLink>
+                </Heading>
+                <Divider />
               </Flex>
-            </Form>
-          </Flex>
-        </Box>
-      )}
-    </Formik>
+
+              <Form>
+                <Flex fontWeight="bold">
+                  <InputField name="login" placeholder="" label="" hidden />
+                </Flex>
+
+                <VStack spacing={6}>
+                  <InputField
+                    name="usernameOrEmail"
+                    placeholder="Username or Email"
+                    label="Username or Email"
+                  />
+                  <PasswordField
+                    label="Password"
+                    placeholder="Password"
+                    name="password"
+                    loginOrRegister={true}
+                  />
+                  <Button
+                    type="submit"
+                    fontSize="md"
+                    isLoading={isSubmitting}
+                    w="100%"
+                    bg="#00b074"
+                    color="white"
+                    size="lg"
+                    _hover={{ bg: "green.500" }}
+                  >
+                    Login
+                  </Button>
+                </VStack>
+                <Flex gridGap="2%" fontSize="sm" mt="3%">
+                  <Text fontSize="sm">Don't have account?</Text>
+                  <NextLink href="/register">
+                    <Link fontSize="sm" color="#00b074" fontWeight="semibold">
+                      Register
+                    </Link>
+                  </NextLink>
+                </Flex>
+              </Form>
+            </Flex>
+          </Box>
+        )}
+      </Formik>
     </MainLayout>
   );
 };
@@ -122,4 +135,4 @@ export const login: React.FC<loginProps> & layout = ({}) => {
 login.value = "L2";
 login.variant = "sm";
 
-export default withApollo({ssr: false}) (login);
+export default withApollo({ ssr: false })(login);

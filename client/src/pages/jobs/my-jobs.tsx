@@ -48,7 +48,7 @@ const MyJobs: React.FC<MyJobsProps> = ({}) => {
                 type="search"
                 placeholder="Job Title"
                 name="title"
-                bg="#fff"
+                // bg="#fff"
               />
             </Form>
           </Formik>
@@ -58,15 +58,15 @@ const MyJobs: React.FC<MyJobsProps> = ({}) => {
           {data?.getCompanyJobs.map((j) => (
             <ManageJobItem
               title={j.title}
-              companyName={j.company.name}
+              companyName={j.user.companyProfile.name}
               id={j.id}
               salary={j.salary}
               location={j.location}
-              postDate={j.updatedAt}
+              postDate={j.createdAt}
               description={j.description}
               expDate={j.expDate}
               category={j.category}
-              applicants={j.applications.length}
+              // applicants={j.user.length}
             />
           ))}
         </VStack>

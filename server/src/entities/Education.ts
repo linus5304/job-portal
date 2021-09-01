@@ -47,7 +47,7 @@ export class Education extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => JobSeeker, (jobSeeker) => jobSeeker.education)
+  @ManyToOne(() => JobSeeker, (jobSeeker) => jobSeeker.education, {onDelete: 'CASCADE'})
   jobSeeker: JobSeeker;
   
 }
