@@ -56,7 +56,7 @@ export const Education: React.FC<EducationProps> = ({ jsId }) => {
         </Flex>
       </HStack>
 
-      {data?.getAllEducation.map((edu) => (
+      {data?.getAllEducation.map((edu, idx) => (
         <>
           <EduWorkItem
             variant="edu"
@@ -65,10 +65,9 @@ export const Education: React.FC<EducationProps> = ({ jsId }) => {
             field={edu.field}
             start={edu.start_date}
             end={edu.end_date}
-            key={edu.id}
+            key={edu.id.toString()}
             id={edu.id}
-            jsId={edu.jobSeekerId}
-            
+            jsId={edu?.jobSeekerId}
           />
           <Divider />
         </>
@@ -90,14 +89,14 @@ export const Education: React.FC<EducationProps> = ({ jsId }) => {
               cache.evict({ fieldName: "getAllEducation" });
             },
           });
-          if (response.data.addEducation) {
+          if (response?.data.addEducation) {
             console.log(values);
-            values.degree=""
-            values.end_date=""
-            values.field=""
-            values.jobSeekerId=null
-            values.school=""
-            values.start_date=""
+            values.jobSeekerId = jsId;
+            values.degree = "";
+            values.end_date = "";
+            values.field = "";
+            values.school = "";
+            values.start_date = "";
             onClose();
           }
         }}

@@ -49,7 +49,7 @@ export const WorkExperience: React.FC<WorkExperienceProps> = ({ jsId }) => {
           />
         </Flex>
       </HStack>
-      {data?.getAllWork.map((wk) => (
+      {data?.getAllWork.map((wk, idx) => (
         <>
           <EduWorkItem
             variant="work"
@@ -58,8 +58,8 @@ export const WorkExperience: React.FC<WorkExperienceProps> = ({ jsId }) => {
             field={wk.field}
             start={wk.start_date}
             end={wk.end_date}
-            key={wk.id}
-            id={wk.id}
+            key={wk.id.toString()}
+            id={wk.id + idx}
             jsId={wk.jobSeekerId}
           />
           <Divider />
@@ -84,13 +84,13 @@ export const WorkExperience: React.FC<WorkExperienceProps> = ({ jsId }) => {
           });
           if (response.data.addWork) {
             console.log(values);
-            onClose();
             values.jobSeekerId = jsId;
             values.company_name = "";
             values.position = "";
             values.field = "";
             values.start_date = "";
             values.end_date = "";
+            onClose();
           }
         }}
       >
