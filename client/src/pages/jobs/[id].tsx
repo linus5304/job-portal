@@ -62,7 +62,7 @@ const Job: React.FC<JobProps> & layout = ({}) => {
   const toast = useToast();
   const [apply] = useApplyMutation();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const {data: meData } = useMeQuery()
+  const { data: meData } = useMeQuery();
 
   const { acceptedFiles, fileRejections, getRootProps, getInputProps } =
     useDropzone({ accept: ".doc,.docx,.pdf" });
@@ -73,10 +73,11 @@ const Job: React.FC<JobProps> & layout = ({}) => {
     },
   });
 
-
   if (!data && !jsData && !meData && loading) {
     return <div>loading...</div>;
   }
+
+  console.log(meData);
 
   return (
     <>
@@ -157,7 +158,7 @@ const Job: React.FC<JobProps> & layout = ({}) => {
               {data?.getJobById.description}
             </Text>
           </VStack>
-          <Flex mt={[0, 0, 0, "-10%", "-10%"]}>
+          <Flex mt={[0, 0, 0, "-10%", "-10%"]} w="300px">
             <Box px={["3%", "3%", "3%", "auto", "auto"]}>
               <Flex
                 bg={useColorModeValue("white", "gray.700")}
@@ -177,8 +178,12 @@ const Job: React.FC<JobProps> & layout = ({}) => {
                   <Text fontSize="xl">
                     About {data?.getJobById.user.companyProfile.name} Employer
                   </Text>
-                  <Text>{data?.getJobById.user.companyProfile.description}</Text>
-                  <NextLink href={`/company/${data?.getJobById.user.companyProfile.id}`}>
+                  <Text>
+                    {data?.getJobById.user.companyProfile.description}
+                  </Text>
+                  <NextLink
+                    href={`/company/${data?.getJobById.user.companyProfile.id}`}
+                  >
                     <Button
                       type="submit"
                       fontSize="md"
@@ -203,17 +208,36 @@ const Job: React.FC<JobProps> & layout = ({}) => {
             justifyContent="space-between"
             flexDir={["column", "column", "column", "row", "row"]}
           >
-            <Button
-              ml="-15%"
-              onClick={onOpen}
-              bg="#00b074"
-              color="white"
-              size="lg"
-              _hover={{ bg: "green.500" }}
-              disabled={meData?.me.user_type === "company" ? true : false}
-            >
-              APPLY NOW
-            </Button>
+            {meData !== undefined || meData?.me.user_type === "job seeker" ? (
+              <>
+                {console.log("not ok", meData)}
+                <Button
+                  ml="-15%"
+                  onClick={onOpen}
+                  bg="#00b074"
+                  color="white"
+                  size="lg"
+                  _hover={{ bg: "green.500" }}
+                >
+                  APPLY NOW
+                </Button>
+              </>
+            ) : (
+              <>
+                {console.log("ok", meData)}
+                <Button
+                  ml="-15%"
+                  onClick={onOpen}
+                  bg="#00b074"
+                  color="white"
+                  size="lg"
+                  _hover={{ bg: "green.500" }}
+                  disabled={meData?.me.user_type === "company" ? true : false}
+                >
+                  APPLY NOW
+                </Button>
+              </>
+            )}
 
             <HStack spacing="24px">
               <Text>Share this job</Text>

@@ -8,13 +8,12 @@ export const cache = new InMemoryCache({
     Query: {
       fields: {
         getJobs: {
-          keyArgs: [],
+          keyArgs: false,
           merge(
             existing: PaginatedJobs | undefined,
             incoming: PaginatedJobs
           ): PaginatedJobs {
             console.log(existing, incoming);
-
             return {
               ...incoming,
               jobs: [...(existing?.jobs || []), ...incoming.jobs],

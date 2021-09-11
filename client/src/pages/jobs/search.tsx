@@ -27,14 +27,13 @@ export const search: React.FC<searchProps> & layout = ({}) => {
 
   const { data, loading, error, fetchMore, variables } = useSearchJobsQuery({
     variables: {
-      title: '%'+(router.query.title as string)+'%',
+      title: "%" + (router.query.title as string) + "%",
       location: router.query.location as string,
-      limit: 10,
-      cursor: null,
+     
     },
   });
 
-  console.log('%'+router.query.title+'%', router.query.location);
+  console.log("%" + router.query.title + "%", router.query.location);
 
   if (!data && !loading) {
     return <Text>{error.message}</Text>;
@@ -62,8 +61,7 @@ export const search: React.FC<searchProps> & layout = ({}) => {
             />
           </VStack>
           <VStack align="flex-start" w="100%" spacing="30px">
-            
-            <SearchBox/>
+            <SearchBox />
             {!data && loading ? (
               <VStack spacing="24px" w="100%">
                 <Skeleton isLoaded={!loading} w="100%">
@@ -88,9 +86,10 @@ export const search: React.FC<searchProps> & layout = ({}) => {
             ) : (
               <VStack spacing="24px" w="100%" align="flex-start">
                 <Text>
-                  {data?.searchJobs.jobs.length} results for {router.query.title} {router.query.location}
+                  {data?.searchJobs.length} results for{" "}
+                  {router.query.title} {router.query.location}
                 </Text>
-                {data?.searchJobs.jobs.map((job) => (
+                {data?.searchJobs.map((job) => (
                   <JobListItem
                     title={job.title}
                     location={job.location}
@@ -102,7 +101,7 @@ export const search: React.FC<searchProps> & layout = ({}) => {
                     salary={job.salary}
                   />
                 ))}
-                {data?.searchJobs.hasMore ? (
+                {/* {data?.searchJobs.hasMore ? (
                   <Flex mx="auto" align="center">
                     <Button
                       isLoading={loading}
@@ -121,7 +120,7 @@ export const search: React.FC<searchProps> & layout = ({}) => {
                       Load More
                     </Button>
                   </Flex>
-                ) : null}
+                ) : null} */}
               </VStack>
             )}
           </VStack>

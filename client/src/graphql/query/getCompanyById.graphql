@@ -7,18 +7,20 @@ query GetCompanyById($id: Int!) {
     logo
     description
     website
+    createdAt
     email
-    jobs {
-      id
-      title
-      location
-      category
-      salary
-      expDate
-      description
-      createdAt
-      expDate
-      imgUrl
+    user {
+      jobs {
+        id
+        title
+        location
+        category
+        salary
+        expDate
+        description
+        imgUrl
+        createdDate
+      }
     }
   }
 }

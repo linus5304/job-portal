@@ -223,19 +223,19 @@ export class JobResolver {
     };
   }
 
-  @Query(() => PaginatedJobs, { nullable: true })
+  @Query(() => [Job], { nullable: true })
   async searchJobs(
     @Arg("title", () => String, { nullable: true }) title: string,
     @Arg("location", () => String, { nullable: true }) location: string,
-    @Arg("limit", () => Int) limit: number,
-    @Arg("cursor", () => String, { nullable: true }) cursor: string | null
-  ): Promise<PaginatedJobs> {
-    const realLimit = Math.min(100, limit);
-    const realLimitPlusOne = realLimit + 1;
-    const replacements: any[] = [title, location, realLimitPlusOne];
-    if (cursor) {
-      replacements.push(new Date(parseInt(cursor)));
-    }
+    // @Arg("limit", () => Int) limit: number,
+    // @Arg("cursor", () => String, { nullable: true }) cursor: string | null
+  ): Promise<Job[]> {
+    // const realLimit = Math.min(100, limit);
+    // const realLimitPlusOne = realLimit + 1;
+    // const replacements: any[] = [title, location, realLimitPlusOne];
+    // if (cursor) {
+    //   replacements.push(new Date(parseInt(cursor)));
+    // }
 
     // const jobsQB: Job[] = await getConnection().query(
     //   `select * from job j
@@ -262,20 +262,16 @@ export class JobResolver {
         location: "%" + location + "%",
       });
     }
-    if (cursor) {
-      qjobs = qjobs.andWhere('job."createdAt" < :cursor', {
-        cursor: new Date(parseInt(cursor)),
-      });
-    }
+    // if (cursor) {
+    //   qjobs = qjobs.andWhere('job."createdAt" < :cursor', {
+    //     cursor: new Date(parseInt(cursor)),
+    //   });
+    // }
 
     jobs = await qjobs
       .orderBy('job."createdAt"', "DESC")
-      .limit(realLimitPlusOne)
       .getMany();
-    return {
-      jobs: jobs.slice(0, realLimit),
-      hasMore: jobs.length === realLimitPlusOne,
-    };
+    return jobs
   }
 
   @Mutation(() => Application)

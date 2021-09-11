@@ -25,17 +25,24 @@ import {
 import { MainLayout } from "./../../components/layouts/MainLayout";
 import { withApollo } from "../../utils/withApollo";
 import { MdSearch, MdLocationOn } from "react-icons/md";
+import { InputField } from "../../components/form/InputField";
+import { Empty } from "../../components/svg/Empty";
 
 interface indexProps {}
 
 export const index: React.FC<indexProps> & layout = ({}) => {
+  const [title, setTitle] = useState("");
+  const [location, setLocation] = useState("");
   const { data, loading, fetchMore, variables, error } = useGetJobsQuery({
     variables: { limit: 5, cursor: null },
     // fetchPolicy: "no-cache"
   });
-
-  const [title, setTitle] = useState("");
-  const [location, setLocation] = useState("");
+  const { data: sData } = useSearchJobsQuery({
+    variables: {
+      title: title,
+      location: location,
+    },
+  });
 
   // const { data, loading, error, fetchMore, variables } = useSearchJobsQuery({
   //   variables: { title, location, limit: 10, cursor: null },
@@ -45,7 +52,7 @@ export const index: React.FC<indexProps> & layout = ({}) => {
     return <Text>{error.message}</Text>;
   }
 
-  if(error){
+  if (error) {
     return <Text>{error.message}</Text>;
   }
 
@@ -72,7 +79,7 @@ export const index: React.FC<indexProps> & layout = ({}) => {
             />
           </VStack>
           <VStack align="flex-start" w="100%" spacing="30px">
-            {/* <Flex p={8} bg="white" boxShadow="lg" borderRadius="lg" w="100%">
+            <Flex p={8} bg="white" boxShadow="lg" borderRadius="lg" w="100%">
               <Stack
                 direction={["column", "column", "column", "row", "row"]}
                 alignItems="center"
@@ -85,7 +92,9 @@ export const index: React.FC<indexProps> & layout = ({}) => {
                     variant="flushed"
                     placeholder="Job Title"
                     name="title"
-                    onChange={(e) => setTitle("%" + e.target.value + "%")}
+                    onChange={(e) => {
+                      setTitle(e.target.value);
+                    }}
                   />
                 </Flex>
                 <Flex alignItems="center">
@@ -107,34 +116,56 @@ export const index: React.FC<indexProps> & layout = ({}) => {
                   Search
                 </Button>
               </Stack>
-            </Flex> */}
-            <SearchBox/>
-            {!data && loading ? (
-              <VStack spacing="24px" w="100%">
-                <Skeleton isLoaded={!loading} w="100%">
-                  <JobListItem
-                    title="Hello"
-                    location="loading"
-                    imgUrl="loading"
-                    postDate="loading"
-                    key={1}
-                  />
-                </Skeleton>
-                <Skeleton isLoaded={!loading} w="100%">
-                  <JobListItem
-                    title="Hello"
-                    location="loading"
-                    imgUrl="loading"
-                    postDate="loading"
-                    key={2}
-                  />
-                </Skeleton>
+            </Flex>
+            {title !== "" ? (
+              // <VStack spacing="24px" w="100%">
+              //   <Skeleton isLoaded={!loading} w="100%">
+              //     <JobListItem
+              //       title="Hello"
+              //       location="loading"
+              //       imgUrl="loading"
+              //       postDate="loading"
+              //       key={1}
+              //     />
+              //   </Skeleton>
+              //   <Skeleton isLoaded={!loading} w="100%">
+              //     <JobListItem
+              //       title="Hello"
+              //       location="loading"
+              //       imgUrl="loading"
+              //       postDate="loading"
+              //       key={2}
+              //     />
+              //   </Skeleton>
+              // </VStack>
+              <VStack w="100%" alignItems="flex-start">
+                {sData?.searchJobs.length === 0 ? (
+                  <VStack>
+                    <Text>No Jobs Found</Text>
+                    <Empty />{" "}
+                  </VStack>
+                ) : (
+                  <Text>
+                    {sData?.searchJobs.length} results for Your search
+                  </Text>
+                )}
+                <>
+                  {sData?.searchJobs.map((job) => (
+                    <JobListItem
+                      title={job.title}
+                      location={job.location}
+                      imgUrl={job.imgUrl}
+                      postDate={job.createdDate}
+                      key={job.id}
+                      companyName={job.user.companyProfile.name}
+                      id={job.id}
+                      salary={job.salary}
+                    />
+                  ))}
+                </>
               </VStack>
             ) : (
               <VStack spacing="24px" w="100%" align="flex-start">
-                <Text>
-                  {data?.getJobs.jobs.length} results for {title} {location}
-                </Text>
                 {data?.getJobs.jobs.map((job) => (
                   <JobListItem
                     title={job.title}
@@ -156,9 +187,8 @@ export const index: React.FC<indexProps> & layout = ({}) => {
                           variables: {
                             limit: variables.limit,
                             cursor:
-                              data.getJobs.jobs[
-                                data.getJobs.jobs.length - 1
-                              ].createdAt,
+                              data.getJobs.jobs[data.getJobs.jobs.length - 1]
+                                .createdAt,
                           },
                         });
                       }}

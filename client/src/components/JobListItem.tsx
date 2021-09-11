@@ -38,12 +38,7 @@ export const JobListItem: React.FC<JobListItemProps> = ({
   id,
   salary,
 }) => {
-  const { data } = useGetJobsQuery({
-    variables: {
-      limit: 5,
-      cursor: null,
-    },
-  });
+  
   const [isSave, setIsSave] = useState(false);
   // const [saveJobs, setSaveJobs] = useState([] as Job[]);
 
@@ -125,7 +120,7 @@ export const JobListItem: React.FC<JobListItemProps> = ({
               size="sm"
               color="blue.400"
             >
-              Location
+              {location}
             </Button>
 
             <Button

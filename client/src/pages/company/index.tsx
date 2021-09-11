@@ -1,7 +1,7 @@
 import React from "react";
 import { layout } from "../../utils/types";
 import { HeroJob } from "./../../components/HeroJob";
-import { Flex, Heading, Wrap, WrapItem, Text } from "@chakra-ui/react";
+import { Flex, Heading, Wrap, WrapItem, Text, VStack } from "@chakra-ui/react";
 import { CompanyCard } from "../../components/CompanyCard";
 import { MainLayout } from "../../components/layouts/MainLayout";
 import { withApollo } from "../../utils/withApollo";
@@ -19,22 +19,10 @@ const Companies: React.FC<CompaniesProps> & layout = ({}) => {
         <SearchBox />
       </Flex>
 
-      <Flex
-        flexDir="column"
-        pt="2%"
-        w="70%"
-        mx="auto"
-        justifyContent="center"
-        pb={8}
-      >
-        <Flex mx="auto">
-          <Text fontSize="4xl" fontWeight="bold" textAlign="center">
-            Companies
-          </Text>
-        </Flex>
+      <VStack flexDir="column" pt="2%" w="60%" mx="auto" pb={8}>
         <Wrap mx="auto" spacing="30px">
           {data?.getCompanies.map((company) => (
-            <NextLink href={`/company/${company.id}`}>
+            <NextLink href={`/company/${company.id}`} key={company.id}>
               <WrapItem>
                 <CompanyCard
                   name={company.name}
@@ -46,7 +34,7 @@ const Companies: React.FC<CompaniesProps> & layout = ({}) => {
             </NextLink>
           ))}
         </Wrap>
-      </Flex>
+      </VStack>
     </MainLayout>
   );
 };

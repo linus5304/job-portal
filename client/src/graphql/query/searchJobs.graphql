@@ -1,37 +1,23 @@
-query searchJobs(
-  $title: String
-  $location: String
-  $limit: Int!
-  $cursor: String
-) {
-  searchJobs(
-    title: $title
-    location: $location
-    limit: $limit
-    cursor: $cursor
-  ) {
-    jobs {
-      id
-      title
-      expDate
-      category
-      location
-      salary
-      description
-      imgUrl
-      createdDate
-      createdAt
-      user {
-        username
-        companyProfile {
-          name
-          website
-          logo
-          location
-        }
+query searchJobs($title: String, $location: String) {
+  searchJobs(title: $title, location: $location) {
+    id
+    title
+    expDate
+    category
+    location
+    salary
+    description
+    imgUrl
+    createdDate
+    createdAt
+    user {
+      username
+      companyProfile {
+        name
+        website
+        logo
+        location
       }
     }
-
-    hasMore
   }
 }

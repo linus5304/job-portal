@@ -1,22 +1,22 @@
+import { User } from "src/entities/User";
 import { MyContext } from "src/types/MyContext";
 import {
   Arg,
   Ctx,
   Field,
+  FieldResolver,
   InputType,
+  Int,
   Mutation,
+  ObjectType,
   Query,
   Resolver,
-  ObjectType,
-  Int,
-  FieldResolver,
   Root,
 } from "type-graphql";
-import { CompanyProfile } from "./../entities/Company";
 import { getConnection } from "typeorm";
-import { Job } from "./../entities/Job";
 import { JobSeeker } from "../entities/JobSeeker";
-import { Application } from "../entities/Application";
+import { CompanyProfile } from "./../entities/Company";
+import { Job } from "./../entities/Job";
 
 @InputType()
 class companyProfileInput {
@@ -99,20 +99,27 @@ export class CompanyResolver {
     return result.raw[0];
   }
 
-  @FieldResolver(() => [Job])
-  async jobs(@Root() profile: CompanyProfile) {
-    const jobs = await getConnection()
-      .createQueryBuilder(Job, "job")
-      .where("job.userId = :id", { id: profile.userId })
-      .getMany();
-    return jobs;
-  }
+  // @FieldResolver(() => [Job])
+  // async jobs(@Root() profile: CompanyProfile) {
+  //   const jobs = await getConnection()
+  //     .createQueryBuilder(Job, "job")
+  //     .where("job.userId = :id", { id: profile.userId })
+  //     .getMany();
+  //   return jobs;
+  // }
 
   @Query(() => CompanyProfile, { nullable: true })
   async getCompanyById(
     @Arg("id", () => Int) id: number
   ): Promise<CompanyProfile | undefined> {
-    return CompanyProfile.findOne(id);
+    const result = await getConnection()
+      .createQueryBuilder(CompanyProfile, "cp")
+      .leftJoinAndSelect("cp.user", "user")
+      .leftJoinAndSelect("user.jobs", "job")
+      .where("cp.id = :id", { id })
+      .getOne();
+
+      return result
   }
 
   @Query(() => [Job])

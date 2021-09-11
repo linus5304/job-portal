@@ -37,6 +37,7 @@ export class User extends BaseEntity {
   jobSeeker: JobSeeker;
 
   
+  @Field(() => [Job], {nullable: true})
   @OneToMany(() => Job, (job) => job.user)
   jobs: Job[];
 

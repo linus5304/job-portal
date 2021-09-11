@@ -35,12 +35,14 @@ export const JsSidebar: React.FC<JsSidebarProps> = ({ username }) => {
   const [logout] = useLogoutMutation();
   const [uploadFile] = useFileUploadMutation();
   const [update] = useUpdateJsProfileMutation();
-  const [profileImage, setprofileImage] = useState(
-    "https://bit.ly/broken-link"
-  );
+
   const { data, loading } = useGetJsProfileQuery();
 
-  if(!data && loading) return <div>Loading....</div>
+  const [profileImage, setprofileImage] = useState(() => "")
+
+  if (!data && loading) return <div>Loading....</div>;
+
+  console.log("profile", profileImage);
 
   // useEffect(() => {
   //   if (profileImage !== "https://bit.ly/broken-link") {
@@ -66,14 +68,20 @@ export const JsSidebar: React.FC<JsSidebarProps> = ({ username }) => {
           transition=".2s ease-out"
           _hover={{ boxShadow: "lg", transform: "scale(1,1)" }}
         >
-          <Avatar size="2xl" src={profileImage}>
+          <Avatar size="2xl" src={profileImage !== "" ? profileImage : data.getJSProfile.profile_pic}>
             <Dropzone
               onDrop={async ([file]) => {
-                const { data } = await uploadFile({
+                const { data: fData } = await uploadFile({
                   variables: { imgUrl: file },
                 });
-                console.log(data.fileUpload.url);
-                setprofileImage(data.fileUpload.url);
+                console.log(fData.fileUpload.url);
+                setprofileImage(fData.fileUpload.url);
+                update({
+                  variables: {
+                    data: { profile_pic: fData.fileUpload.url },
+                    id: data?.getJSProfile.id,
+                  },
+                });
               }}
             >
               {({ getRootProps, getInputProps }) => (

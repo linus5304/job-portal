@@ -13,13 +13,13 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  Avatar
+  Avatar,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import React, { useState } from "react";
 import { FaKeycdn } from "react-icons/fa";
-import { useLogoutMutation, useMeQuery } from "../generated/graphql";
-import {useRouter} from 'next/router'
+import { useGetJsProfileQuery, useLogoutMutation, useMeQuery } from "../generated/graphql";
+import { useRouter } from "next/router";
 
 interface NavbarProps {}
 
@@ -28,7 +28,8 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
   const { data } = useMeQuery();
   const [logout] = useLogoutMutation();
   const apolloClient = useApolloClient();
-  const router = useRouter()
+  const router = useRouter();
+  const {data: jsData} = useGetJsProfileQuery()
 
   const logoutFn = async () => {
     await logout();
@@ -36,22 +37,18 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
   };
 
   return (
-    <Flex top={0} zIndex={40} px={8} py={4} position="sticky" bg="white" >
+    <Flex top={0} zIndex={40} px={8} py={4} position="sticky" bg="white">
       <Flex justifyContent="space-between" w="100%">
         <Flex>
           <NextLink href="/" passHref>
-              <Flex alignItems="center" cursor="pointer">
-                <Icon as={FaKeycdn} fontSize="4xl" color="#00b074"/>
-                <Text fontSize="xl" fontWeight="bold" >
-                  goJobs
-                </Text>
-              </Flex>
+            <Flex alignItems="center" cursor="pointer">
+              <Icon as={FaKeycdn} fontSize="4xl" color="#00b074" />
+              <Text fontSize="xl" fontWeight="bold">
+                goJobs
+              </Text>
+            </Flex>
           </NextLink>
         </Flex>
-
-        
-           
-        
 
         <Flex
           justifyContent="space-between"
@@ -59,57 +56,65 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
         >
           {data?.me ? (
             <HStack spacing="24px">
-             
               <NextLink href="/jobs">
-                <Button variant="ghost" >Jobs</Button>
+                <Button variant="ghost">Jobs</Button>
               </NextLink>
               <NextLink href="/company">
                 <Button variant="ghost">Companies</Button>
               </NextLink>
-              
+
               <Menu>
-                <MenuButton as={Avatar} rightIcon={<ChevronDownIcon />} cursor="pointer"/>
+                <Avatar cursor="pointer" src={jsData?.getJSProfile.profile_pic}>
                   
+                </Avatar>
+                <MenuButton />
+
                 <MenuList>
                   {data.me.user_type === "company" ? (
-                    <NextLink href='/account/company'>
-                    <MenuItem>My account</MenuItem>
-                  </NextLink>
+                    <NextLink href="/account/company">
+                      <MenuItem>My account</MenuItem>
+                    </NextLink>
                   ) : (
-                    <NextLink href='/account/job-seeker'>
-                    <MenuItem>My account</MenuItem>
-                  </NextLink>
+                    <NextLink href="/account/job-seeker">
+                      <MenuItem>My account</MenuItem>
+                    </NextLink>
                   )}
-                  
-                  
-                    <MenuItem
-                      onClick={async () => {
-                        await logout();
-                        router.push('/')
-                        apolloClient.resetStore();
-                      }}
-                    >
-                      Logout
-                    </MenuItem>
-                  
-                 
+
+                  <MenuItem
+                    onClick={async () => {
+                      await logout();
+                      router.push("/");
+                      apolloClient.resetStore();
+                    }}
+                  >
+                    Logout
+                  </MenuItem>
                 </MenuList>
               </Menu>
             </HStack>
           ) : (
             <HStack spacing="24px">
-            <NextLink href="/jobs">
-                <Button variant="ghost" >Jobs</Button>
+              <NextLink href="/jobs">
+                <Button variant="ghost">Jobs</Button>
               </NextLink>
               <NextLink href="/company">
                 <Button variant="ghost">Companies</Button>
               </NextLink>
-              
+
               <NextLink href="/login">
-                <Button variant="ghost" size="lg">Login</Button>
+                <Button variant="ghost" size="lg">
+                  Login
+                </Button>
               </NextLink>
               <NextLink href="/register">
-                <Button bg="#00b074" color="white" size="lg" _hover={{bg:"#00b074"}}>Register</Button>
+                <Button
+                  bg="#00b074"
+                  color="white"
+                  size="lg"
+                  _hover={{ bg: "#00b074" }}
+                >
+                  Register
+                </Button>
               </NextLink>
             </HStack>
           )}
@@ -153,7 +158,7 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
                 <NextLink href="/jobs">
                   <Button variant="ghost">Jobs</Button>
                 </NextLink>
-              
+
                 <NextLink href="">
                   <Button
                     variant="ghost"
@@ -176,7 +181,6 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
                     Jobs
                   </Button>
                 </NextLink>
-               
 
                 <NextLink href="/login">
                   <Button variant="ghost" onClick={() => changeDisplay("none")}>

@@ -56,22 +56,23 @@ export const Education: React.FC<EducationProps> = ({ jsId }) => {
         </Flex>
       </HStack>
 
-      {data?.getAllEducation.map((edu, idx) => (
-        <>
-          <EduWorkItem
-            variant="edu"
-            school={edu.school}
-            degree={edu.degree}
-            field={edu.field}
-            start={edu.start_date}
-            end={edu.end_date}
-            key={edu.id.toString()}
-            id={edu.id}
-            jsId={edu?.jobSeekerId}
-          />
-          <Divider />
-        </>
-      ))}
+      <VStack spacing="30px" w="100%">
+        {data?.getAllEducation.map((edu, idx) => (
+          <VStack key={edu.id} w="100%">
+            <EduWorkItem
+              variant="edu"
+              school={edu.school}
+              degree={edu.degree}
+              field={edu.field}
+              start={edu.start_date}
+              end={edu.end_date}
+              id={edu.id}
+              jsId={edu?.jobSeekerId}
+            />
+            <Divider />
+          </VStack>
+        ))}
+      </VStack>
 
       <Formik
         initialValues={{

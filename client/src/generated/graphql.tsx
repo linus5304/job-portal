@@ -42,7 +42,7 @@ export type CompanyProfile = {
   description?: Maybe<Scalars['String']>;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
-  jobs: Array<Job>;
+  user?: Maybe<User>;
 };
 
 
@@ -272,10 +272,11 @@ export type Query = {
   getCompanyById?: Maybe<CompanyProfile>;
   getCompanyJobs: Array<Job>;
   getCompanies?: Maybe<Array<CompanyProfile>>;
+  getCompanyJobApplicants?: Maybe<Array<JobSeeker>>;
   job: Scalars['String'];
   getJobById?: Maybe<Job>;
   getJobs?: Maybe<PaginatedJobs>;
-  searchJobs?: Maybe<PaginatedJobs>;
+  searchJobs?: Maybe<Array<Job>>;
   jobSeeker: Scalars['String'];
   getJSProfile: JobSeeker;
   getJSProfileById: JobSeeker;
@@ -306,8 +307,6 @@ export type QueryGetJobsArgs = {
 
 
 export type QuerySearchJobsArgs = {
-  cursor?: Maybe<Scalars['String']>;
-  limit: Scalars['Int'];
   location?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
 };
@@ -352,6 +351,7 @@ export type User = {
   email: Scalars['String'];
   user_type: Scalars['String'];
   companyProfile?: Maybe<CompanyProfile>;
+  jobs?: Maybe<Array<Job>>;
 };
 
 export type UserResponse = {
@@ -523,7 +523,7 @@ export type GetCompanyByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetCompanyByIdQuery = { __typename?: 'Query', getCompanyById?: Maybe<{ __typename?: 'CompanyProfile', id: number, name?: Maybe<string>, location?: Maybe<string>, phone?: Maybe<string>, logo?: Maybe<string>, description?: Maybe<string>, website?: Maybe<string>, email?: Maybe<string>, jobs: Array<{ __typename?: 'Job', id: number, title: string, location: string, category: string, salary: string, expDate: string, description: string, createdAt: string, imgUrl: string }> }> };
+export type GetCompanyByIdQuery = { __typename?: 'Query', getCompanyById?: Maybe<{ __typename?: 'CompanyProfile', id: number, name?: Maybe<string>, location?: Maybe<string>, phone?: Maybe<string>, logo?: Maybe<string>, description?: Maybe<string>, website?: Maybe<string>, createdAt: string, email?: Maybe<string>, user?: Maybe<{ __typename?: 'User', jobs?: Maybe<Array<{ __typename?: 'Job', id: number, title: string, location: string, category: string, salary: string, expDate: string, description: string, imgUrl: string, createdDate: any }>> }> }> };
 
 export type GetCompanyJobsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -646,12 +646,10 @@ export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', 
 export type SearchJobsQueryVariables = Exact<{
   title?: Maybe<Scalars['String']>;
   location?: Maybe<Scalars['String']>;
-  limit: Scalars['Int'];
-  cursor?: Maybe<Scalars['String']>;
 }>;
 
 
-export type SearchJobsQuery = { __typename?: 'Query', searchJobs?: Maybe<{ __typename?: 'PaginatedJobs', hasMore: boolean, jobs: Array<{ __typename?: 'Job', id: number, title: string, expDate: string, category: string, location: string, salary: string, description: string, imgUrl: string, createdDate: any, createdAt: string, user?: Maybe<{ __typename?: 'User', username: string, companyProfile?: Maybe<{ __typename?: 'CompanyProfile', name?: Maybe<string>, website?: Maybe<string>, logo?: Maybe<string>, location?: Maybe<string> }> }> }> }> };
+export type SearchJobsQuery = { __typename?: 'Query', searchJobs?: Maybe<Array<{ __typename?: 'Job', id: number, title: string, expDate: string, category: string, location: string, salary: string, description: string, imgUrl: string, createdDate: any, createdAt: string, user?: Maybe<{ __typename?: 'User', username: string, companyProfile?: Maybe<{ __typename?: 'CompanyProfile', name?: Maybe<string>, website?: Maybe<string>, logo?: Maybe<string>, location?: Maybe<string> }> }> }>> };
 
 export const EducationDetailsFragmentDoc = gql`
     fragment educationDetails on Education {
@@ -1316,18 +1314,20 @@ export const GetCompanyByIdDocument = gql`
     logo
     description
     website
+    createdAt
     email
-    jobs {
-      id
-      title
-      location
-      category
-      salary
-      expDate
-      description
-      createdAt
-      expDate
-      imgUrl
+    user {
+      jobs {
+        id
+        title
+        location
+        category
+        salary
+        expDate
+        description
+        imgUrl
+        createdDate
+      }
     }
   }
 }
@@ -2057,30 +2057,27 @@ export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const SearchJobsDocument = gql`
-    query searchJobs($title: String, $location: String, $limit: Int!, $cursor: String) {
-  searchJobs(title: $title, location: $location, limit: $limit, cursor: $cursor) {
-    jobs {
-      id
-      title
-      expDate
-      category
-      location
-      salary
-      description
-      imgUrl
-      createdDate
-      createdAt
-      user {
-        username
-        companyProfile {
-          name
-          website
-          logo
-          location
-        }
+    query searchJobs($title: String, $location: String) {
+  searchJobs(title: $title, location: $location) {
+    id
+    title
+    expDate
+    category
+    location
+    salary
+    description
+    imgUrl
+    createdDate
+    createdAt
+    user {
+      username
+      companyProfile {
+        name
+        website
+        logo
+        location
       }
     }
-    hasMore
   }
 }
     `;
@@ -2099,12 +2096,10 @@ export const SearchJobsDocument = gql`
  *   variables: {
  *      title: // value for 'title'
  *      location: // value for 'location'
- *      limit: // value for 'limit'
- *      cursor: // value for 'cursor'
  *   },
  * });
  */
-export function useSearchJobsQuery(baseOptions: Apollo.QueryHookOptions<SearchJobsQuery, SearchJobsQueryVariables>) {
+export function useSearchJobsQuery(baseOptions?: Apollo.QueryHookOptions<SearchJobsQuery, SearchJobsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<SearchJobsQuery, SearchJobsQueryVariables>(SearchJobsDocument, options);
       }

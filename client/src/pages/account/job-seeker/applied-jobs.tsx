@@ -20,6 +20,7 @@ const appliedJobs: React.FC<appliedJobsProps> = ({}) => {
             companyName={j.user.companyProfile.name}
             postDate={j.application[0].appication_date}
             location={j.location}
+            key={j.id}
           />
         ))}
       </VStack>

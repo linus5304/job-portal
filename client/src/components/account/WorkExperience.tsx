@@ -13,6 +13,7 @@ import {
   Text,
   useDisclosure,
   Divider,
+  VStack,
 } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import React from "react";
@@ -50,7 +51,9 @@ export const WorkExperience: React.FC<WorkExperienceProps> = ({ jsId }) => {
         </Flex>
       </HStack>
       {data?.getAllWork.map((wk, idx) => (
-        <>
+        <VStack key={wk.id} w="100%" spacing="30px">
+
+        
           <EduWorkItem
             variant="work"
             comp_name={wk.company_name}
@@ -58,12 +61,11 @@ export const WorkExperience: React.FC<WorkExperienceProps> = ({ jsId }) => {
             field={wk.field}
             start={wk.start_date}
             end={wk.end_date}
-            key={wk.id.toString()}
             id={wk.id + idx}
             jsId={wk.jobSeekerId}
           />
           <Divider />
-        </>
+          </VStack>
       ))}
 
       <Formik

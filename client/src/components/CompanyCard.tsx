@@ -28,18 +28,18 @@ export const CompanyCard: React.FC<CompanyCardProps> = ({
 }) => {
   return (
     <LinkBox as="article" maxW="sm">
-      <VStack
+      <VStack 
         bg="#fff"
         align="flex-start"
         border="1px solid #fff"
         borderRadius="4%"
         spacing="10px"
         p="8%"
-        w="300px"
+        w="270px"
         transition=".2s ease-out"
         _hover={{ boxShadow: "lg", transform: "scale(1,1)" }}
       >
-        <Box p="8%" borderRadius="4%">
+        <Box p="8%" borderRadius="4%" w="100%" alignItems="center">
           <Image
             objectFit="cover"
             boxSize="100px"

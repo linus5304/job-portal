@@ -56,6 +56,7 @@ export class CompanyProfile extends BaseEntity {
   @Column({ unique: true })
   userId: number;
 
+  @Field(() => User,{nullable: true})
   @OneToOne(() => User, (user) => user.companyProfile, { onDelete: "CASCADE" })
   @JoinColumn()
   user: User;

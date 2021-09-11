@@ -7,17 +7,19 @@ import {
   HStack,
   Wrap,
   WrapItem,
-  Stack
+  Stack,
+  Box
 } from "@chakra-ui/react";
 import { HeroSearchBox } from "./HeroSearchBox";
 import { ImageComponent } from "./Image";
+import { Hsvg } from "./svg/Hsvg";
 
 interface HeroProps {}
 
 export const Hero: React.FC<HeroProps> = ({}) => {
   return (
     <>
-      <VStack>
+      <VStack w="100%">
         <Stack
           minH="80vh"
           justifyContent="space-between"
@@ -45,8 +47,8 @@ export const Hero: React.FC<HeroProps> = ({}) => {
             <HeroSearchBox />
           </VStack>
 
-          <Wrap spacing="20px">
-            <WrapItem>
+          {/* <Wrap spacing="20px"> */}
+            {/* <WrapItem>
               <ImageComponent />
             </WrapItem>
             <WrapItem>
@@ -57,8 +59,12 @@ export const Hero: React.FC<HeroProps> = ({}) => {
             </WrapItem>
             <WrapItem>
               <ImageComponent />
-            </WrapItem>
-          </Wrap>
+            </WrapItem> */}
+            <Box w="40%">
+            <Hsvg/>
+            </Box>
+            
+          {/* </Wrap> */}
         </Stack>
       </VStack>
     </>

@@ -48,11 +48,7 @@ export const DNavBar: React.FC<DNavBarProps> = ({}) => {
                 <Button variant="ghost">Post Job</Button>
               </NextLink>
               <Menu>
-                <MenuButton
-                  as={Avatar}
-                  rightIcon={<ChevronDownIcon />}
-                  cursor="pointer"
-                />
+                
 
                 <MenuList>
                   <NextLink href={`/account/${data?.me.id}`}>

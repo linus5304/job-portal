@@ -1,37 +1,29 @@
 import {
-  Box,
-  Heading,
-  Flex,
-  Divider,
-  VStack,
-  HStack,
-  Button,
-  useColorModeValue,
-  Text,
-  Stack,
-  useToast,
   Avatar,
+  Box,
+  Button,
+  Divider,
+  Flex,
+  HStack,
   IconButton,
+  Text,
+  useColorModeValue,
+  useToast,
+  VStack,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
-import { Formik, Form } from "formik";
-import { InputField } from "../../../components/form/InputField";
-import NextLink from "next/link";
+import { Form, Formik } from "formik";
 import { useRouter } from "next/router";
+import React, { useState } from "react";
+import Dropzone from "react-dropzone";
+import { MdEdit } from "react-icons/md";
+import { InputField } from "../../../components/form/InputField";
+import { DashboardLayout } from "../../../components/layouts/DashboardLayout";
 import {
-  useCreateCompanyProfileMutation,
   useFileUploadMutation,
-  useGetCompanyByIdQuery,
   useGetCompanyProfileQuery,
   useUpdateCompanyProfileMutation,
 } from "../../../generated/graphql";
-import Dropzone from "react-dropzone";
-import { MainLayout } from "../../../components/layouts/MainLayout";
-import { DashboardLayout } from "../../../components/layouts/DashboardLayout";
-
 import { withApollo } from "../../../utils/withApollo";
-import { FiUploadCloud } from "react-icons/fi";
-import { MdEdit } from "react-icons/md";
 
 interface indexProps {}
 
@@ -40,15 +32,15 @@ export const index: React.FC<indexProps> = ({}) => {
   const [uploadFile] = useFileUploadMutation();
   const { data, loading } = useGetCompanyProfileQuery();
   const [updateCompProfile] = useUpdateCompanyProfileMutation();
-  const toast = useToast()
+  const toast = useToast();
 
-  const [profileImage, setprofileImage] = useState(() =>"");
+  const [profileImage, setprofileImage] = useState(() => "");
 
   if (!data && loading) {
     return <div>loading</div>;
   }
-  console.log('image ',data?.getCompanyProfile.logo);
-  
+  console.log("image ", data?.getCompanyProfile.logo);
+
   return (
     <DashboardLayout>
       <Formik
@@ -66,26 +58,25 @@ export const index: React.FC<indexProps> = ({}) => {
           const response = await updateCompProfile({
             variables: { data: values, id: data.getCompanyProfile.id },
           });
-            if (!response.data.updateCompanyProfile) {
-              toast({
-                title: "Error.",
-                position: "top-right",
-                description: "Error occured when Udating your profile",
-                status: "error",
-                duration: 5000,
-                isClosable: true,
-              });
-            } else {
-              toast({
-                title: "Profile sucessfully Updated",
-                position: "top-right",
-                description: "We've created your account for you.",
-                status: "success",
-                duration: 5000,
-                isClosable: true,
-              });
-              
-            }
+          if (!response.data.updateCompanyProfile) {
+            toast({
+              title: "Error.",
+              position: "top-right",
+              description: "Error occured when Udating your profile",
+              status: "error",
+              duration: 5000,
+              isClosable: true,
+            });
+          } else {
+            toast({
+              title: "Profile sucessfully Updated",
+              position: "top-right",
+              description: "We've created your account for you.",
+              status: "success",
+              duration: 5000,
+              isClosable: true,
+            });
+          }
           console.log(values);
         }}
       >
@@ -121,17 +112,26 @@ export const index: React.FC<indexProps> = ({}) => {
                   <Avatar size="2xl" src={profileImage}>
                     <Dropzone
                       onDrop={async ([file]) => {
-                        const { data } = await uploadFile({
+                        const { data: fileData } = await uploadFile({
                           variables: { imgUrl: file },
                         });
-                        console.log(data.fileUpload.url);
-                        setFieldValue("logo", data.fileUpload.url);
-                        setprofileImage((profileImage) =>  profileImage = data.fileUpload.url);
+                        updateCompProfile({
+                          variables: {
+                            data: { logo: fileData?.fileUpload.url },
+                            id: data?.getCompanyProfile.id,
+                          },
+                        });
+                        console.log(fileData.fileUpload.url);
+                        setFieldValue("logo", fileData.fileUpload.url);
+                        setprofileImage(
+                          (profileImage) =>
+                            (profileImage = fileData.fileUpload.url)
+                        );
                       }}
                     >
                       {({ getRootProps, getInputProps }) => (
                         <Box {...getRootProps()}>
-                          <input {...getInputProps()} name="logo"/>
+                          <input {...getInputProps()} name="logo" />
                           <IconButton
                             aria-label="Search database"
                             icon={<MdEdit fontSize="1.5em" />}
@@ -159,7 +159,7 @@ export const index: React.FC<indexProps> = ({}) => {
                 <VStack spacing={4} align="flex-start">
                   <HStack align="flex-start" w="100%" spacing="30px">
                     <InputField name="name" label="Company name" />
-                    <InputField name="email"  label="Email"/>
+                    <InputField name="email" label="Email" />
                   </HStack>
                   <HStack align="flex-start" w="100%" spacing="30px">
                     <InputField name="phone" label="Phone" />
