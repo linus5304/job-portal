@@ -30,7 +30,7 @@ import { withApollo } from "../utils/withApollo";
 
 interface RegisterProps {}
 
-export const Register: React.FC<RegisterProps> & layout = ({}) => {
+export const Register: React.FC<RegisterProps> = ({}) => {
   const [register] = useRegisterMutation();
   const [createJSProfile] = useCreateJsProfileMutation();
   const [createCompProfile] = useCreateCompanyProfileMutation();
@@ -44,10 +44,15 @@ export const Register: React.FC<RegisterProps> & layout = ({}) => {
           console.log(values);
           const response = await register({
             variables: { data: values },
-            update: (cache) => {
-              cache.evict({ fieldName: "register" });
-            },
+            // update: (cache) => {
+            //   cache.evict({ fieldName: "register" });
+            // },
           });
+
+          console.log(response?.data)
+          if(response.data?.register.errors){
+            setErrors(toErrorMap(response?.data.register.errors))
+          }
 
           if (response?.data?.register?.user?.user_type === "job seeker") {
             await createJSProfile({
@@ -88,7 +93,7 @@ export const Register: React.FC<RegisterProps> & layout = ({}) => {
                 <VStack spacing={6}>
                   <InputField
                     name="username"
-                    placeholder="Username "
+                    placeholder="Username"
                     label="Username"
                   />
                   <InputField name="email" placeholder="Email" label="Email" />
@@ -133,6 +138,4 @@ export const Register: React.FC<RegisterProps> & layout = ({}) => {
   );
 };
 
-Register.value = "L2";
-Register.variant = "sm";
 export default withApollo({ ssr: false })(Register);

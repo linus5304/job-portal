@@ -42,7 +42,7 @@ const main = async () => {
     username: "postgres",
     password: "toor",
     logging: true,
-    synchronize: true,
+    // synchronize: true,
     migrations: [path.join(__dirname, "./migrations/*")],
     entities: [
       User,
@@ -55,7 +55,7 @@ const main = async () => {
     ],
   });
 
-  await conn.runMigrations();
+  // await conn.runMigrations();
 
   const app = express();
   app.use(
