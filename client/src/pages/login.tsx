@@ -15,7 +15,7 @@ import { InputField } from "../components/form/InputField";
 import { Form, Formik } from "formik";
 import { PasswordField } from "../components/form/PasswordField";
 import NextLink from "next/link";
-import { useLoginMutation } from "../generated/graphql";
+import { MeDocument, MeQuery, useLoginMutation } from "../generated/graphql";
 import { toErrorMap } from "../utils/errorMap";
 import { MainLayout } from "../components/layouts/MainLayout";
 import { withApollo } from "../utils/withApollo";
@@ -40,22 +40,32 @@ export const login: React.FC<loginProps> & layout = ({}) => {
         onSubmit={async (values, { setErrors }) => {
           const response = await login({
             variables: { data: values },
+            update: (cache, { data }) => {
+              cache.writeQuery<MeQuery>({
+                query: MeDocument,
+                data: {
+                  __typename: "Query",
+                  me: data?.login.user,
+                },
+              });
+              cache.evict({ fieldName: "login:{}" });
+            },
           });
           if (response.data.login.errors) {
             setErrors(toErrorMap(response.data.login.errors));
           }
-          if (response?.data?.login.user.user_type === "company") {
+          if (response?.data?.login?.user?.user_type === "company") {
             console.log(values);
             toast({
               position: "top-right",
               description: "You are logged in",
               status: "success",
               duration: 3000,
-              isClosable: false,
+              isClosable: false, 
             });
             router.push(`/account/company`);
           }
-          if (response?.data?.login.user.user_type === "job seeker") {
+          if (response?.data?.login?.user?.user_type === "job seeker") {
             console.log(values);
             toast({
               position: "top-right",

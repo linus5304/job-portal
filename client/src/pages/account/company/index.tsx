@@ -40,6 +40,11 @@ export const index: React.FC<indexProps> = ({}) => {
     return <div>loading</div>;
   }
   console.log("image ", data?.getCompanyProfile.logo);
+  console.log("data", data?.getCompanyProfile)
+
+  if(data?.getCompanyProfile === null){
+    console.log(data?.getCompanyProfile)
+  }
 
   return (
     <DashboardLayout>

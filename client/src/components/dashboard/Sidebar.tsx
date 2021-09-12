@@ -34,20 +34,19 @@ import { useApolloClient } from "@apollo/client";
 import { useRouter } from "next/router";
 
 interface SidebarProps {
-  username?:string
+  username?: string;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({username}) => {
+export const Sidebar: React.FC<SidebarProps> = ({ username }) => {
   const [isActive, setIsActive] = useState(false);
   const [logout] = useLogoutMutation();
   const apolloClient = useApolloClient();
   const router = useRouter();
-  const {data, loading} = useGetCompanyProfileQuery()
+  const { data, loading } = useGetCompanyProfileQuery();
 
-  if(!data && loading){
-    return <div>loading....</div>
+  if (!data && loading) {
+    return <div>loading....</div>;
   }
- 
 
   return (
     <Flex w="300px" minH="100%" overflow="hidden" mb={50}>
@@ -62,9 +61,8 @@ export const Sidebar: React.FC<SidebarProps> = ({username}) => {
           transition=".2s ease-out"
           _hover={{ boxShadow: "lg", transform: "scale(1,1)" }}
         >
-          <Avatar size="2xl" src={data?.getCompanyProfile.logo}/>
-            
-          
+          <Avatar size="2xl" src={data?.getCompanyProfile.logo} />
+
           <Text fontSize="2em" fontWeight="bold">
             @{username}
           </Text>
@@ -151,8 +149,9 @@ export const Sidebar: React.FC<SidebarProps> = ({username}) => {
               fontWeight="bold"
               onClick={async () => {
                 await logout();
+
+                // apolloClient.resetStore();
                 router.push("/");
-                apolloClient.resetStore();
               }}
             >
               Logout
