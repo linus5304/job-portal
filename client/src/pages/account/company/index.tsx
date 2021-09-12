@@ -40,10 +40,10 @@ export const index: React.FC<indexProps> = ({}) => {
     return <div>loading</div>;
   }
   console.log("image ", data?.getCompanyProfile.logo);
-  console.log("data", data?.getCompanyProfile)
+  console.log("data", data?.getCompanyProfile);
 
-  if(data?.getCompanyProfile === null){
-    console.log(data?.getCompanyProfile)
+  if (data?.getCompanyProfile === null) {
+    console.log(data?.getCompanyProfile);
   }
 
   return (
@@ -104,59 +104,7 @@ export const index: React.FC<indexProps> = ({}) => {
               </Flex>
 
               <Form>
-                <VStack
-                  p="8%"
-                  border="1px solid #fff"
-                  borderRadius="2%"
-                  bg="#fff"
-                  spacing="10px"
-                  w="100%"
-                  transition=".2s ease-out"
-                  _hover={{ boxShadow: "lg", transform: "scale(1,1)" }}
-                >
-                  <Avatar size="2xl" src={profileImage}>
-                    <Dropzone
-                      onDrop={async ([file]) => {
-                        const { data: fileData } = await uploadFile({
-                          variables: { imgUrl: file },
-                        });
-                        updateCompProfile({
-                          variables: {
-                            data: { logo: fileData?.fileUpload.url },
-                            id: data?.getCompanyProfile.id,
-                          },
-                        });
-                        console.log(fileData.fileUpload.url);
-                        setFieldValue("logo", fileData.fileUpload.url);
-                        setprofileImage(
-                          (profileImage) =>
-                            (profileImage = fileData.fileUpload.url)
-                        );
-                      }}
-                    >
-                      {({ getRootProps, getInputProps }) => (
-                        <Box {...getRootProps()}>
-                          <input {...getInputProps()} name="logo" />
-                          <IconButton
-                            aria-label="Search database"
-                            icon={<MdEdit fontSize="1.5em" />}
-                            position="absolute"
-                            top="0"
-                            right="0"
-                            size="sm"
-                            variant="outline"
-                            bg="#00b074"
-                            color="white"
-                            _hover={{ bg: "#00b074" }}
-                          />
-                        </Box>
-                      )}
-                    </Dropzone>
-                  </Avatar>
-                  <Text fontSize="2em" fontWeight="bold">
-                    {/* @{username} */}
-                  </Text>
-                </VStack>
+                
                 <Flex fontWeight="bold">
                   <InputField name="login" placeholder="" label="" hidden />
                 </Flex>
