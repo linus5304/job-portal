@@ -8,7 +8,6 @@ import {
   Select,
   Textarea,
 } from "@chakra-ui/react";
-import { options } from "../../utils/sample-data";
 
 type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   name: string;
@@ -16,6 +15,7 @@ type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   label?: string;
   textarea?: boolean;
   select?: boolean;
+  options?:any
 };
 
 export const InputField: React.FC<InputFieldProps> = ({
@@ -23,6 +23,7 @@ export const InputField: React.FC<InputFieldProps> = ({
   textarea,
   size: _,
   select,
+  options,
   ...props
 }) => {
   const [field, { error }] = useField(props);

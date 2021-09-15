@@ -1,32 +1,20 @@
 import {
-  Box,
-  Flex,
-  useColorModeValue,
-  Text,
-  Heading,
-  Divider,
-  VStack,
-  Button,
-  Link,
-  useToast,
+  Box, Button, Divider, Flex, Heading, Link, Text, useColorModeValue, useToast, VStack
 } from "@chakra-ui/react";
-import { Formik, Form } from "formik";
+import { Form, Formik } from "formik";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import { InputField } from "../components/form/InputField";
 import { PasswordField } from "../components/form/PasswordField";
-import { layout } from "./login";
-import NextLink from "next/link";
-import {
-  useRegisterMutation,
-  useCreateJsProfileMutation,
-  MeQuery,
-  MeDocument,
-  useCreateCompanyProfileMutation,
-} from "./../generated/graphql";
-import { toErrorMap } from "../utils/errorMap";
-import { useRouter } from "next/router";
 import { MainLayout } from "../components/layouts/MainLayout";
+import { toErrorMap } from "../utils/errorMap";
 import { withApollo } from "../utils/withApollo";
+import {
+  useCreateCompanyProfileMutation, useCreateJsProfileMutation, useRegisterMutation
+} from "./../generated/graphql";
+import { user_type, job_category } from "../utils/sample-data";
+
 
 interface RegisterProps {}
 
@@ -44,9 +32,9 @@ export const Register: React.FC<RegisterProps> = ({}) => {
           console.log(values);
           const response = await register({
             variables: { data: values },
-            // update: (cache) => {
-            //   cache.evict({ fieldName: "register" });
-            // },
+            update: (cache) => {
+              cache.evict({ fieldName: "register" });
+            },
           });
 
           console.log(response?.data)
@@ -108,6 +96,7 @@ export const Register: React.FC<RegisterProps> = ({}) => {
                     placeholder="Select a user"
                     label="User Type"
                     select
+                    options={user_type}
                   />
                   <Button
                     type="submit"

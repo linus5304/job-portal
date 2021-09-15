@@ -15,6 +15,7 @@ import {
   UseMiddleware,
 } from "type-graphql";
 import { getConnection } from "typeorm";
+import { JobSeeker } from "../entities/JobSeeker";
 import { isAuth } from "../middleware/isAuth";
 import { MyContext, Upload } from "../types/MyContext";
 import { Application } from "./../entities/Application";
@@ -54,6 +55,8 @@ class applyInput {
   cv?: string;
   @Field(() => Int)
   jobId?: number;
+  @Field(() => Int, { nullable: true })
+  companyId: number;
 }
 @ObjectType()
 export class ImageUrl {
@@ -226,7 +229,7 @@ export class JobResolver {
   @Query(() => [Job], { nullable: true })
   async searchJobs(
     @Arg("title", () => String, { nullable: true }) title: string,
-    @Arg("location", () => String, { nullable: true }) location: string,
+    @Arg("location", () => String, { nullable: true }) location: string
     // @Arg("limit", () => Int) limit: number,
     // @Arg("cursor", () => String, { nullable: true }) cursor: string | null
   ): Promise<Job[]> {
@@ -268,10 +271,8 @@ export class JobResolver {
     //   });
     // }
 
-    jobs = await qjobs
-      .orderBy('job."createdAt"', "DESC")
-      .getMany();
-    return jobs
+    jobs = await qjobs.orderBy('job."createdAt"', "DESC").getMany();
+    return jobs;
   }
 
   @Mutation(() => Application)
@@ -280,5 +281,15 @@ export class JobResolver {
     @Ctx() { req }: MyContext
   ): Promise<Application> {
     return Application.create({ ...input, userId: req.session.userId }).save();
+  }
+
+  @Query(() => [Application])
+  async getJobApplicants(@Arg("jId") jId: number) {
+    const result = await getConnection()
+      .createQueryBuilder(Application, "application")
+      .where('application."jobId" = :id', { id: jId })
+      .getMany();
+
+    return result;
   }
 }

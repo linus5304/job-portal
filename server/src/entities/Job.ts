@@ -27,12 +27,12 @@ export class Job extends BaseEntity {
   @Column()
   location: string;
 
-  @Field()
-  @Column()
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   category: string;
 
-  @Field()
-  @Column()
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   salary: string;
 
   @Field()

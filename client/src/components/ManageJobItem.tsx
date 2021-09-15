@@ -36,6 +36,7 @@ import Moment from "react-moment";
 import NextLink from "next/link";
 import { useDeleteJobMutation } from "../generated/graphql";
 import { cache } from "../utils/withApollo";
+import { job_category } from "../utils/sample-data";
 
 interface ManageJobItemProps {
   id?: number;
@@ -135,7 +136,7 @@ export const ManageJobItem: React.FC<ManageJobItemProps> = ({
             <HStack align="flex-start">
               <Text fontWeight="semibold">0 Views</Text>
               <Divider orientation="vertical" h="30px" />
-              <Link>
+              <Link href={`/jobs/my-jobs/${id}`}>
                 <Text fontWeight="semibold">{applicants} Applicants</Text>
               </Link>
             </HStack>
@@ -211,7 +212,7 @@ export const ManageJobItem: React.FC<ManageJobItemProps> = ({
                       <VStack spacing={4} align="flex-start">
                         <InputField name="title" label="Title" />
                         <HStack w="100%">
-                          <InputField name="category" label="Category" select />
+                          <InputField name="category" label="Category" select options={job_category}/>
                           <InputField
                             name="salary"
                             label="Salary"

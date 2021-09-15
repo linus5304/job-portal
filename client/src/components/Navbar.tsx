@@ -18,7 +18,11 @@ import {
 import NextLink from "next/link";
 import React, { useState } from "react";
 import { FaKeycdn } from "react-icons/fa";
-import { useGetJsProfileQuery, useLogoutMutation, useMeQuery } from "../generated/graphql";
+import {
+  useGetJsProfileQuery,
+  useLogoutMutation,
+  useMeQuery,
+} from "../generated/graphql";
 import { useRouter } from "next/router";
 
 interface NavbarProps {}
@@ -29,7 +33,7 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
   const [logout] = useLogoutMutation();
   const apolloClient = useApolloClient();
   const router = useRouter();
-  const {data: jsData} = useGetJsProfileQuery()
+  const { data: jsData } = useGetJsProfileQuery();
 
   const logoutFn = async () => {
     await logout();
@@ -64,10 +68,14 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
               </NextLink>
 
               <Menu>
-                <Avatar cursor="pointer" src={jsData?.getJSProfile.profile_pic}>
-                  
-                </Avatar>
-                <MenuButton />
+                <MenuButton
+                  as={Button}
+                  bg="#00b074"
+                  color="white"
+                  _hover={{ bg: "#00b074" }}
+                >
+                  Profile
+                </MenuButton>
 
                 <MenuList>
                   {data.me.user_type === "company" ? (
@@ -83,8 +91,12 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
                   <MenuItem
                     onClick={async () => {
                       await logout();
+                      
+                      // apolloClient.resetStore();
+                      apolloClient.cache.reset()
+
                       router.push("/");
-                      apolloClient.resetStore();
+
                     }}
                   >
                     Logout

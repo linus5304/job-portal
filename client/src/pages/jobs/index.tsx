@@ -60,7 +60,7 @@ export const index: React.FC<indexProps> & layout = ({}) => {
     <>
       <MainLayout>
         <Flex justify="space-between" mx="auto" w="60%" pt="10%" pb="4%">
-          <VStack
+          {/* <VStack
             spacing="24px"
             align="flex-start"
             display={["none", "none", "none", "flex", "flex"]}
@@ -77,7 +77,7 @@ export const index: React.FC<indexProps> & layout = ({}) => {
               values={["All", "Senior", "Mid", "Junior"]}
               heading="Experience Level"
             />
-          </VStack>
+          </VStack> */}
           <VStack align="flex-start" w="100%" spacing="30px">
             <Flex p={8} bg="white" boxShadow="lg" borderRadius="lg" w="100%">
               <Stack

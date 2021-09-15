@@ -32,6 +32,7 @@ export const WorkExperience: React.FC<WorkExperienceProps> = ({ jsId }) => {
   const [addWk] = useAddWorkMutation();
   const { data } = useGetAllWorkQuery({
     variables: { jsId },
+    fetchPolicy: "cache-and-network",
   });
 
   return (
@@ -50,10 +51,8 @@ export const WorkExperience: React.FC<WorkExperienceProps> = ({ jsId }) => {
           />
         </Flex>
       </HStack>
-      {data?.getAllWork.map((wk, idx) => (
+      {data?.getAllWork.map((wk) => (
         <VStack key={wk.id} w="100%" spacing="30px">
-
-        
           <EduWorkItem
             variant="work"
             comp_name={wk.company_name}
@@ -61,11 +60,11 @@ export const WorkExperience: React.FC<WorkExperienceProps> = ({ jsId }) => {
             field={wk.field}
             start={wk.start_date}
             end={wk.end_date}
-            id={wk.id + idx}
+            id={wk.id}
             jsId={wk.jobSeekerId}
           />
           <Divider />
-          </VStack>
+        </VStack>
       ))}
 
       <Formik
@@ -81,8 +80,8 @@ export const WorkExperience: React.FC<WorkExperienceProps> = ({ jsId }) => {
           const response = await addWk({
             variables: { data: values },
             update: (cache) => {
-              cache.evict({fieldName: "getAllWork"})
-            }
+              cache.evict({ fieldName: "getAllWork" });
+            },
           });
           if (response.data.addWork) {
             console.log(values);

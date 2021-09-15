@@ -1,9 +1,11 @@
 mutation Apply($input: applyInput!){
   apply(input:$input){
-    email
+     email
     phone
     jobId
     appication_date
     userId
+    companyId
+    updatedAt
   }
 }

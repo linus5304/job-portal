@@ -23,6 +23,7 @@ import {
   useGetCompanyProfileQuery,
   useUpdateCompanyProfileMutation,
 } from "../../../generated/graphql";
+import { location } from "../../../utils/sample-data";
 import { withApollo } from "../../../utils/withApollo";
 
 interface indexProps {}
@@ -116,7 +117,7 @@ export const index: React.FC<indexProps> = ({}) => {
                   </HStack>
                   <HStack align="flex-start" w="100%" spacing="30px">
                     <InputField name="phone" label="Phone" />
-                    <InputField name="location" label="Location" select />
+                    <InputField name="location" label="Location" select options={location} />
                   </HStack>
                   <HStack align="flex-start" w="100%" spacing="30px">
                     <InputField name="website" label="Website Link" />

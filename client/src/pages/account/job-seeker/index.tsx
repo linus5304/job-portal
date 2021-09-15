@@ -37,7 +37,7 @@ const index: React.FC<{}> = ({}) => {
   return (
     <DashboardLayout>
       {!data && loading ? (
-        <Text>Loading</Text>
+        <Text>Loading...</Text>
       ) : (
         <Formik
           initialValues={{

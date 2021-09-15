@@ -27,6 +27,7 @@ import {
 import { DashboardLayout } from "../components/layouts/DashboardLayout";
 import { withApollo } from "../utils/withApollo";
 import { FiUploadCloud } from "react-icons/fi";
+import { job_category, location } from "../utils/sample-data";
 
 interface postJobProps {}
 
@@ -64,14 +65,21 @@ export const postJob: React.FC<postJobProps> & layout = ({}) => {
               isClosable: true,
             });
           } else if (result.data) {
-            toast({
-              title: "Job post Successful.",
-              position: "top-right",
-              description: "You successfully post a job.",
-              status: "success",
-              duration: 5000,
-              isClosable: true,
-            });
+            (values.title = ""),
+              (values.category = ""),
+              (values.salary = ""),
+              (values.location = ""),
+              (values.expDate = ""),
+              (values.description = ""),
+              (values.imgUrl = "img"),
+              toast({
+                title: "Job post Successful.",
+                position: "top-right",
+                description: "You successfully post a job.",
+                status: "success",
+                duration: 5000,
+                isClosable: true,
+              });
             // router.push(`/company/${result.data.postJob.userId}`);
           }
           console.log(values);
@@ -102,11 +110,21 @@ export const postJob: React.FC<postJobProps> & layout = ({}) => {
                 <VStack spacing={4} align="flex-start">
                   <InputField name="title" label="Title" />
                   <HStack w="100%">
-                    <InputField name="category" label="Category" select />
+                    <InputField
+                      name="category"
+                      label="Category"
+                      select
+                      options={job_category}
+                    />
                     <InputField name="salary" label="Salary" type="text" />
                   </HStack>
                   <HStack w="100%">
-                    <InputField name="location" label="Location" />
+                    <InputField
+                      name="location"
+                      label="Location"
+                      select
+                      options={location}
+                    />
                     <InputField
                       name="expDate"
                       label="Expiration Date"

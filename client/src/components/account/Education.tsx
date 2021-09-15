@@ -1,30 +1,20 @@
-import React from "react";
-import { InputField } from "../form/InputField";
 import {
-  Button,
-  VStack,
-  IconButton,
-  useDisclosure,
-  Flex,
-  Text,
-  HStack,
-  Modal,
+  Button, Divider, Flex, HStack, IconButton, Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
-  ModalOverlay,
-  Divider,
+  ModalOverlay, Text, useDisclosure, VStack
 } from "@chakra-ui/react";
-import { FiEdit, FiPlus } from "react-icons/fi";
 import { Form, Formik } from "formik";
+import React from "react";
+import { FiPlus } from "react-icons/fi";
 import {
-  AddEducationDocument,
-  GetAllEducationDocument,
   useAddEducationMutation,
-  useGetAllEducationQuery,
+  useGetAllEducationQuery
 } from "../../generated/graphql";
+import { InputField } from "../form/InputField";
 import { EduWorkItem } from "./EduWorktem";
 
 interface EducationProps {

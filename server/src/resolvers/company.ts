@@ -119,7 +119,7 @@ export class CompanyResolver {
       .where("cp.id = :id", { id })
       .getOne();
 
-      return result
+    return result;
   }
 
   @Query(() => [Job])
@@ -142,10 +142,14 @@ export class CompanyResolver {
   }
 
   @Query(() => [JobSeeker], { nullable: true })
-  async getCompanyJobApplicants(): Promise<JobSeeker[] | undefined> {
+  async getCompanyJobApplicants(
+    @Ctx() { req }: MyContext
+  ): Promise<JobSeeker[] | undefined> {
     const result = await getConnection()
       .createQueryBuilder(JobSeeker, "js")
-      .leftJoinAndSelect('ap."jobId"', "")
+      .leftJoinAndSelect("js.user", "user")
+      .leftJoinAndSelect("user.application", "application")
+      .where('application."companyId" = :id', { id: req.session.userId })
       .getMany();
     return result;
   }

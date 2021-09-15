@@ -10,14 +10,12 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import Dropzone from "react-dropzone";
 import { FaUser } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 import { IoDocumentText } from "react-icons/io5";
-import { MdEdit, MdPeople, MdWork, MdFavoriteBorder } from "react-icons/md";
+import { MdEdit, MdFavoriteBorder } from "react-icons/md";
 import {
   useFileUploadMutation,
   useGetJsProfileQuery,
@@ -38,7 +36,7 @@ export const JsSidebar: React.FC<JsSidebarProps> = ({ username }) => {
 
   const { data, loading } = useGetJsProfileQuery();
 
-  const [profileImage, setprofileImage] = useState(() => "")
+  const [profileImage, setprofileImage] = useState(() => "");
 
   if (!data && loading) return <div>Loading....</div>;
 
@@ -68,7 +66,12 @@ export const JsSidebar: React.FC<JsSidebarProps> = ({ username }) => {
           transition=".2s ease-out"
           _hover={{ boxShadow: "lg", transform: "scale(1,1)" }}
         >
-          <Avatar size="2xl" src={profileImage !== "" ? profileImage : data.getJSProfile.profile_pic}>
+          <Avatar
+            size="2xl"
+            src={
+              profileImage !== "" ? profileImage : data?.getJSProfile.profile_pic
+            }
+          >
             <Dropzone
               onDrop={async ([file]) => {
                 const { data: fData } = await uploadFile({

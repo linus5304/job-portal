@@ -1,4 +1,4 @@
-import { Field, ObjectType } from "type-graphql";
+import { Field, Int, ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
@@ -15,7 +15,7 @@ import { User } from "./User";
 @ObjectType()
 export class Application extends BaseEntity {
   @Field(() => Date)
-  @CreateDateColumn()
+  @CreateDateColumn() 
   appication_date: Date;
 
   @Field(() => String)
@@ -26,15 +26,20 @@ export class Application extends BaseEntity {
   @PrimaryColumn()
   userId: number;
 
+  // @Field(() => Int, { nullable: true })
+  // @Column({ nullable: true })
+  // companyId: number;
+
   @Field({ nullable: true })
   @Column({ nullable: true })
   email: string;
+
   @Field({ nullable: true })
   @Column({ nullable: true })
   phone: string;
 
-  @Field(() => User, {nullable: true})
-  @ManyToOne(() => User, (user) => user.application, {onDelete: 'CASCADE'})
+  @Field(() => User, { nullable: true })
+  @ManyToOne(() => User, (user) => user.application, { onDelete: "CASCADE" })
   user: User;
 
   @Field({ nullable: true })

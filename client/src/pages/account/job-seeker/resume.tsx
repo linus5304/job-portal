@@ -9,7 +9,9 @@ import { VStack, Text, Box } from "@chakra-ui/react";
 interface resumeProps {}
 
 const resume: React.FC<resumeProps> = ({}) => {
-  const { data, loading } = useGetJsProfileQuery();
+  const { data, loading } = useGetJsProfileQuery({
+    fetchPolicy: "cache-and-network",
+  });
 
   console.log("idkfdhfd", data?.getJSProfile.id);
 
@@ -17,12 +19,15 @@ const resume: React.FC<resumeProps> = ({}) => {
     <DashboardLayout>
       <VStack bg="#fff" w="100%" p="4%" rounded={{ sm: "lg" }} overflow="auto">
         {!data && loading ? (
-          <Text>Loading</Text>
+          <Text>Loading...</Text>
         ) : (
           <>
+            <Text>
+              {data?.getJSProfile.id ? data?.getJSProfile.id : "no id"}
+            </Text>
             <Education jsId={data?.getJSProfile.id} />
             <WorkExperience jsId={data?.getJSProfile.id} />
-            </>
+          </>
         )}
       </VStack>
     </DashboardLayout>

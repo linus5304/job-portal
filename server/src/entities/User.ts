@@ -41,6 +41,7 @@ export class User extends BaseEntity {
   @OneToMany(() => Job, (job) => job.user)
   jobs: Job[];
 
+  @Field(() => [Application], { nullable: true })
   @OneToMany(() => Application, (application) => application.user)
   application: Application[];
 }

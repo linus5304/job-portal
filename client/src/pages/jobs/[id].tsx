@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -7,11 +8,6 @@ import {
   Icon,
   Image,
   Link,
-  Stack,
-  Text,
-  useColorModeValue,
-  VStack,
-  useToast,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -19,12 +15,18 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Stack,
+  Text,
+  useColorModeValue,
   useDisclosure,
+  useToast,
+  VStack,
 } from "@chakra-ui/react";
-import { Formik, Form } from "formik";
+import { Form, Formik } from "formik";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+
+import Dropzone, { useDropzone } from "react-dropzone";
 import {
   FaChevronLeft,
   FaFacebook,
@@ -34,6 +36,7 @@ import {
 } from "react-icons/fa";
 import { FiCalendar, FiGlobe, FiUploadCloud } from "react-icons/fi";
 import { MdLocationOn } from "react-icons/md";
+import Moment from "react-moment";
 import { InputField } from "../../components/form/InputField";
 import { layout } from "../../utils/types";
 import { withApollo } from "../../utils/withApollo";
@@ -44,10 +47,7 @@ import {
   useGetJobByIdQuery,
   useGetJsProfileQuery,
   useMeQuery,
-  usePostJobMutation,
 } from "./../../generated/graphql";
-import Moment from "react-moment";
-import Dropzone, { useDropzone } from "react-dropzone";
 
 interface JobProps {}
 
@@ -67,17 +67,21 @@ const Job: React.FC<JobProps> & layout = ({}) => {
   const { acceptedFiles, fileRejections, getRootProps, getInputProps } =
     useDropzone({ accept: ".doc,.docx,.pdf" });
 
-  const { data } = useGetJobByIdQuery({
+  const { data, loading: cLoading } = useGetJobByIdQuery({
     variables: {
       id: jobId,
     },
+    fetchPolicy: "cache-and-network",
   });
 
-  if (!data && !jsData && !meData && loading) {
+  if (!jsData && !meData && loading) {
     return <div>loading...</div>;
   }
 
-  console.log(meData);
+  if (!data && cLoading) {
+    <div>Loading...</div>;
+  }
+
 
   return (
     <>
@@ -175,11 +179,18 @@ const Job: React.FC<JobProps> & layout = ({}) => {
                     width="100px"
                     height="100px"
                   />
-                  <Text fontSize="xl">
-                    About {data?.getJobById.user.companyProfile.name} Employer
-                  </Text>
+                  <Box>
+                    About @Company
+                    <Text fontSize="xl" fontWeight="semibold">
+                      {data?.getJobById.user.companyProfile.name}
+                    </Text>
+                  </Box>
+
                   <Text>
                     {data?.getJobById.user.companyProfile.description}
+                    {setTimeout(() => {
+                      console.log("company Id", data?.getJobById.user.id);
+                    }, 5000)}
                   </Text>
                   <NextLink
                     href={`/company/${data?.getJobById.user.companyProfile.id}`}
@@ -208,9 +219,9 @@ const Job: React.FC<JobProps> & layout = ({}) => {
             justifyContent="space-between"
             flexDir={["column", "column", "column", "row", "row"]}
           >
-            {meData !== undefined || meData?.me.user_type === "job seeker" ? (
+            {meData?.me && meData.me.user_type === "job seeker" ? (
               <>
-                {console.log("not ok", meData)}
+                {/* {console.log("not ok", meData)} */}
                 <Button
                   ml="-15%"
                   onClick={onOpen}
@@ -224,7 +235,7 @@ const Job: React.FC<JobProps> & layout = ({}) => {
               </>
             ) : (
               <>
-                {console.log("ok", meData)}
+                {/* {console.log("ok", meData)} */}
                 <Button
                   ml="-15%"
                   onClick={onOpen}
@@ -232,7 +243,7 @@ const Job: React.FC<JobProps> & layout = ({}) => {
                   color="white"
                   size="lg"
                   _hover={{ bg: "green.500" }}
-                  disabled={meData?.me.user_type === "company" ? true : false}
+                  disabled={true}
                 >
                   APPLY NOW
                 </Button>
@@ -258,105 +269,107 @@ const Job: React.FC<JobProps> & layout = ({}) => {
         </Flex>
       </MainLayout>
 
-      <Formik
-        initialValues={{
-          jobId,
-          email: jsData?.getJSProfile.email,
-          phone: jsData?.getJSProfile.phone,
-          cv: "",
-          cover_letter: "",
-        }}
-        onSubmit={async (values) => {
-          const response = await apply({
-            variables: { input: values },
-          });
-          if (!response.data?.apply) {
-            toast({
-              title: "Application failed.",
-              position: "top-right",
-              description: "An error occured when applying",
-              status: "error",
-              duration: 4000,
-              isClosable: true,
+      {data ? (
+        <Formik
+          initialValues={{
+            jobId,
+            email: jsData?.getJSProfile.email ? jsData?.getJSProfile.email : "",
+            phone: jsData?.getJSProfile.phone ? jsData?.getJSProfile.phone : "",
+            cv: "",
+            cover_letter: "",
+            companyId: data ? data.getJobById?.user?.id : null,
+          }}
+          onSubmit={async (values) => {
+            const response = await apply({
+              variables: { input: values },
             });
-          }
-          toast({
-            title: "Application Successfull",
-            position: "top-right",
-            description:
-              "You have successfully applied. Manage jobs in Myaccoount section",
-            status: "success",
-            duration: 6000,
-            isClosable: false,
-          });
-          onClose();
+            console.log("application respose", response.data.apply);
 
-          console.log("values", values);
-        }}
-      >
-        {({ isSubmitting, setFieldValue }) => (
-          <Modal isOpen={isOpen} onClose={onClose}>
-            <ModalOverlay />
-            <Form>
-              <ModalContent>
-                <ModalHeader>Apply for Job</ModalHeader>
-                <ModalCloseButton />
-                <ModalBody>
-                  <VStack>
-                    <InputField name="jobId" label="" hidden />
-                    <InputField name="email" label="Email" />
-                    <InputField name="phone" label="Phone" />
-                    <InputField
-                      name="cover_letter"
-                      label="Cover Letter"
-                      textarea
-                    />
-                    <Dropzone
-                      onDrop={async ([file]) => {
-                        const { data } = await uploadFile({
-                          variables: { imgUrl: file },
-                        });
-                        setFieldValue("cv", data.fileUpload.url);
-                        // setImg((img) => (img = data.fileUpload.url));
-                        setName((name) => (name = file.name));
+            if (!response.data?.apply) {
+              toast({
+                title: "Application failed.",
+                position: "top-right",
+                description: "An error occured when applying",
+                status: "error",
+                duration: 4000,
+                isClosable: true,
+              });
+            }
+            toast({
+              title: "Application Successfull",
+              position: "top-right",
+              description:
+                "You have successfully applied. Manage jobs in Myaccoount section",
+              status: "success",
+              duration: 6000,
+              isClosable: false,
+            });
+            onClose();
+          }}
+        >
+          {({ isSubmitting, setFieldValue }) => (
+            <Modal isOpen={isOpen} onClose={onClose}>
+              <ModalOverlay />
+              <Form>
+                <ModalContent>
+                  <ModalHeader>Apply for Job</ModalHeader>
+                  <ModalCloseButton />
+                  <ModalBody>
+                    <VStack>
+                      <InputField name="jobId" label="" hidden />
+                      <InputField name="companyId" label="" hidden />
+                      <InputField name="email" label="Email" />
+                      <InputField name="phone" label="Phone" />
+                      <InputField
+                        name="cover_letter"
+                        label="Cover Letter"
+                        textarea
+                      />
+                      <Dropzone
+                        onDrop={async ([file]) => {
+                          const { data } = await uploadFile({
+                            variables: { imgUrl: file },
+                          });
+                          setFieldValue("cv", data.fileUpload.url);
+                          // setImg((img) => (img = data.fileUpload.url));
+                          setName((name) => (name = file.name));
+                        }}
+                      >
+                        {({ getRootProps, getInputProps }) => (
+                          <Box
+                            border="1px dashed gray"
+                            h="100px"
+                            w="100%"
+                            {...getRootProps()}
+                          >
+                            <input {...getInputProps()} name="cv" />
+                            <VStack>
+                              <Icon as={FiUploadCloud} fontSize="2em" />
+                              <Text>Drag and drop or Click to Add your CV</Text>
+                            </VStack>
+                            {name ? (
+                              <Text fontSize="lg" fontWeight="semibold">
+                                {name}
+                              </Text>
+                            ) : null}
+                          </Box>
+                        )}
+                      </Dropzone>
+                    </VStack>
+                  </ModalBody>
 
-                        console.log(file);
-                      }}
-                    >
-                      {({ getRootProps, getInputProps }) => (
-                        <Box
-                          border="1px dashed gray"
-                          h="100px"
-                          w="100%"
-                          {...getRootProps()}
-                        >
-                          <input {...getInputProps()} name="cv" />
-                          <VStack>
-                            <Icon as={FiUploadCloud} fontSize="2em" />
-                            <Text>Drag and drop or Click to Add your CV</Text>
-                          </VStack>
-                          {name ? (
-                            <Text fontSize="lg" fontWeight="semibold">
-                              {name}
-                            </Text>
-                          ) : null}
-                        </Box>
-                      )}
-                    </Dropzone>
-                  </VStack>
-                </ModalBody>
-
-                <ModalFooter>
-                  <Button mr={3} isLoading={isSubmitting} type="submit">
-                    Apply
-                  </Button>
-                  <Button onClick={onClose}>Cancel</Button>
-                </ModalFooter>
-              </ModalContent>
-            </Form>
-          </Modal>
-        )}
-      </Formik>
+                  <ModalFooter>
+                    <Button mr={3} isLoading={isSubmitting} type="submit">
+                      Apply
+                    </Button>
+                    <Button onClick={onClose}>Cancel</Button>
+                  </ModalFooter>
+                </ModalContent>
+              </Form>
+            </Modal>
+          )}
+        </Formik>
+      ) : null}
     </>
   );
 };

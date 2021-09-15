@@ -45,11 +45,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ username }) => {
   const router = useRouter();
   const { data, loading } = useGetCompanyProfileQuery();
   const [uploadFile] = useFileUploadMutation();
-  const [update] = useUpdateCompanyProfileMutation()
+  const [update] = useUpdateCompanyProfileMutation();
 
-
-  const [profileImage, setprofileImage] = useState(() => "")
-
+  const [profileImage, setprofileImage] = useState(() => "");
 
   if (!data && loading) {
     return <div>loading....</div>;
@@ -68,7 +66,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ username }) => {
           transition=".2s ease-out"
           _hover={{ boxShadow: "lg", transform: "scale(1,1)" }}
         >
-          <Avatar size="2xl" src={profileImage !== "" ? profileImage : data.getCompanyProfile.logo}>
+          <Avatar
+            size="2xl"
+            src={
+              profileImage !== "" ? profileImage : data.getCompanyProfile.logo
+            }
+          >
             <Dropzone
               onDrop={async ([file]) => {
                 const { data: fData } = await uploadFile({
@@ -160,21 +163,23 @@ export const Sidebar: React.FC<SidebarProps> = ({ username }) => {
               </Text>
             </Flex>
           </NextLink>
-          <Flex
-            alignItems="center"
-            cursor="pointer"
-            gridGap="4%"
-            p="5%"
-            _hover={{ bg: "green.100" }}
-            w="100%"
-            // onClick={() =>setIsActive(!isActive)}
-            // bg={isActive ? "green.100" : null}
-          >
-            <Icon as={MdPeople} fontSize="4xl" color="#00b074" />
-            <Text fontSize="xl" fontWeight="bold">
-              Applicants
-            </Text>
-          </Flex>
+          <NextLink href="/account/company/applicants">
+            <Flex
+              alignItems="center"
+              cursor="pointer"
+              gridGap="4%"
+              p="5%"
+              _hover={{ bg: "green.100" }}
+              w="100%"
+              // onClick={() =>setIsActive(!isActive)}
+              // bg={isActive ? "green.100" : null}
+            >
+              <Icon as={MdPeople} fontSize="4xl" color="#00b074" />
+              <Text fontSize="xl" fontWeight="bold">
+                Applicants
+              </Text>
+            </Flex>
+          </NextLink>
 
           <Flex
             alignItems="center"
@@ -190,8 +195,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ username }) => {
               fontWeight="bold"
               onClick={async () => {
                 await logout();
-
                 // apolloClient.resetStore();
+                apolloClient.cache.reset();
                 router.push("/");
               }}
             >

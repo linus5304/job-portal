@@ -63,6 +63,7 @@ export class JobSeeker extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @Field(() => User, { nullable: true })
   @OneToOne(() => User, (user) => user.jobSeeker, { onDelete: "CASCADE" })
   @JoinColumn()
   user: User;
