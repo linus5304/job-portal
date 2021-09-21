@@ -12,7 +12,7 @@ import {
   ObjectType,
   Query,
   Resolver,
-  UseMiddleware,
+  UseMiddleware
 } from "type-graphql";
 import { getConnection } from "typeorm";
 import { JobSeeker } from "../entities/JobSeeker";
@@ -283,10 +283,12 @@ export class JobResolver {
     return Application.create({ ...input, userId: req.session.userId }).save();
   }
 
-  @Query(() => [Application])
-  async getJobApplicants(@Arg("jId") jId: number) {
+  @Query(() => [JobSeeker])
+  async getJobApplicants(@Arg("jId", () => Int!) jId: number) {
     const result = await getConnection()
-      .createQueryBuilder(Application, "application")
+      .createQueryBuilder(JobSeeker, "js")
+      .leftJoinAndSelect("js.user", "user")
+      .leftJoinAndSelect("user.application", "application")
       .where('application."jobId" = :id', { id: jId })
       .getMany();
 

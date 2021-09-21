@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from "type-graphql";
+import { Field, ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
@@ -6,7 +6,7 @@ import {
   Entity,
   ManyToOne,
   PrimaryColumn,
-  UpdateDateColumn,
+  UpdateDateColumn
 } from "typeorm";
 import { Job } from "./Job";
 import { User } from "./User";

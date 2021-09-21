@@ -26,6 +26,7 @@ import { JobSeekerResolver } from "./resolvers/jobseeker";
 import { EducationResolver } from "./resolvers/education";
 import { WorkResolver } from "./resolvers/work";
 import { ApplicationResolver } from "./resolvers/application";
+import compression from 'compression'
 
 declare module "express-session" {
   interface Session {
@@ -58,6 +59,7 @@ const main = async () => {
   await conn.runMigrations();
 
   const app = express();
+  app.use(compression())
   app.use(
     cors({
       origin: "http://localhost:3000",

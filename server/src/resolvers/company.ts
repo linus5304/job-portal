@@ -1,17 +1,13 @@
-import { User } from "src/entities/User";
 import { MyContext } from "src/types/MyContext";
 import {
   Arg,
   Ctx,
-  Field,
-  FieldResolver,
-  InputType,
+  Field, InputType,
   Int,
   Mutation,
   ObjectType,
   Query,
-  Resolver,
-  Root,
+  Resolver
 } from "type-graphql";
 import { getConnection } from "typeorm";
 import { JobSeeker } from "../entities/JobSeeker";
@@ -129,6 +125,7 @@ export class CompanyResolver {
       .leftJoinAndSelect("job.user", "user")
       .leftJoinAndSelect("user.companyProfile", "cp")
       .where("job.userId = :id", { id: req.session.userId })
+      .orderBy('job.createdAt', 'DESC')
       .getMany();
     return jobs;
   }

@@ -3,20 +3,13 @@ import {
   Arg,
   Ctx,
   Field,
-  InputType,
-  Mutation,
-  Query,
-  Resolver,
-  ObjectType,
-  Int,
-  FieldResolver,
-  Root,
+  InputType, Int, Mutation, ObjectType, Query,
+  Resolver
 } from "type-graphql";
-import { CompanyProfile } from "./../entities/Company";
 import { getConnection } from "typeorm";
+import { CompanyProfile } from "./../entities/Company";
 import { Job } from "./../entities/Job";
 import { JobSeeker } from "./../entities/JobSeeker";
-import { Education } from "../entities/Education";
 
 @InputType()
 class JSProfileInput {
