@@ -58,7 +58,7 @@ export const Hero: React.FC<HeroProps> = ({}) => {
               <ImageComponent />
             </WrapItem>
             <WrapItem>
-              <ImageComponent />
+              // <ImageComponent />
             </WrapItem> */}
             <Box w="40%">
             <Hsvg/>

@@ -1,32 +1,21 @@
-import React, { useState } from "react";
-import { layout } from "../login";
-
-import { HeroJob } from "./../../components/HeroJob";
 import {
-  Flex,
-  VStack,
-  Button,
-  Text,
-  Box,
-  Heading,
-  Skeleton,
-  Icon,
+  Button, Flex, Icon,
   Input,
-  Stack,
+  Stack, Text, VStack
 } from "@chakra-ui/react";
-import { Filter } from "./../../components/Filter";
-import { JobListItem } from "./../../components/JobListItem";
-import { SearchBox } from "./../../components/SearchBox";
-import {
-  Job,
-  useGetJobsQuery,
-  useSearchJobsQuery,
-} from "./../../generated/graphql";
-import { MainLayout } from "./../../components/layouts/MainLayout";
-import { withApollo } from "../../utils/withApollo";
-import { MdSearch, MdLocationOn } from "react-icons/md";
-import { InputField } from "../../components/form/InputField";
+import React, { useState } from "react";
+import { MdLocationOn, MdSearch } from "react-icons/md";
 import { Empty } from "../../components/svg/Empty";
+import { Spinner } from "../../components/svg/Spinner";
+import { withApollo } from "../../utils/withApollo";
+import { layout } from "../login";
+import { JobListItem } from "./../../components/JobListItem";
+import { MainLayout } from "./../../components/layouts/MainLayout";
+import {
+  useGetJobsQuery,
+  useSearchJobsQuery
+} from "./../../generated/graphql";
+
 
 interface indexProps {}
 
@@ -48,8 +37,8 @@ export const index: React.FC<indexProps> & layout = ({}) => {
   //   variables: { title, location, limit: 10, cursor: null },
   // });
 
-  if (!data && !loading) {
-    return <Text>{error.message}</Text>;
+  if (!data && loading) {
+    return <Spinner/>
   }
 
   if (error) {
@@ -58,6 +47,7 @@ export const index: React.FC<indexProps> & layout = ({}) => {
 
   return (
     <>
+
       <MainLayout>
         <Flex justify="space-between" mx="auto" w="60%" pt="10%" pb="4%">
           {/* <VStack

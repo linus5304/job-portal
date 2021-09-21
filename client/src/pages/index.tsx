@@ -1,22 +1,20 @@
-import { Button, Flex , Divider, Box} from '@chakra-ui/react'
-import Link from 'next/link'
-import { Hero } from '../components/Hero'
+import React from 'react';
+import { FeaturedJobs } from '../components/FeaturedJobs';
+import { HelpSection } from '../components/HelpSection';
+import { Hero } from '../components/Hero';
+import { HeroCategory } from '../components/HeroCategory';
 import { HeroContact } from '../components/HeroContact';
 import { HeroPost } from '../components/HeroPost';
-import { Navbar } from '../components/Navbar'
-import { CompanySection } from '../components/CompanySection';
-import { FeaturedJobs } from '../components/FeaturedJobs';
-import { LatestJobs } from '../components/LatestJobs';
-import { withApollo } from '../utils/withApollo';
-import React from 'react';
 import { MainLayout } from "../components/layouts/MainLayout";
-import { HeroCategory } from '../components/HeroCategory';
-import { HelpSection } from '../components/HelpSection';
+import { withApollo } from '../utils/withApollo';
 
 
 export type layout = {
   value: string, variant?:string
 }
+export const config = {
+  unstable_runtimeJS: false
+};
 
 const IndexPage : React.FC<{}> & layout = () => {
   return(

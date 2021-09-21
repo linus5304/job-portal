@@ -24,8 +24,9 @@ const appliedJobs: React.FC<appliedJobsProps> = ({}) => {
         {data?.getApplicantJobs.length === 0 ? (
           <Empty />
         ) : (
-          <Box w="100%">
+          <VStack w="100%">
             {data?.getApplicantJobs.map((j) => (
+              
               <AppliedJobItem
                 title={j.title}
                 companyName={j.user.companyProfile.name}
@@ -35,7 +36,7 @@ const appliedJobs: React.FC<appliedJobsProps> = ({}) => {
                 id={j.id}
               />
             ))}
-          </Box>
+          </VStack>
         )}
       </VStack>
     </DashboardLayout>

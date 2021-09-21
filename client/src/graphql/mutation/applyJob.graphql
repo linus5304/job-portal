@@ -1,11 +1,10 @@
-mutation Apply($input: applyInput!){
-  apply(input:$input){
-     email
+mutation Apply($input: applyInput!) {
+  apply(input: $input) {
+    email
     phone
     jobId
     appication_date
     userId
-    companyId
     updatedAt
   }
 }

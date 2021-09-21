@@ -26,3 +26,36 @@ export const location = [
   { id: 6, name: "Buea" },
   { id: 7, name: "Kribi" },
 ];
+
+// export type ColumnType = {
+//   id: string;
+//   title: string;
+//   applicants: any[];
+// };
+
+// export const columns: ColumnType[] = [
+//   { id: "column_1", title: "New Applicants", applicants: [] },
+//   { id: "column_2", title: "Interview", applicants: [] },
+//   { id: "column_3", title: "Rejected", applicants: [] },
+// ];
+
+export const initialData = {
+  columns: {
+    "column-1": {
+      id: "column-1",
+      title: "New Application",
+      applicants: [],
+    },
+    "column-2": {
+      id: "column-2",
+      title: "Interview",
+      applicants: [],
+    },
+    "column-3": {
+      id: "column-3",
+      title: "Rejected",
+      applicants: [],
+    },
+  },
+  columnOrder: ["column-1", "column-2", "column-3"],
+};

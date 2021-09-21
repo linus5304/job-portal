@@ -1,21 +1,13 @@
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { createBreakpoints } from "@chakra-ui/theme-tools";
-import React from "react";
-import { MainLayout } from "../components/layouts/MainLayout";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
 import { DashboardLayout } from "../components/layouts/DashboardLayout";
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  createHttpLink,
-} from "@apollo/client";
-import { setContext } from "@apollo/client/link/context";
-import { onError } from "@apollo/client/link/error";
-
-import { createUploadLink } from "apollo-upload-client";
-import { cache } from './../utils/withApollo';
-
-import { withApollo } from '../utils/withApollo';
+import { MainLayout } from "../components/layouts/MainLayout";
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
+import "../../styles/nprogress.css";
+import { Spinner } from "../components/svg/Spinner";
 
 const breakpoints = createBreakpoints({
   sm: "320px",
@@ -36,16 +28,35 @@ const variants = {
   rg: "regular",
 };
 
-
-
+export const config = {
+  unstable_runtimeJS: false,
+};
 const App = ({ Component, pageProps }) => {
   const Layout = layouts[Component.value] || EmptyLayout;
   const variant = variants[Component.variant];
+
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  router.events?.on("routeChangeStart", (url) => {
+    console.log("Router is changing");
+    NProgress.start();
+    setLoading(true);
+  });
+  router.events?.on("routeChangeComplete", (url) => {
+    console.log("Router is changing complete");
+    NProgress.done();
+    setLoading(false);
+  });
+  router.events?.on("routeChangeError", (url) => {
+    console.log("Router is changing complete");
+    NProgress.done();
+    setLoading(false);
+  });
+
   return (
-      <ChakraProvider theme={theme}>
-        
-          <Component {...pageProps} />
-      </ChakraProvider>
+    <ChakraProvider theme={theme}>
+      {loading ? <Spinner /> : <Component {...pageProps} />}
+    </ChakraProvider>
   );
 };
 

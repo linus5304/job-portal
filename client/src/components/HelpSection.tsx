@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { MdDashboard, MdSearch } from "react-icons/md";
+import { HeroHelp } from "./svg/HeroHelp";
 
 interface HelpSectionProps {}
 
@@ -24,7 +25,7 @@ export const HelpSection: React.FC<HelpSectionProps> = ({}) => {
         
       >
         <Flex>
-          <Image src="/content-2-img1.png" alt="smile" />
+          <HeroHelp/>
         </Flex>
         <VStack align="flex-start" spacing="20px">
           <Text fontSize="2em" fontWeight="bold" w="80%" >

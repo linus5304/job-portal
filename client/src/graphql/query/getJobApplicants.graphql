@@ -1,0 +1,17 @@
+query getJobApplicants($id: Int!) {
+  getJobApplicants(jId: $id) {
+    id
+    first_name
+    last_name
+    about_me
+    phone
+    email
+    profile_pic
+    user {
+      username
+      application {
+        appication_date
+      }
+    }
+  }
+}

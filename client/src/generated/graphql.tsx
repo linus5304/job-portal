@@ -23,7 +23,6 @@ export type Application = {
   appication_date: Scalars['DateTime'];
   updatedAt: Scalars['String'];
   userId?: Maybe<Scalars['Float']>;
-  companyId?: Maybe<Scalars['Int']>;
   email?: Maybe<Scalars['String']>;
   phone?: Maybe<Scalars['String']>;
   user?: Maybe<User>;
@@ -123,6 +122,7 @@ export type JobSeeker = {
   userId?: Maybe<Scalars['Float']>;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
+  user?: Maybe<User>;
   education?: Maybe<Array<Education>>;
   work_experience?: Maybe<Array<Work>>;
 };
@@ -278,6 +278,7 @@ export type Query = {
   getJobById?: Maybe<Job>;
   getJobs?: Maybe<PaginatedJobs>;
   searchJobs?: Maybe<Array<Job>>;
+  getJobApplicants: Array<JobSeeker>;
   jobSeeker: Scalars['String'];
   getJSProfile: JobSeeker;
   getJSProfileById: JobSeeker;
@@ -310,6 +311,11 @@ export type QueryGetJobsArgs = {
 export type QuerySearchJobsArgs = {
   location?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryGetJobApplicantsArgs = {
+  jId: Scalars['Int'];
 };
 
 
@@ -353,6 +359,7 @@ export type User = {
   user_type: Scalars['String'];
   companyProfile?: Maybe<CompanyProfile>;
   jobs?: Maybe<Array<Job>>;
+  application?: Maybe<Array<Application>>;
 };
 
 export type UserResponse = {
@@ -418,7 +425,7 @@ export type ApplyMutationVariables = Exact<{
 }>;
 
 
-export type ApplyMutation = { __typename?: 'Mutation', apply: { __typename?: 'Application', email?: Maybe<string>, phone?: Maybe<string>, jobId?: Maybe<number>, appication_date: any, userId?: Maybe<number>, companyId?: Maybe<number>, updatedAt: string } };
+export type ApplyMutation = { __typename?: 'Mutation', apply: { __typename?: 'Application', email?: Maybe<string>, phone?: Maybe<string>, jobId?: Maybe<number>, appication_date: any, userId?: Maybe<number>, updatedAt: string } };
 
 export type ChangePasswordMutationVariables = Exact<{
   token: Scalars['String'];
@@ -548,6 +555,13 @@ export type GetJsProfileByIdQueryVariables = Exact<{
 
 
 export type GetJsProfileByIdQuery = { __typename?: 'Query', getJSProfileById: { __typename?: 'JobSeeker', id: number, first_name?: Maybe<string>, last_name?: Maybe<string>, about_me?: Maybe<string>, profile_pic?: Maybe<string>, userId?: Maybe<number>, email?: Maybe<string>, phone?: Maybe<string>, title?: Maybe<string>, cv?: Maybe<string>, updatedAt: string, education?: Maybe<Array<{ __typename?: 'Education', id: number, school: string, field: string, degree: string, start_date?: Maybe<string>, end_date?: Maybe<string>, jobSeekerId: number }>>, work_experience?: Maybe<Array<{ __typename?: 'Work', id: number, company_name: string, position: string, field: string, start_date?: Maybe<string>, end_date?: Maybe<string>, jobSeekerId: number }>> } };
+
+export type GetJobApplicantsQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type GetJobApplicantsQuery = { __typename?: 'Query', getJobApplicants: Array<{ __typename?: 'JobSeeker', id: number, first_name?: Maybe<string>, last_name?: Maybe<string>, about_me?: Maybe<string>, phone?: Maybe<string>, email?: Maybe<string>, profile_pic?: Maybe<string>, user?: Maybe<{ __typename?: 'User', username: string, application?: Maybe<Array<{ __typename?: 'Application', appication_date: any }>> }> }> };
 
 export type GetJobByIdQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -683,7 +697,6 @@ export const ApplyDocument = gql`
     jobId
     appication_date
     userId
-    companyId
     updatedAt
   }
 }
@@ -1570,6 +1583,53 @@ export function useGetJsProfileByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type GetJsProfileByIdQueryHookResult = ReturnType<typeof useGetJsProfileByIdQuery>;
 export type GetJsProfileByIdLazyQueryHookResult = ReturnType<typeof useGetJsProfileByIdLazyQuery>;
 export type GetJsProfileByIdQueryResult = Apollo.QueryResult<GetJsProfileByIdQuery, GetJsProfileByIdQueryVariables>;
+export const GetJobApplicantsDocument = gql`
+    query getJobApplicants($id: Int!) {
+  getJobApplicants(jId: $id) {
+    id
+    first_name
+    last_name
+    about_me
+    phone
+    email
+    profile_pic
+    user {
+      username
+      application {
+        appication_date
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetJobApplicantsQuery__
+ *
+ * To run a query within a React component, call `useGetJobApplicantsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetJobApplicantsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetJobApplicantsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetJobApplicantsQuery(baseOptions: Apollo.QueryHookOptions<GetJobApplicantsQuery, GetJobApplicantsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetJobApplicantsQuery, GetJobApplicantsQueryVariables>(GetJobApplicantsDocument, options);
+      }
+export function useGetJobApplicantsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetJobApplicantsQuery, GetJobApplicantsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetJobApplicantsQuery, GetJobApplicantsQueryVariables>(GetJobApplicantsDocument, options);
+        }
+export type GetJobApplicantsQueryHookResult = ReturnType<typeof useGetJobApplicantsQuery>;
+export type GetJobApplicantsLazyQueryHookResult = ReturnType<typeof useGetJobApplicantsLazyQuery>;
+export type GetJobApplicantsQueryResult = Apollo.QueryResult<GetJobApplicantsQuery, GetJobApplicantsQueryVariables>;
 export const GetJobByIdDocument = gql`
     query GetJobById($id: Int!) {
   getJobById(id: $id) {
