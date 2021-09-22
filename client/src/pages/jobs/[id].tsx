@@ -52,12 +52,13 @@ import {
 interface JobProps {}
 
 const Job: React.FC<JobProps> & layout = ({}) => {
+  const [name, setName] = useState("");
   const router = useRouter();
   const { id } = router.query;
   const jobId = parseInt(id as string);
 
   const [uploadFile] = useFileUploadMutation();
-  const [name, setName] = useState("");
+  
   const { data: jsData, loading } = useGetJsProfileQuery();
   const toast = useToast();
   const [apply] = useApplyMutation();

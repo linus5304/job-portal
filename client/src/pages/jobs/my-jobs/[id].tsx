@@ -13,7 +13,7 @@ import { withApollo } from "../../../utils/withApollo";
 import { useRouter } from "next/router";
 import { useGetJobApplicantsQuery } from "../../../generated/graphql";
 import { Column } from "../../../components/dnd/Column";
-import { initialData } from "../../../utils/sample-data";
+import { exampleData, initialData } from "../../../utils/sample-data";
 
 interface ApplicantsProps {
   jId: number;
@@ -67,34 +67,45 @@ const Applicants: React.FC<ApplicantsProps> = ({
   const router = useRouter();
   const { id } = router.query;
   const jobId = parseInt(id as string);
-  const [state2, setState2] = useState(initialData);
-  const [applicants, setApplicants] = useState([]);
+  const [state, setState] = useState(initialData);
+  const [applicants, setApplicants] = useState({});
   const { data, loading } = useGetJobApplicantsQuery({
     variables: { id: jobId },
     onCompleted: (data) => {
       if (!data && loading) {
         setApplicants([]);
       }
-      const items = data?.getJobApplicants.map((x) => x.id);
+      // const items = data?.getJobApplicants.map((x) => x.id);
       const applicants = data?.getJobApplicants.map((x) => x);
-      let newItems = { ...initialData };
+      // const newApplicants = Object.assign({}, applicants)
+
+
+      // converting and array into object using the reduce method
+      const newApplicants = applicants.reduce(
+        (a, v) => ({ ...a, [`applicant-${v.id}`]: v }),
+        {}
+      );
+      const items = Object.keys(newApplicants);
+      let newItems = { ...initialData, applicants: newApplicants };
       let newItem = { ...newItems.columns["column-1"] };
-      newItem.applicants = items;
+      newItem.applicantIds = items;
       newItems.columns["column-1"] = newItem;
-      console.log("new item", newItem.applicants);
-      // setState2(newItems);
-      setApplicants(applicants);
+      console.log("new item", newItem.applicantIds);
+      setState(newItems);
+      setApplicants(newApplicants);
+      console.log("applicants", items);
     },
   });
   // let i = 0
   if (!data && loading) return <div>Loading...</div>;
 
   function onDragEnd(result: DropResult) {
-    const { draggableId, source, destination } = result;
+    const { destination, source, draggableId, type } = result;
 
     if (!destination) {
       return;
     }
+
     if (
       destination.droppableId === source.droppableId &&
       destination.index === source.index
@@ -102,58 +113,99 @@ const Applicants: React.FC<ApplicantsProps> = ({
       return;
     }
 
-    const start = state2.columns[source.droppableId];
-    const finish = state2.columns[destination.droppableId];
+    if (type === "column") {
+      const newColumnOrder = Array.from(state.columnOrder);
+      newColumnOrder.splice(source.index, 1);
+      newColumnOrder.splice(destination.index, 0, draggableId);
+
+      const newState = {
+        ...state,
+        columnOrder: newColumnOrder,
+      };
+
+      return;
+    }
+
+    const start = state.columns[source.droppableId];
+    const finish = state.columns[destination.droppableId];
 
     console.log(start, finish);
 
     if (start === finish) {
-      const newApplicants: any[] = Array.from(start.applicants);
-      newApplicants.splice(source.index, 1);
-      newApplicants.splice(destination.index, 0, parseInt(draggableId));
+      const newTasksIds = Array.from(start.applicantIds);
+      newTasksIds.splice(source.index, 1);
+      newTasksIds.splice(destination.index, 0, `applicant-${draggableId}`);
 
-      console.log(source.index, destination.index)
+      console.log('applicants Ids', newTasksIds)
       const newColumn = {
         ...start,
-        applicants: newApplicants,
+        applicantIds: newTasksIds,
       };
-      console.log("new column", newColumn);
-      console.log("start", newColumn);
+
+      console.log("new Column", newColumn);
 
       const newState = {
-      ...state2,
+        ...state,
         columns: {
-          ...state2.columns,
+          ...state.columns,
           [newColumn.id]: newColumn,
         },
       };
 
-      console.log('1st state 2',state2.columns["column-1"])
-      console.log('new state 2',newState.columns["column-1"])
-      setState2(newState);
+      // setState(newState);
+      // console.log("1st state 2", state.columns["column-1"]);
+      // console.log("new state 2", state.columns["column-1"]);
+      setState(newState);
+
+      console.log("state", state);
       return;
     }
+
+    // moving from one list to another
+    const startTaskIds = Array.from(start.applicantIds);
+    startTaskIds.splice(source.index, 1);
+    const newStart = {
+      ...start,
+      applicantIds: startTaskIds,
+    };
+
+    const finishTaskIds = Array.from(finish.applicantIds);
+    finishTaskIds.splice(destination.index, 0, `applicant-${draggableId}`);
+    const newFinish = {
+      ...finish,
+      applicantIds: finishTaskIds,
+    };
+
+    const newState = {
+      ...state,
+      columns: {
+        ...state.columns,
+        [newStart.id]: newStart,
+        [newFinish.id]: newFinish,
+      },
+    };
+
+    setState(newState);
+    return;
   }
 
   return (
     <DashboardLayout>
       <DragDropContext onDragEnd={onDragEnd}>
-        {state2.columnOrder.map((columnId, index) => {
+        {state.columnOrder.map((columnId, index) => {
           // console.log("index", index);
 
-          const column = state2.columns[columnId];
-          const newApplicants = column.applicants.map(
-            (_, i: number) => applicants[i]
-          );
+          const column = state.columns[columnId];
+          const tasks = column.applicantIds.map((id: number) => applicants[id]);
 
-          // console.log(newApplicants)
+          console.log("task", tasks);
 
           return (
             <Column
               key={column.id}
               id={column.id}
               title={column.title}
-              applicants={newApplicants}
+              tasks={tasks}
             />
           );
         })}

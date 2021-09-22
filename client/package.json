@@ -5,8 +5,7 @@
     "build": "next build",
     "start": "next start",
     "type-check": "tsc",
-    "gen": "graphql-codegen --config codegen.yml",
-    "analyze": "ANALYZE=true next build"
+    "gen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
     "@apollo/client": "^3.4.5",

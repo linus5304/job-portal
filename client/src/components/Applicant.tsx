@@ -7,16 +7,17 @@ interface ApplicantProps {
     id?: number
     first_name?: string
     last_name?: string
+    bg?: string
 }
 
-export const Applicant: React.FC<ApplicantProps> = ({id, first_name, last_name}) => {
+export const Applicant: React.FC<ApplicantProps> = ({id, first_name, last_name, bg}) => {
   return (
     <Box
       as="article"
-      rounded="lg"
-      bg="white"
       w="100%"
-      p={4}
+      rounded="md"
+      bg={bg}
+      p={3}
       transition=".2s ease-out"
       _hover={{ boxShadow: "lg", transform: "scale(1,1)" }}
     >
