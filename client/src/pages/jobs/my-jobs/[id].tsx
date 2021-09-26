@@ -1,74 +1,60 @@
-import { HStack, VStack, Heading, Box, Spacer, Text } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DraggableLocation,
-  DropResult,
-} from "react-beautiful-dnd";
-import { Applicant } from "../../../components/Applicant";
-import { DashboardLayout } from "../../../components/layouts/DashboardLayout";
-import { withApollo } from "../../../utils/withApollo";
 import { useRouter } from "next/router";
-import { useGetJobApplicantsQuery } from "../../../generated/graphql";
+import React, { useEffect, useState } from "react";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { Column } from "../../../components/dnd/Column";
-import { exampleData, initialData } from "../../../utils/sample-data";
+import { DashboardLayout } from "../../../components/layouts/DashboardLayout";
+import {
+  JobSeeker,
+  useGetJobApplicantsQuery,
+} from "../../../generated/graphql";
+import { initialData, MyData } from "../../../utils/sample-data";
+import { withApollo } from "../../../utils/withApollo";
+import Cookie from "js-cookie";
+import { parseCookie } from "../../../utils/functions";
+import { NextPageContext } from "next";
 
 interface ApplicantsProps {
   jId: number;
   first_name: string;
   last_name: string;
+  newInitialState: MyData;
 }
-interface Item {
-  id: string;
-  content: string;
-}
-
-interface IMoveResult {
-  droppable: Item[];
-  droppable2: Item[];
-}
-
-const getItems = (count: number, offset: number = 0): Item[] => {
-  return Array.from({ length: count }, (v, k) => k).map((k) => ({
-    content: `item ${k + offset}`,
-    id: `item-${k + offset}`,
-  }));
-};
-
-const reorder = (list: any[], startIndex: number, endIndex: number) => {
-  const result: any[] = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-
-  return result;
-};
-
-const move = (source, destination, droppableSource, droppableDestination) => {
-  const sourceClone = Array.from(source);
-  const destClone = Array.from(destination);
-  const [removed] = sourceClone.splice(droppableSource.index, 1);
-
-  destClone.splice(droppableDestination.index, 0, removed);
-  const result = {};
-  result[droppableSource.droppableId] = sourceClone;
-  result[droppableDestination.droppableId] = destClone;
-
-  return result;
-};
 
 const Applicants: React.FC<ApplicantsProps> = ({
   jId,
   first_name,
   last_name,
+  newInitialState,
 }) => {
   // const [state, setState] = useState(() => )
+
   const router = useRouter();
   const { id } = router.query;
   const jobId = parseInt(id as string);
-  const [state, setState] = useState(initialData);
+  // const lData = JSON.parse(localStorage.getItem('setState'))
+  let lData;
+  if (typeof localStorage !== "undefined") {
+    const getSavedData = localStorage.getItem("newState");
+    lData = JSON.parse(getSavedData);
+  } else {
+    lData = initialData;
+  }
+  const [state, setState] = useState(lData);
+
   const [applicants, setApplicants] = useState({});
+
+  console.log('new Initial state',newInitialState)
+
+  // useEffect(() => {
+  //   const getSavedData = localStorage.getItem("newState");
+  //   const savedData = JSON.parse(getSavedData);
+  //   setState((prev) => prev = savedData);
+  // }, []);
+  useEffect(() => {
+    Cookie.set("newState", JSON.stringify(state));
+    console.log("json data", JSON.parse(Cookie.get("newState")));
+  }, [state]);
+
   const { data, loading } = useGetJobApplicantsQuery({
     variables: { id: jobId },
     onCompleted: (data) => {
@@ -79,12 +65,11 @@ const Applicants: React.FC<ApplicantsProps> = ({
       const applicants = data?.getJobApplicants.map((x) => x);
       // const newApplicants = Object.assign({}, applicants)
 
-
       // converting and array into object using the reduce method
       const newApplicants = applicants.reduce(
         (a, v) => ({ ...a, [`applicant-${v.id}`]: v }),
         {}
-      );
+      ) as JobSeeker;
       const items = Object.keys(newApplicants);
       let newItems = { ...initialData, applicants: newApplicants };
       let newItem = { ...newItems.columns["column-1"] };
@@ -93,7 +78,7 @@ const Applicants: React.FC<ApplicantsProps> = ({
       console.log("new item", newItem.applicantIds);
       setState(newItems);
       setApplicants(newApplicants);
-      console.log("applicants", items);
+      console.log("applicants", newApplicants);
     },
   });
   // let i = 0
@@ -101,6 +86,7 @@ const Applicants: React.FC<ApplicantsProps> = ({
 
   function onDragEnd(result: DropResult) {
     const { destination, source, draggableId, type } = result;
+    console.log("resssssulll", result);
 
     if (!destination) {
       return;
@@ -122,7 +108,6 @@ const Applicants: React.FC<ApplicantsProps> = ({
         ...state,
         columnOrder: newColumnOrder,
       };
-
       return;
     }
 
@@ -136,7 +121,7 @@ const Applicants: React.FC<ApplicantsProps> = ({
       newTasksIds.splice(source.index, 1);
       newTasksIds.splice(destination.index, 0, `applicant-${draggableId}`);
 
-      console.log('applicants Ids', newTasksIds)
+      console.log("applicants Ids", newTasksIds);
       const newColumn = {
         ...start,
         applicantIds: newTasksIds,
@@ -196,7 +181,9 @@ const Applicants: React.FC<ApplicantsProps> = ({
           // console.log("index", index);
 
           const column = state.columns[columnId];
-          const tasks = column.applicantIds.map((id: number) => applicants[id]);
+          const tasks = column.applicantIds.map(
+            (id: number) => applicants[id]
+          ) as JobSeeker[];
 
           console.log("task", tasks);
 
@@ -206,12 +193,17 @@ const Applicants: React.FC<ApplicantsProps> = ({
               id={column.id}
               title={column.title}
               tasks={tasks}
+              jId={jId}
             />
           );
         })}
       </DragDropContext>
     </DashboardLayout>
   );
+  
 };
 
-export default withApollo({ ssr: false })(Applicants);
+
+export default withApollo({ ssr: true })(Applicants)
+
+

@@ -39,7 +39,13 @@ export const location = [
 //   { id: "column_3", title: "Rejected", applicants: [] },
 // ];
 
-export const initialData = {
+export type MyData ={
+  applicants: {},
+  columns: {},
+  columnOrder: string[]
+}
+
+export const initialData: MyData = {
   applicants: {},
   columns: {
     "column-1": {

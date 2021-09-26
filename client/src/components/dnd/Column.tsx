@@ -1,15 +1,30 @@
 import { Box, Heading, VStack } from "@chakra-ui/react";
 import React from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
+import { Application, JobSeeker } from "../../generated/graphql";
 import { Applicant } from "../Applicant";
 
 interface ColumnProps {
-  tasks: any;
+  tasks: JobSeeker[];
   id: string;
   title: string;
+  jId: number;
 }
 
-export const Column: React.FC<ColumnProps> = ({ tasks, id, title }) => {
+export const Column: React.FC<ColumnProps> = ({ tasks, id, title, jId }) => {
+  // get a single value from array based on a condition
+  // 1. loop through the array with a filter and store the result in a temp variable
+  // 2. check if $temp has any data
+  // 3. if temp has data, return the date of $temp[0]
+  // 4. else return null
+  const getApplicationDate = (a: Application[]) => {
+    const temp = a.filter((o) => o.jobId === jId);
+    if (temp.length > 0) {
+      return temp[0].appication_date;
+    } else {
+      return null;
+    }
+  };
   return (
     <>
       <Box
@@ -31,10 +46,8 @@ export const Column: React.FC<ColumnProps> = ({ tasks, id, title }) => {
               ref={provided.innerRef}
               bgColor={snapshot.isDraggingOver ? "#f3f3f3" : "lightgray"}
               h="600px"
-
-
             >
-              {tasks?.map((task: any, index: number) => (
+              {tasks?.map((task: JobSeeker, index: number) => (
                 <Draggable
                   draggableId={task?.id + ""}
                   index={index}
@@ -49,8 +62,9 @@ export const Column: React.FC<ColumnProps> = ({ tasks, id, title }) => {
                     >
                       <Applicant
                         last_name={task?.last_name}
-                        first_name={task?.first_name}
+                        date={getApplicationDate(task.user.application)}
                         bg={snapshot.isDragging ? "lightgray" : "white"}
+                        image={task?.profile_pic}
                       />
                     </Box>
                   )}

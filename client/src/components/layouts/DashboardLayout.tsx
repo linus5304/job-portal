@@ -13,7 +13,9 @@ interface DashboardLayoutProps {}
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   children,
 }) => {
-  const { data, loading, error } = useMeQuery();
+  const { data, loading, error } = useMeQuery({
+    fetchPolicy: "cache-and-network"
+  });
 
   if (!data?.me?.user_type && loading) {
     return <div>loading</div>;

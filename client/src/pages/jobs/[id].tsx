@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -53,6 +53,7 @@ interface JobProps {}
 
 const Job: React.FC<JobProps> & layout = ({}) => {
   const [name, setName] = useState("");
+  // const [history, setHistory] = useState('');
   const router = useRouter();
   const { id } = router.query;
   const jobId = parseInt(id as string);
@@ -65,6 +66,9 @@ const Job: React.FC<JobProps> & layout = ({}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { data: meData } = useMeQuery();
 
+  // useEffect(() => {
+  //   setHistory(id as string)
+  // }, [history])
   const { acceptedFiles, fileRejections, getRootProps, getInputProps } =
     useDropzone({ accept: ".doc,.docx,.pdf" });
 
@@ -244,9 +248,10 @@ const Job: React.FC<JobProps> & layout = ({}) => {
                   color="white"
                   size="lg"
                   _hover={{ bg: "green.500" }}
-                  disabled={true}
+                  
                 >
-                  APPLY NOW
+                  <NextLink href="/login">APPLY NOW</NextLink>
+                  
                 </Button>
               </>
             )}

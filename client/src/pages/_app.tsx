@@ -1,7 +1,7 @@
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { createBreakpoints } from "@chakra-ui/theme-tools";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { Component, useState } from "react";
 import { DashboardLayout } from "../components/layouts/DashboardLayout";
 import { MainLayout } from "../components/layouts/MainLayout";
 import NProgress from "nprogress";
@@ -59,6 +59,7 @@ const App = ({ Component, pageProps }) => {
     </ChakraProvider>
   );
 };
+
 
 const EmptyLayout = ({ children }) => <>({children})</>;
 export default App;

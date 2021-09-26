@@ -1,8 +1,10 @@
-import { MyContext } from "src/types/MyContext";
+import { User } from "../entities/User";
+import { MyContext } from "../types/MyContext";
+import { stripe } from "../utils/stripe";
 import {
   Arg,
   Ctx,
-  Field, InputType,
+  Field, InputType, 
   Int,
   Mutation,
   ObjectType,
@@ -149,5 +151,22 @@ export class CompanyResolver {
       .where('application."companyId" = :id', { id: req.session.userId })
       .getMany();
     return result;
+  }
+
+  @Mutation(() => User)
+  async createSubscription(
+    @Arg('priceId') priceId: string,
+    @Ctx() { req }: MyContext
+  ): Promise<User> {
+    const session = stripe.checkout.sessions.create({
+      mode:'subscription',
+      payment_method_types: ["card"],
+      line_items:[{
+        price: priceId
+      }],
+      success_url: 'localhost:3000',
+      cancel_url: 'localhost:3000'
+    })
+    return new User
   }
 }

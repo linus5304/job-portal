@@ -1,6 +1,6 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { PaginatedJobs } from "../generated/graphql";
-import { withApollo as createWithApollo } from "next-apollo";
+import { createWithApollo } from "./createWithApollo";
 import { createUploadLink } from "apollo-upload-client";
 
 export const cache = new InMemoryCache({
