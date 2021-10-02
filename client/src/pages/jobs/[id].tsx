@@ -114,7 +114,7 @@ const Job: React.FC<JobProps> & layout = ({}) => {
               color="#fff"
             >
               <Box>
-                <Image src="/bg2.jpg" width="100px" height="100px" />
+                <Image src={data?.getJobById.imgUrl} width="100px" height="100px" />
               </Box>
               <Flex flexDir="column" gridGap={3}>
                 <Flex>
@@ -132,8 +132,8 @@ const Job: React.FC<JobProps> & layout = ({}) => {
                   <Flex alignItems="center">
                     <Icon as={FiCalendar} fontSize="lg" />
                     <Text>
-                      <Moment format="MMM DD YYYY">
-                        {data?.getJobById.createdDate}
+                      <Moment format="LL">
+                        {data?.getJobById?.createdDate}
                       </Moment>
                     </Text>
                   </Flex>
@@ -193,9 +193,7 @@ const Job: React.FC<JobProps> & layout = ({}) => {
 
                   <Text>
                     {data?.getJobById.user.companyProfile.description}
-                    {setTimeout(() => {
-                      console.log("company Id", data?.getJobById.user.id);
-                    }, 5000)}
+                    
                   </Text>
                   <NextLink
                     href={`/company/${data?.getJobById.user.companyProfile.id}`}
@@ -224,7 +222,7 @@ const Job: React.FC<JobProps> & layout = ({}) => {
             justifyContent="space-between"
             flexDir={["column", "column", "column", "row", "row"]}
           >
-            {meData?.me && meData.me.user_type === "job seeker" ? (
+            { meData?.me?.user_type === "job seeker" && (
               <>
                 {/* {console.log("not ok", meData)} */}
                 <Button
@@ -238,12 +236,13 @@ const Job: React.FC<JobProps> & layout = ({}) => {
                   APPLY NOW
                 </Button>
               </>
-            ) : (
+            ) }
+            {meData?.me === null &&
+             (
               <>
                 {/* {console.log("ok", meData)} */}
                 <Button
                   ml="-15%"
-                  onClick={onOpen}
                   bg="#00b074"
                   color="white"
                   size="lg"

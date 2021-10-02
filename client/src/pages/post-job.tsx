@@ -2,32 +2,20 @@ import {
   Box,
   Button,
   Divider,
-  Flex,
-  Heading,
-  Stack,
-  HStack,
-  toast,
-  useColorModeValue,
-  VStack,
-  useToast,
-  Text,
-  Icon,
+  Flex, HStack, Icon, Text, useColorModeValue, useToast, VStack
 } from "@chakra-ui/react";
-import { Formik, Form } from "formik";
-import router from "next/router";
+import { Form, Formik } from "formik";
 import React, { useState } from "react";
-import { InputField } from "../components/form/InputField";
-import { layout } from "../utils/types";
-import NextLink from "next/link";
 import Dropzone, { useDropzone } from "react-dropzone";
-import {
-  usePostJobMutation,
-  useFileUploadMutation,
-} from "./../generated/graphql";
-import { DashboardLayout } from "../components/layouts/DashboardLayout";
-import { withApollo } from "../utils/withApollo";
 import { FiUploadCloud } from "react-icons/fi";
+import { InputField } from "../components/form/InputField";
+import { DashboardLayout } from "../components/layouts/DashboardLayout";
 import { job_category, location } from "../utils/sample-data";
+import { layout } from "../utils/types";
+import { withApollo } from "../utils/withApollo";
+import {
+  useFileUploadMutation, usePostJobMutation
+} from "./../generated/graphql";
 
 interface postJobProps {}
 
@@ -143,6 +131,8 @@ export const postJob: React.FC<postJobProps> & layout = ({}) => {
                       setName((name) => (name = file.name));
 
                       console.log(file);
+                      console.log(data.fileUpload.url);
+
                     }}
                   >
                     {({ getRootProps, getInputProps }) => (

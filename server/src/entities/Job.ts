@@ -44,7 +44,7 @@ export class Job extends BaseEntity {
   description: string;
 
   @Field()
-  @Column()
+  @Column({default: 'http://localhost:4000/images/HRjNq7C1.png'})
   imgUrl: string;
 
   @Field(() => String)

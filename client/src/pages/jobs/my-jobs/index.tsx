@@ -57,7 +57,7 @@ const MyJobs: React.FC<MyJobsProps> = ({}) => {
           </Text>
           {data?.getCompanyJobs.map((j) => (
             <ManageJobItem
-            key={j.id}
+              key={j.id}
               title={j.title}
               companyName={j.user.companyProfile.name}
               id={j.id}
@@ -67,7 +67,7 @@ const MyJobs: React.FC<MyJobsProps> = ({}) => {
               description={j.description}
               expDate={j.expDate}
               category={j.category}
-              // applicants={j.user.length}
+              applicants={j.application.length}
             />
           ))}
         </VStack>

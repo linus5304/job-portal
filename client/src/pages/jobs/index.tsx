@@ -1,7 +1,11 @@
 import {
-  Button, Flex, Icon,
+  Button,
+  Flex,
+  Icon,
   Input,
-  Stack, Text, VStack
+  Stack,
+  Text,
+  VStack,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { MdLocationOn, MdSearch } from "react-icons/md";
@@ -11,11 +15,7 @@ import { withApollo } from "../../utils/withApollo";
 import { layout } from "../login";
 import { JobListItem } from "./../../components/JobListItem";
 import { MainLayout } from "./../../components/layouts/MainLayout";
-import {
-  useGetJobsQuery,
-  useSearchJobsQuery
-} from "./../../generated/graphql";
-
+import { useGetJobsQuery, useSearchJobsQuery } from "./../../generated/graphql";
 
 interface indexProps {}
 
@@ -24,7 +24,7 @@ export const index: React.FC<indexProps> & layout = ({}) => {
   const [location, setLocation] = useState("");
   const { data, loading, fetchMore, variables, error } = useGetJobsQuery({
     variables: { limit: 5, cursor: null },
-    // fetchPolicy: "no-cache"
+    fetchPolicy: "cache-and-network"
   });
   const { data: sData } = useSearchJobsQuery({
     variables: {
@@ -38,7 +38,7 @@ export const index: React.FC<indexProps> & layout = ({}) => {
   // });
 
   if (!data && loading) {
-    return <Spinner/>
+    return null;
   }
 
   if (error) {
@@ -47,7 +47,6 @@ export const index: React.FC<indexProps> & layout = ({}) => {
 
   return (
     <>
-
       <MainLayout>
         <Flex justify="space-between" mx="auto" w="60%" pt="10%" pb="4%">
           {/* <VStack

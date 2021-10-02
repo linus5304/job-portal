@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Box,
   Button,
@@ -6,42 +5,25 @@ import {
   Heading,
   HStack,
   Icon,
-  Image,
-  Link,
-  Stack,
+  Image, Stack,
   Text,
   useColorModeValue,
   VStack,
-  useToast,
-  Divider,
+  Avatar
 } from "@chakra-ui/react";
-import { Formik, Form } from "formik";
-import NextLink from "next/link";
 import { useRouter } from "next/router";
+import React from "react";
 import {
-  FaChevronLeft,
-  FaFacebook,
-  FaGraduationCap,
-  FaInstagram,
-  FaLinkedin,
-  FaTwitter,
+  FaChevronLeft, FaGraduationCap
 } from "react-icons/fa";
-import { FiCalendar, FiGlobe } from "react-icons/fi";
-import { MdLocationOn, MdWork } from "react-icons/md";
-import { InputField } from "../../components/form/InputField";
-import { EducationDesc } from "../../components/EducationDesc";
-import { WorkDesc } from "../../components/WorkDesc";
-import { layout } from "../../utils/types";
+import { FiCalendar } from "react-icons/fi";
+import { MdWork } from "react-icons/md";
+import Moment from "react-moment";
 import { withApollo } from "../../utils/withApollo";
 import { MainLayout } from "./../../components/layouts/MainLayout";
 import {
-  useApplyMutation,
-  useGetAllEducationQuery,
-  useGetJobByIdQuery,
-  useGetJsProfileByIdQuery,
-  useGetJsProfileQuery,
+  useGetJsProfileByIdQuery
 } from "./../../generated/graphql";
-import Moment from "react-moment";
 
 interface ResumeProps {
   position?: string;
@@ -211,15 +193,12 @@ export const Resume: React.FC<ResumeProps> = ({
               rounded={{ sm: "lg" }}
               flexDir="column"
             >
-              <VStack spacing={6}>
-                <Image
-                  src="/bg2.jpg"
-                  alt="logo"
-                  width="100px"
-                  height="100px"
-                  rounded="full"
-                />
-                <Text fontSize="xl">About Employer</Text>
+              <VStack spacing={6} w="100%">
+              <Avatar
+            size="2xl"
+            src={data?.getJSProfileById.profile_pic}
+          />
+                <Text fontSize="xl">Download cv</Text>
                 <Text></Text>
               </VStack>
             </Flex>

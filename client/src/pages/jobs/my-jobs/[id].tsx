@@ -39,7 +39,7 @@ const Applicants: React.FC<ApplicantsProps> = ({
   } else {
     lData = initialData;
   }
-  const [state, setState] = useState(lData);
+  const [state, setState] = useState(initialData);
 
   const [applicants, setApplicants] = useState({});
 

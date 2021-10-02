@@ -134,10 +134,9 @@ export const ManageJobItem: React.FC<ManageJobItemProps> = ({
           </Flex>
           <VStack justify="space-between" align="flex-end">
             <HStack align="flex-start">
-              <Text fontWeight="semibold">0 Views</Text>
               <Divider orientation="vertical" h="30px" />
               <Link href={`/jobs/my-jobs/${id}`}>
-                <Text fontWeight="semibold">{applicants} Applicants</Text>
+                <Text fontWeight="semibold"> Applicants ({applicants})</Text>
               </Link>
             </HStack>
             <HStack align="flex-start">

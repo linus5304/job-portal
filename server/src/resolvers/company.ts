@@ -126,6 +126,7 @@ export class CompanyResolver {
       .createQueryBuilder(Job, "job")
       .leftJoinAndSelect("job.user", "user")
       .leftJoinAndSelect("user.companyProfile", "cp")
+      .leftJoinAndSelect("job.application", "app")
       .where("job.userId = :id", { id: req.session.userId })
       .orderBy('job.createdAt', 'DESC')
       .getMany();

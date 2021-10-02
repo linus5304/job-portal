@@ -49,7 +49,7 @@ export const AppliedJobItem: React.FC<AppliedJobItemProps> = ({
   applicants,
 }) => {
   return (
-    <VStack>
+    <VStack w="100%">
       <Box
         as="article"
         rounded="lg"

@@ -55,7 +55,7 @@ const App = ({ Component, pageProps }) => {
 
   return (
     <ChakraProvider theme={theme}>
-      {loading ? <Spinner /> : <Component {...pageProps} />}
+       <Component {...pageProps} />
     </ChakraProvider>
   );
 };

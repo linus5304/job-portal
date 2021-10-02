@@ -1,38 +1,27 @@
-import React, { useState } from "react";
+import { useApolloClient } from "@apollo/client";
 import {
-  Text,
-  Flex,
-  VStack,
-  Link,
   Avatar,
-  IconButton,
   Box,
+  Flex,
+  Icon,
+  IconButton,
+  Text,
+  VStack,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
-import { Icon } from "@chakra-ui/react";
-import {
-  MdDashboard,
-  MdPeople,
-  MdWork,
-  MdSettings,
-  MdEdit,
-} from "react-icons/md";
-import { IoDocumentText } from "react-icons/io5";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+import Dropzone from "react-dropzone";
 import { FaUser } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
-import { Dashboard } from "./../Dashboard";
-import { Divider } from "@chakra-ui/react";
-import { SearchIcon } from "@chakra-ui/icons";
-import Dropzone, { useDropzone } from "react-dropzone";
+import { IoDocumentText } from "react-icons/io5";
+import { MdEdit, MdPeople, MdWork } from "react-icons/md";
 import {
-  useLogoutMutation,
   useFileUploadMutation,
-  useMeQuery,
   useGetCompanyProfileQuery,
+  useLogoutMutation,
   useUpdateCompanyProfileMutation,
 } from "../../generated/graphql";
-import { useApolloClient } from "@apollo/client";
-import { useRouter } from "next/router";
 
 interface SidebarProps {
   username?: string;
@@ -163,23 +152,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ username }) => {
               </Text>
             </Flex>
           </NextLink>
-          <NextLink href="/account/company/applicants">
-            <Flex
-              alignItems="center"
-              cursor="pointer"
-              gridGap="4%"
-              p="5%"
-              _hover={{ bg: "green.100" }}
-              w="100%"
-              // onClick={() =>setIsActive(!isActive)}
-              // bg={isActive ? "green.100" : null}
-            >
-              <Icon as={MdPeople} fontSize="4xl" color="#00b074" />
-              <Text fontSize="xl" fontWeight="bold">
-                Applicants
-              </Text>
-            </Flex>
-          </NextLink>
+          
 
           <Flex
             alignItems="center"

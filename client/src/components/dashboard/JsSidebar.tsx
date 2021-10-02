@@ -42,16 +42,7 @@ export const JsSidebar: React.FC<JsSidebarProps> = ({ username }) => {
 
   console.log("profile", profileImage);
 
-  // useEffect(() => {
-  //   if (profileImage !== "https://bit.ly/broken-link") {
-  //     update({
-  //       variables: {
-  //         data: { profile_pic: profileImage },
-  //         id: data?.getJSProfile.id,
-  //       },
-  //     });
-  //   }
-  // }, [profileImage]);
+ 
 
   return (
     <Flex w="300px" minH="100%" overflow="hidden" mb={50}>
@@ -121,8 +112,6 @@ export const JsSidebar: React.FC<JsSidebarProps> = ({ username }) => {
               p="5%"
               _hover={{ bg: "green.100" }}
               w="100%"
-              // onClick={(isa) =>setIsActive(!isa)}
-              // bg={isActive ? "green.100" : null}
             >
               <Icon as={FaUser} fontSize="4xl" color="#00b074" />
               <Text fontSize="xl" fontWeight="bold">
@@ -138,8 +127,6 @@ export const JsSidebar: React.FC<JsSidebarProps> = ({ username }) => {
               p="5%"
               _hover={{ bg: "green.100" }}
               w="100%"
-              // onClick={(isa) =>setIsActive(!isa)}
-              // bg={isActive ? "green.100" : null}
             >
               <Icon as={IoDocumentText} fontSize="4xl" color="#00b074" />
               <Text fontSize="xl" fontWeight="bold">
@@ -147,23 +134,7 @@ export const JsSidebar: React.FC<JsSidebarProps> = ({ username }) => {
               </Text>
             </Flex>
           </NextLink>
-          <NextLink href="/account/job-seeker/saved-jobs">
-            <Flex
-              alignItems="center"
-              cursor="pointer"
-              gridGap="4%"
-              p="5%"
-              _hover={{ bg: "green.100" }}
-              w="100%"
-              // onClick={(isa) =>setIsActive(!isa)}
-              // bg={isActive ? "green.100" : null}
-            >
-              <Icon as={MdFavoriteBorder} fontSize="4xl" color="#00b074" />
-              <Text fontSize="xl" fontWeight="bold">
-                Saved Jobs
-              </Text>
-            </Flex>
-          </NextLink>
+          
           <NextLink href="/account/job-seeker/applied-jobs">
             <Flex
               alignItems="center"

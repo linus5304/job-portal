@@ -10,9 +10,13 @@ query getCompanyJobs{
     imgUrl
     userId
     createdAt
+    application{
+      appication_date
+    }
     user{
       username
       email
+      
       companyProfile{
         name
         logo

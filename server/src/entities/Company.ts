@@ -30,7 +30,7 @@ export class CompanyProfile extends BaseEntity {
   phone: string;
 
   @Field({nullable: true})
-  @Column({nullable: true})
+  @Column({nullable: true, default: 'http://localhost:4000/images/HRjNq7C1.png'})
   logo: string;
 
   @Field({nullable: true})

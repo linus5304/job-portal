@@ -1,27 +1,22 @@
 import {
-  Avatar,
   Box,
   Button,
   Divider,
   Flex,
-  HStack,
-  IconButton,
-  Text,
+  HStack, Text,
   useColorModeValue,
   useToast,
-  VStack,
+  VStack
 } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import Dropzone from "react-dropzone";
-import { MdEdit } from "react-icons/md";
 import { InputField } from "../../../components/form/InputField";
 import { DashboardLayout } from "../../../components/layouts/DashboardLayout";
 import {
   useFileUploadMutation,
   useGetCompanyProfileQuery,
-  useUpdateCompanyProfileMutation,
+  useUpdateCompanyProfileMutation
 } from "../../../generated/graphql";
 import { location } from "../../../utils/sample-data";
 import { withApollo } from "../../../utils/withApollo";
@@ -55,7 +50,6 @@ export const index: React.FC<indexProps> = ({}) => {
           website: data?.getCompanyProfile.website,
           phone: data?.getCompanyProfile.phone,
           location: data?.getCompanyProfile.location,
-          logo: data?.getCompanyProfile.logo,
           description: data?.getCompanyProfile.description,
           email: data?.getCompanyProfile.email,
           founded_date: data?.getCompanyProfile.founded_date,
