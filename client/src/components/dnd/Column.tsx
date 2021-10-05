@@ -1,8 +1,21 @@
-import { Box, Heading, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Heading,
+  HStack,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalOverlay,
+  useDisclosure,
+  VStack,
+} from "@chakra-ui/react";
 import React from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { Application, JobSeeker } from "../../generated/graphql";
 import { Applicant } from "../Applicant";
+import { ApplicantResume } from "../ApplicantResume";
 
 interface ColumnProps {
   tasks: JobSeeker[];
@@ -25,6 +38,9 @@ export const Column: React.FC<ColumnProps> = ({ tasks, id, title, jId }) => {
       return null;
     }
   };
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <>
       <Box
@@ -47,6 +63,7 @@ export const Column: React.FC<ColumnProps> = ({ tasks, id, title, jId }) => {
               bgColor={snapshot.isDraggingOver ? "#f3f3f3" : "lightgray"}
               h="600px"
             >
+
               {tasks?.map((task: JobSeeker, index: number) => (
                 <Draggable
                   draggableId={task?.id + ""}
@@ -59,6 +76,7 @@ export const Column: React.FC<ColumnProps> = ({ tasks, id, title, jId }) => {
                       {...provided.dragHandleProps}
                       ref={provided.innerRef}
                       w="100%"
+                      onClick={onOpen}
                     >
                       <Applicant
                         last_name={task?.last_name}
@@ -66,6 +84,17 @@ export const Column: React.FC<ColumnProps> = ({ tasks, id, title, jId }) => {
                         bg={snapshot.isDragging ? "lightgray" : "white"}
                         image={task?.profile_pic}
                       />
+                      <Modal isOpen={isOpen} onClose={onClose} isCentered size="4xl" >
+                        <ModalOverlay />
+                        <Box w="100%" overflow="auto">
+                          <ModalContent w="100%">
+                            <ModalBody p={0} rounded="5%"> 
+                              <ApplicantResume id={task.id} />
+                              
+                            </ModalBody>
+                          </ModalContent>
+                        </Box>
+                      </Modal>
                     </Box>
                   )}
                 </Draggable>
