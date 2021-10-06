@@ -6,7 +6,7 @@ import {
   Entity,
   ManyToOne,
   PrimaryColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
 } from "typeorm";
 import { Job } from "./Job";
 import { User } from "./User";
@@ -15,7 +15,7 @@ import { User } from "./User";
 @ObjectType()
 export class Application extends BaseEntity {
   @Field(() => Date)
-  @CreateDateColumn() 
+  @CreateDateColumn()
   appication_date: Date;
 
   @Field(() => String)
@@ -25,6 +25,14 @@ export class Application extends BaseEntity {
   @Field({ nullable: true })
   @PrimaryColumn()
   userId: number;
+
+  @Field({ nullable: true })
+  @Column({nullable: true})
+  cvLink: string;
+
+  @Field({ nullable: true })
+  @Column({nullable: true})
+  coverLetter: string;
 
   // @Field(() => Int, { nullable: true })
   // @Column({ nullable: true })

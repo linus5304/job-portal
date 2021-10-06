@@ -1,7 +1,5 @@
-import {
-  Ctx, Query,
-  Resolver
-} from "type-graphql";
+import { Application } from "../entities/Application";
+import { Arg, Ctx, ID, Query, Resolver } from "type-graphql";
 import { getConnection } from "typeorm";
 import { MyContext } from "../types/MyContext";
 import { Job } from "./../entities/Job";
@@ -27,12 +25,21 @@ export class ApplicationResolver {
     const jobs = await getConnection()
       .createQueryBuilder(Job, "job")
       .leftJoinAndSelect("job.application", "a")
-      .leftJoinAndSelect('job.user', "u")
-      .leftJoinAndSelect('u.companyProfile', "cp")
+      .leftJoinAndSelect("job.user", "u")
+      .leftJoinAndSelect("u.companyProfile", "cp")
       .where('a."userId" = :id', { id: req.session.userId })
       .orderBy('job."createdAt"', "DESC")
       .getMany();
 
-    return jobs;  
+    return jobs;
+  }
+
+  @Query(() => Application, { nullable: true })
+  async getApplications(@Arg("id") id: number): Promise<Application> {
+    const response = (await getConnection()
+      .createQueryBuilder(Application, "applicaiton")
+      .getOne()) as Application;
+
+    return response;
   }
 }
