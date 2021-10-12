@@ -1,6 +1,6 @@
 import "reflect-metadata";
-import dotenv from "dotenv"
-dotenv.config()
+import dotenv from "dotenv";
+dotenv.config();
 import { createConnection } from "typeorm";
 import { User } from "./entities/User";
 import { ApolloServer } from "apollo-server-express";
@@ -28,10 +28,8 @@ import { JobSeekerResolver } from "./resolvers/jobseeker";
 import { EducationResolver } from "./resolvers/education";
 import { WorkResolver } from "./resolvers/work";
 import { ApplicationResolver } from "./resolvers/application";
-import compression from 'compression'
+import compression from "compression";
 import { stripe } from "./utils/stripe";
-
-
 
 declare module "express-session" {
   interface Session {
@@ -40,8 +38,7 @@ declare module "express-session" {
 }
 
 const main = async () => {
-  
-  stripe
+  stripe;
   const RedisStore = connectRedis(session);
 
   const conn = await createConnection({
@@ -63,11 +60,10 @@ const main = async () => {
     ],
   });
 
-
   await conn.runMigrations();
 
   const app = express();
-  app.use(compression())
+  app.use(compression());
   app.use(
     cors({
       origin: "http://localhost:3000",

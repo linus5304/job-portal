@@ -37,7 +37,7 @@ export class ApplicationResolver {
   @Query(() => Application, { nullable: true })
   async getApplications(@Arg("id") id: number): Promise<Application> {
     const response = (await getConnection()
-      .createQueryBuilder(Application, "applicaiton")
+      .createQueryBuilder(Application, "applicaiton").andWhere('application.')
       .getOne()) as Application;
 
     return response;

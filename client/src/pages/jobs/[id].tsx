@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -20,19 +19,19 @@ import {
   useColorModeValue,
   useDisclosure,
   useToast,
-  VStack,
+  VStack
 } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-
+import React, { useState } from "react";
 import Dropzone, { useDropzone } from "react-dropzone";
 import {
   FaChevronLeft,
   FaFacebook,
   FaInstagram,
   FaLinkedin,
-  FaTwitter,
+  FaTwitter
 } from "react-icons/fa";
 import { FiCalendar, FiGlobe, FiUploadCloud } from "react-icons/fi";
 import { MdLocationOn } from "react-icons/md";
@@ -46,8 +45,9 @@ import {
   useFileUploadMutation,
   useGetJobByIdQuery,
   useGetJsProfileQuery,
-  useMeQuery,
+  useMeQuery
 } from "./../../generated/graphql";
+
 
 interface JobProps {}
 
